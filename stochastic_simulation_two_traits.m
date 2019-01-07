@@ -27,39 +27,48 @@ function [v,v1,v2,varx,vary,cov] = stochastic_simulation_two_traits(N,s1,u1,s2,u
 % input :outputfile: string with filename where detailed data will be stored
 
 % initialize variables
-pop=N;                      %abundances of a classes
-Na = 0;                     %actual population size
-fit=0;                      %total fitness of a class
-fitx=0;                     %fitness in trait 1 of a class
-fity=0;                     %fitness in trait 2 of a class
-nosefitness = 0;            %total fitness of the front
-meanfitness = 0;            %mean fitness of the population
-meanfitx = 0;               %mean fitness in x 
-meanfity = 0;               %mean fitness in y
-varx = 0;                   %variance in trait 1
-vary = 0;                   %variance in trait 2
-cov = 0;                    %covariance between trait 1 and 2
-cutoff=10/min(s1,s2);       %population cutoff for stochasticity
+pop=N;                      % abundances of a classes
+Na = 0;                     % actual population size
+fit=0;                      % total fitness of a class
+fitx=0;                     % fitness in trait 1 of a class
+fity=0;                     % fitness in trait 2 of a class
+nosefitness = 0;            % total fitness of the front
+meanfitness = 0;            % mean fitness of the population
+meanfitx = 0;               % mean fitness in x 
+meanfity = 0;               % mean fitness in y
+varx = 0;                   % variance in trait 1
+vary = 0;                   % variance in trait 2
+cov = 0;                    % covariance between trait 1 and 2
+cutoff=10/min(s1,s2);       % population cutoff for stochasticity
 
-if (collect_data)   %store parameters used in simulation
+if (collect_data)           % store parameters used in simulation
     fileID = fopen([outputfile '-0.txt'],'w');
     fprintf(fileID,'%f,%f,%f,%f,%f',N, s1, s2, u1, u2);
     fclose(fileID);
+    fileID1 = fopen([outputfile '-1.txt'],'w'); %file for all other 2d wave data per generation
+    fileID2 = fopen([outputfile '-2.txt'],'w'); %file for data on classes per generation
+    fileID3 = fopen([outputfile '-3.txt'],'w'); %file for data on abundances per generation
 end
-
-fileID1 = fopen([outputfile '-1.txt'],'w'); %file for all other 2d wave data per generation
-fileID2 = fopen([outputfile '-2.txt'],'w'); %file for data on classes per generation
-fileID3 = fopen([outputfile '-3.txt'],'w'); %file for data on abundances per generation
 
 % Main loop for simulation of each generation
 for timestep=1:steps   
-        
+    
     %%%%%%%%%%%%%%%%%%%
     % Remove columns of zeros of decreasing fitness classes
+    if (any(size(pop))==0)
+        pop
+        timestep
+    end
+    
     while any(pop(:,1))==0
         pop(:,1)=[];
         fit(:,1)=[];
         fity(1)=[];
+    end
+
+    if (any(size(pop))==0)
+        pop
+        timestep
     end
     
     while any(pop(1,:))==0 
@@ -76,7 +85,7 @@ for timestep=1:steps
         fity(dim(2)+1)=fity(dim(2))+1;
     end
     
-    dim=size(pop);
+    dim=size(pop); 
     if any(pop(dim(1),:))==1    % check for expansion of front in direction of trait 2
         pop(dim(1)+1,:)=zeros(1,dim(2));
         fit(dim(1)+1,:)=fit(dim(1),:)+ones(1,dim(2));
@@ -121,6 +130,7 @@ for timestep=1:steps
     
     newpop=round(newpop);    
     Na = sum(sum(newpop));
+    pop = newpop;
     
     meanfitness = sum(sum(times(newpop,fit)))/Na;
     meanfitx = s1*sum(sum(newpop,2).*fitx')/Na;
@@ -138,8 +148,6 @@ for timestep=1:steps
         vary = (1/timestep)*((timestep-1)*vary + sum(sum(times(newpop,(fity_arry-meanfity).^2)))/Na);
         cov = (1/timestep)*((timestep-1)*cov + sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity))))/Na);
     end
-    
-    pop=newpop;
     
     if( collect_data && (timestep >= start_time) && (timestep <= end_time) )
         
@@ -183,9 +191,11 @@ v1 = meanfitx/steps;
 v2 = meanfity/steps;
 
 % close output files
-fclose(fileID1);
-fclose(fileID2);
-fclose(fileID3);
+if(collect_data)
+    fclose(fileID1);
+    fclose(fileID2);
+    fclose(fileID3);
+end
 
 end
 
