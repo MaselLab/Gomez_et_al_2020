@@ -90,13 +90,12 @@ for timestep=1:steps
     freq=pop/N;                                 % array with frequencies of the each class
     
     % calculate growth due to selection
-    fitx_arry = fitx'*ones(1,dim(2));           % array with # of mutations in trait 1
-    fity_arry = ones(dim(1),1)*fity;            % array with # of mutations in trait 2
-    fit = s1*fitx_arry + s2*fity_arry;          % total fitness
+    fitx_arry = s1*fitx'*ones(1,dim(2));           % array with # of mutations in trait 1
+    fity_arry = s2*ones(dim(1),1)*fity;            % array with # of mutations in trait 2
+    fit = fitx_arry + fity_arry;          % total fitness
     meanfitness = sum(sum(times(freq,fit)));
-    meanfit_arry = meanfitness*ones(size(fit));
     
-    newfreq=times(exp(fit-meanfit_arry),freq);  % after selection
+    newfreq=times(exp(fit-meanfitness),freq);  % after selection
     newfreq=newfreq/sum(sum(newfreq));          % make sure frequencies still add to one.
     
     % calculate changes in abundances due to mutations
@@ -123,23 +122,24 @@ for timestep=1:steps
     newpop=round(newpop);    
     Na = sum(sum(newpop));
     
-    pop = newpop;
-    
     meanfitness = sum(sum(times(newpop,fit)))/Na;
-    meanfitx = s1*sum(sum(newpop,2).*fitx')/Na;
-    meanfity = s2*sum(sum(newpop,1).*fity)/Na;
+    meanfitx = sum(sum(times(newpop,fitx_arry)))/Na;
+    meanfity = sum(sum(times(newpop,fity_arry)))/Na;
     
     nosefitness = max(max(times(fit,sign(newpop))));    % calculate most fitness of most fit class
+    pop = newpop;
     
     % recompute time-average of variances and covariances
-    if timestep == 1
-        varx = sum(sum(times(newpop,(fitx_arry-meanfitx).^2)))/Na;
-        vary = sum(sum(times(newpop,(fity_arry-meanfity).^2)))/Na;
-        cov = sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity))))/Na;
-    else
+    if timestep > 5000
         varx = (1/timestep)*((timestep-1)*varx + sum(sum(times(newpop,(fitx_arry-meanfitx).^2)))/Na);
         vary = (1/timestep)*((timestep-1)*vary + sum(sum(times(newpop,(fity_arry-meanfity).^2)))/Na);
         cov = (1/timestep)*((timestep-1)*cov + sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity))))/Na);
+    else
+        if timestep==5000
+            varx = sum(sum(times(newpop,(fitx_arry-meanfitx).^2)))/Na;
+            vary = sum(sum(times(newpop,(fity_arry-meanfity).^2)))/Na;
+            cov = sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity))))/Na;
+        end
     end
     
     if( collect_data && (timestep >= start_time) && (timestep <= end_time) )
@@ -151,9 +151,9 @@ for timestep=1:steps
         front_cov = sum(pop(indx_front).*(fitx_arry(indx_front)-meanfitx_front).*(fity_arry(indx_front)-meanfity_front))/sum(pop(indx_front));
         
         % compute variances, covarainces and population load
-        sigmax2 = s1^2*sum(sum(times(newpop,(fitx_arry-meanfitx).^2)))/Na;
-        sigmay2 = s2^2*sum(sum(times(newpop,(fity_arry-meanfity).^2)))/Na;
-        sigmaxy = s1*s2*sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity))))/Na;
+        sigmax2 = sum(sum(times(newpop,(fitx_arry-meanfitx).^2)))/Na;
+        sigmay2 = sum(sum(times(newpop,(fity_arry-meanfity).^2)))/Na;
+        sigmaxy = sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity))))/Na;
         pop_load = nosefitness - meanfitness;
         
         % compute v1, v2, sigma12, G eigenvalues and orientation 
