@@ -1,36 +1,34 @@
-cd ~/Documents/mutBiasCI/
-
 %% setup array for parameters N,s1,s2,u1,u2
 N = 1e9;
 s = 1e-2;
 U = 1e-5;
-data_pts = 50;
-rng(7);                                                     % set seed for random number generator
 v = s^2*(2*log(N*s)-log(s/U))/(log(s/U)^2);                 % extend this to a range of v
 
-sarry = (1e-3)*(1e-1/1e-3).^((0:1:data_pts)./data_pts);     % use range specified in Gomez et al 2019
+data_pts = 3;
+rng(7);                                                     % set seed for random number generator
+
+sarry = (1e-3)*(2e-2/1e-3).^((0:1:data_pts)./data_pts);     % range for possible s & U values
 Uarry = ones(size(sarry));
 
-% analytical Uarry contains numerical error
-% Uarry = sarry.*exp((-0.5*sarry.^2/v).*(sqrt(8*v*(log(N*sarry)./(sarry.^2)))-1));
-% sarry.^2.*(2*log(N*sarry)-log(sarry./Uarry))./(log(sarry./Uarry).^2)
-
-% numerically solve for U given s and fixed value of v(N,s,U)
-syms t;
 for i=1:length(sarry)
-    Uarry(i) = real(vpasolve(log(sarry(i)/t)^2+sarry(i)^2/v*log(sarry(i)/t)-2*log(N*sarry(i))*sarry(i)^2/v == 0,t));
+    si = sarry(i);
+    Ui = exp( (0.5*si^2/v) * ( 1 + 2*v*log(si)/si^2 - sqrt(1 + 8*v*log(N*si)/si^2) ) );
+    Uarry(i) = Ui; 
+    varry(i) = si.^2.*(2*log(N*si)-log(si./Ui))./(log(si./Ui).^2);      % checking that Ui is correct solution
+    qarry(i) = 2*log(N*si)./log(si./Ui);
 end
-clear t;
+
+% Examine whether s,U combinations give the traveling wave regime
+% [(1:51)' log10(sarry') log10(Uarry'./sarry') log10(N*Uarry') log10(N*Uarry'.*log(N*sarry')) qarry'] 
 
 %% test simulations for initial figure
 
-steps = 1e3;
-start_time = 5e2;                     % collect data on distribution at start time
-end_time = 1e3;                       % collect data on distribution at end time
+steps = 1.5e4;
+start_time = 1e4;                     % collect data on distribution at start time
+end_time = 1.5e5;                       % collect data on distribution at end time
 outputfile = '~/Documents/mutBiasCI/data/mutBiasCI_data_for_2d_distribution_ml-01'; 
 number_of_sims = 0.5*data_pts*(data_pts+1);
-collect_distribution_data = [1;1;zeros(number_of_sims-2,1)];
-% collect_distribution_data = rand(number_of_sims,1)>.95;
+collect_distribution_data = rand(number_of_sims,1)>2/number_of_sims;
 indx_of_collected_data = [];
 
 NsU = zeros(number_of_sims,5);          % array that stores the parameters [N,s1,u1,s2,u2]
@@ -45,11 +43,11 @@ for i=1:data_pts
         if(collect_distribution_data(indx))
             indx_of_collected_data = [indx_of_collected_data; indx];
         end
-        indx
     end
 end
 toc
 
-csvwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_parameters_ml-01-0.dat',NsU);
-csvwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_grand_means_ml-01-1.dat',sim_data);
-csvwrite('~/Documents/mutBiasCI/data/mutBiasCI_indx_of_collected_data_ml-01-2.dat',indx_of_collected_data);
+csvwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_parameters_ml-01-0.dat',vpa(NsU));
+csvwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_grand_means_ml-01-1.dat',vpa(sim_data));
+csvwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_indx_of_collected_data_ml-01-2.dat',indx_of_collected_data);
+

@@ -26,6 +26,8 @@ function [v,v1,v2,varx,vary,cov] = stochastic_simulation_two_traits(N,s1,u1,s2,u
 % input :end_time: end time for collecting detailed data on 2d distribution
 % input :outputfile: string with filename where detailed data will be stored
 
+digits(16);
+
 % initialize variables
 pop=N;                      % abundances of a classes
 Na = 0;                     % actual population size
@@ -43,7 +45,7 @@ cutoff=10/min(s1,s2);       % population cutoff for stochasticity
 
 if (collect_data)           % store parameters used in simulation
     fileID = fopen([outputfile '-0.txt'],'w');
-    fprintf(fileID,'%f,%f,%f,%f,%f',N, s1, s2, u1, u2);
+    fprintf(fileID,'%.16f,%.16f,%.16f,%.16f,%.16f',N, s1, s2, u1, u2);
     fclose(fileID);
     fileID1 = fopen([outputfile '-1.txt'],'w'); %file for all other 2d wave data per generation
     fileID2 = fopen([outputfile '-2.txt'],'w'); %file for data on classes per generation
@@ -55,20 +57,10 @@ for timestep=1:steps
     
     %%%%%%%%%%%%%%%%%%%
     % Remove columns of zeros of decreasing fitness classes
-    if (any(size(pop))==0)
-        pop
-        timestep
-    end
-    
     while any(pop(:,1))==0
         pop(:,1)=[];
         fit(:,1)=[];
         fity(1)=[];
-    end
-
-    if (any(size(pop))==0)
-        pop
-        timestep
     end
     
     while any(pop(1,:))==0 
@@ -104,8 +96,8 @@ for timestep=1:steps
     meanfitness = sum(sum(times(freq,fit)));
     meanfit_arry = meanfitness*ones(size(fit));
     
-    newfreq=times(exp(fit-meanfit_arry),freq);  %after selection
-    newfreq=newfreq/sum(sum(newfreq));          %make sure frequencies still add to one.
+    newfreq=times(exp(fit-meanfit_arry),freq);  % after selection
+    newfreq=newfreq/sum(sum(newfreq));          % make sure frequencies still add to one.
     
     % calculate changes in abundances due to mutations
     z1=zeros(dim(1),1);
@@ -130,6 +122,7 @@ for timestep=1:steps
     
     newpop=round(newpop);    
     Na = sum(sum(newpop));
+    
     pop = newpop;
     
     meanfitness = sum(sum(times(newpop,fit)))/Na;
@@ -142,7 +135,7 @@ for timestep=1:steps
     if timestep == 1
         varx = sum(sum(times(newpop,(fitx_arry-meanfitx).^2)))/Na;
         vary = sum(sum(times(newpop,(fity_arry-meanfity).^2)))/Na;
-        cov = sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity(timestep)))))/Na;
+        cov = sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity))))/Na;
     else
         varx = (1/timestep)*((timestep-1)*varx + sum(sum(times(newpop,(fitx_arry-meanfitx).^2)))/Na);
         vary = (1/timestep)*((timestep-1)*vary + sum(sum(times(newpop,(fity_arry-meanfity).^2)))/Na);
@@ -169,7 +162,7 @@ for timestep=1:steps
         Gang = atan2d(evec1(2),evec1(1)); 
         
         % print data to output files, need: times,mean_fit,fit_var,fit_cov,pop_load,dcov_dt,vU_thry,v2U_thry
-        fprintf(fileID1,'%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n',timestep,sigmax2,sigmay2,sigmaxy,front_cov,pop_load,L(2,2),L(1,1),Gang,meanfitness,meanfitx,meanfity);
+        fprintf(fileID1,'%i,%.16f,%.16f,%.16f,%.16f,%.16f,%.16f,%.16f,%.16f,%.16f,%.16f,%.16f\n',timestep,sigmax2,sigmay2,sigmaxy,front_cov,pop_load,L(2,2),L(1,1),Gang,meanfitness,meanfitx,meanfity);
         
         for i=1:size(pop,1)
             for j=1:size(pop,2)
