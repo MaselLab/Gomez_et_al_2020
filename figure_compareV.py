@@ -20,8 +20,8 @@ import matplotlib.mlab as mlab
 # load processed matlab data for figure
 # -----------------------------------------------------------------------------
 pickle_file_name = 'fig_compareVdata-01.pickle'
-pickle_file = open(pickle_file_name,'wb') 
-pickle.dump([N,s,U,v,parameters,grand_means,sarry,Uarry,v1_data,v2_data],pickle_file,pickle.HIGHEST_PROTOCOL)
+pickle_file = open(pickle_file_name,'rb') 
+[N,s,U,v,parameters,grand_means,sarry,Uarry,v1_data,v2_data] = pickle.load(pickle_file)
 pickle_file.close()
 
 v_comp = np.log10(v1_data/v2_data)
