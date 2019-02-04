@@ -2,37 +2,24 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Jan 31 14:15:28 2019
+Masel Lab
+Project: Mutation-driven Adaptation
+@author: Kevin Gomez
 
-@author: kgomez81
+Description:
+Script for creating phase plot, and sample trajectories, for the relationship
+between U and s that preserves the total rate of adaptation given a population
+size N.
 """
-from mpl_toolkits.mplot3d import Axes3D
-from numpy import inf
-import matplotlib.ticker as mtick
 
-import pickle
+#libraries
 import matplotlib.pyplot as plt
-import scipy as sp
 import numpy as np
-import matplotlib.mlab as mlab
-
-def conc_sU_tradeoff(s,N,v):
-    U = s*np.exp(-(0.5*s**2/v)*(np.sqrt(8*v*np.log(N*s)/s**2+1)-1))
-    return U
-
-def get_sUtransition(s,Us,Uc,N):
-    n0 = len(s)
-    U = [0 for i in range(n0)]
-    
-    for i in range(n0):
-        if (np.log(N*Uc[i]*np.log(N*s[i]))>0):
-            U[i] = Uc[i]
-        else:
-            U[i] = Us[i]
-    return U
+import fig_functions.py as myfun
 
 # basic parameters
 [N0,s0,U0] = [1e9,1e-2,1e-5]
-v0=s0**2*(2*np.log(N0*s0)-np.log(s0/U0))/(np.log(s0/U0)**2)
+v0=myfun.get_v(N0,s0,U0)
 
 [s_min,s_max,no_div] = [1e-6, 5e-1, 100]
 
@@ -53,7 +40,7 @@ ax1.plot(np.log10(s),np.log10(U),c="black",label="U(s)")
 #ax1.set_xticklabels(my_xlabel)
 #ax1.set_yticklabels(my_ylabel)        
 ax1.set_xlabel('Selection coefficient (log10)',fontsize=18,labelpad=20)
-ax1.set_ylabel('Mutation rate U (log10)',fontsize=18,labelpad=10)
+ax1.set_ylabel('Mutation rate (log10)',fontsize=18,labelpad=10)
 ax1.tick_params(axis='both',labelsize=14)        
 ax1.legend()
 ax1.axis('tight')        
@@ -75,3 +62,18 @@ fig1.savefig('fig_sUtradeoff.pdf')
 #U_arry_conc = [(conc_sU_tradeoff(s_arry[i],N,v))/U for i in range(no_div+1)]
 #NsU_regime_succ = [np.log(N*U_arry_succ[i]*np.log(N*s_arry[i])) for i in range(no_div+1)]
 #NsU_regime_conc = [np.log(N*U_arry_conc[i]*np.log(N*s_arry[i])) for i in range(no_div+1)]
+
+
+# testing phase portait plotting
+
+
+x
+
+plt.figure(figsize=(18,6))
+plt.quiver(apv, avv, dapv, davv, color='b', alpha=.75)
+plt.box('off')
+plt.xlim(-2,2)
+plt.ylim(-2,2)
+plt.xlabel('Radians', fontsize=14)
+plt.ylabel('Radians/Second', fontsize=14)
+plt.title('Phase portrait for a simple pendulum', fontsize=16);

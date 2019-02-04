@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Jan 15 14:09:05 2019
+Masel Lab
+Project: Mutation-driven Adaptation
+@author: Kevin Gomez
 
-@author: dirge
+Description:
+Script for creating a figure that compares the rates of adaptation in two 
+traits of an asexual population, evolving together in the concurrent mutations
+regime.
 """
 
+#libraries
 from mpl_toolkits.mplot3d import Axes3D
 from scipy.stats import multivariate_normal
 from numpy import inf
@@ -44,3 +51,5 @@ ax1.set_ylabel('Trait 2 (U Log10 Scale)',fontsize=18,labelpad=10)
 ax1.tick_params(axis='both',labelsize=14)        
 cbar.ax.text(2.5,0.65,'Log$_{10}$ of $v_1/v_2$',rotation=90,fontsize=18)
 fig1.savefig('fig_compareVdata.pdf')
+
+# need to creat a figure with v_g rather than v_w used above
