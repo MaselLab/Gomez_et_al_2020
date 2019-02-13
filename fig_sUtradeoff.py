@@ -17,13 +17,20 @@ import matplotlib.pyplot as plt
 import numpy as np
 import fig_functions.py as myfun
 
+def get_theta(N,s,v):
+    theta = v*np.log(N*s)/s**2
+    return theta
+    
 # basic parameters
 [N0,s0,U0] = [1e9,1e-2,1e-5]
 v0=myfun.get_v(N0,s0,U0)
 
-[s_min,s_max,no_div] = [1e-6, 5e-1, 100]
+[s_min,s_max] = [1e-6, 5e-1]
+[U_min,U_max] = [1e-13, 5e-3]
+no_div = 100
 
 s = [(s_min*10**(i*np.log10(s_max/s_min)/no_div)) for i in range(no_div+1)]
+
 Us = [v0/(N0*s[i]**2) for i in range(no_div+1)]
 Uc = [conc_sU_tradeoff(s[i],N0,v0) for i in range(no_div+1)]
 U = get_sUtransition(s,Us,Uc,N0)
