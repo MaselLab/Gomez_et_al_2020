@@ -15,7 +15,7 @@ size N.
 #libraries
 import matplotlib.pyplot as plt
 import numpy as np
-import fig_functions.py as myfun
+import fig_functions as myfun
 
 def get_theta(N,s,v):
     theta = v*np.log(N*s)/s**2
@@ -23,36 +23,46 @@ def get_theta(N,s,v):
     
 # basic parameters
 [N0,s0,U0] = [1e9,1e-2,1e-5]
-v0=myfun.get_v(N0,s0,U0)
+v0=myfun.get_vDF(N0,s0,U0)
 
-[s_min,s_max] = [1e-6, 5e-1]
-[U_min,U_max] = [1e-13, 5e-3]
+[s_min,s_max,U_min,U_max] = [1e-4*s0, 5e1*s0,1e-5*U0, 5e+2*U0]
 no_div = 100
 
-def f(Y, t):
-    y1, y2 = Y
-    return [y2, -np.sin(y1)]
+s1 = np.logspace(s_min, s_max, no_div)
+u1 = np.logspace(U_min, U_max, no_div)
 
-y1 = np.linspace(-2.0, 8.0, 20)
-y2 = np.linspace(-2.0, 2.0, 20)
-Y1, Y2 = np.meshgrid(y1, y2)
-t = 0
-u, v = np.zeros(Y1.shape), np.zeros(Y2.shape)
-NI, NJ = Y1.shape
+def f(sU_vect, N, v):
+    S, U = sU_vect
+    Theta = v*np.log(N*S)/S**2
+    
+    if():
+        dU = -2*U/S
+        dS = 1
+    else:
+        dU = ( (S + 8*S*Theta)/v + (2 - 4*np.log(N*S))/(S*np.sqrt(1+8*Theta)) )*U
+        dS = 1
+    
+    return [dS, dU]
+
+S1, U1 = np.meshgrid(s1, u1)
+dS1, dU1 = np.zeros(S1.shape), np.zeros(U1.shape)
+
+NI, NJ = S1.shape
+
 for i in range(NI):
     for j in range(NJ):
-        x = Y1[i, j]
-        y = Y2[i, j]
-        yprime = f([x, y], t)
-        u[i,j] = yprime[0]
-        v[i,j] = yprime[1]
-Q = plt.quiver(Y1, Y2, u, v, color='r')
-plt.xlabel('$y_1$')
-plt.ylabel('$y_2$')
-plt.xlim([-2, 8])
-plt.ylim([-4, 4])
+        x, y = S1[i, j], U1[i, j]
+        dS1[i,j], dU1[i,j] = f([x, y], N0, v0)
+        
+Q = plt.quiver(S1, U1, dS1, dU1, color='r')
+plt.xlabel('$S1$')
+plt.ylabel('$U1$')
+#plt.xlim([s_min, s_max])
+#plt.ylim([U_min, U_max])
 
 
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 s = [(s_min*10**(i*np.log10(s_max/s_min)/no_div)) for i in range(no_div+1)]
 
 Us = [v0/(N0*s[i]**2) for i in range(no_div+1)]
