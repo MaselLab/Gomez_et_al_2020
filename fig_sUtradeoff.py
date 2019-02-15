@@ -25,40 +25,14 @@ def get_theta(N,s,v):
 [N0,s0,U0] = [1e9,1e-2,1e-5]
 v0=myfun.get_vDF(N0,s0,U0)
 
-[s_min,s_max,U_min,U_max] = [1e-4*s0, 5e1*s0,1e-5*U0, 5e+2*U0]
+# Define window
+[s_min,s_max,U_min,U_max] = [1/N0, 5e1*s0,, 5e+2*U0]
 no_div = 100
 
 s1 = np.logspace(s_min, s_max, no_div)
 u1 = np.logspace(U_min, U_max, no_div)
 
-def f(sU_vect, N, v):
-    S, U = sU_vect
-    Theta = v*np.log(N*S)/S**2
-    
-    if():
-        dU = -2*U/S
-        dS = 1
-    else:
-        dU = ( (S + 8*S*Theta)/v + (2 - 4*np.log(N*S))/(S*np.sqrt(1+8*Theta)) )*U
-        dS = 1
-    
-    return [dS, dU]
 
-S1, U1 = np.meshgrid(s1, u1)
-dS1, dU1 = np.zeros(S1.shape), np.zeros(U1.shape)
-
-NI, NJ = S1.shape
-
-for i in range(NI):
-    for j in range(NJ):
-        x, y = S1[i, j], U1[i, j]
-        dS1[i,j], dU1[i,j] = f([x, y], N0, v0)
-        
-Q = plt.quiver(S1, U1, dS1, dU1, color='r')
-plt.xlabel('$S1$')
-plt.ylabel('$U1$')
-#plt.xlim([s_min, s_max])
-#plt.ylim([U_min, U_max])
 
 
 # -----------------------------------------------------------------------------
@@ -118,3 +92,30 @@ plt.ylim(-2,2)
 plt.xlabel('Radians', fontsize=14)
 plt.ylabel('Radians/Second', fontsize=14)
 plt.title('Phase portrait for a simple pendulum', fontsize=16);
+
+
+
+def f(sU_vect, N, v):
+    S, U = sU_vect
+    Theta = v*np.log(N*S)/S**2
+    if():
+        dU = -2*U/S
+        dS = 1
+    else:
+        dU = ( (S + 8*S*Theta)/v + (2 - 4*np.log(N*S))/(S*np.sqrt(1+8*Theta)) )*U
+        dS = 1
+    return [dS, dU]
+
+S1, U1 = np.meshgrid(s1, u1)
+dS1, dU1 = np.zeros(S1.shape), np.zeros(U1.shape)
+
+NI, NJ = S1.shape
+
+for i in range(NI):
+    for j in range(NJ):
+        x, y = S1[i, j], U1[i, j]
+        dS1[i,j], dU1[i,j] = f([x, y], N0, v0)
+        
+Q = plt.quiver(S1, U1, dS1, dU1, color='r')
+plt.xlabel('$S1$')
+plt.ylabel('$U1$')
