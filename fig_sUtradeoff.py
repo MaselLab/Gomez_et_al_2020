@@ -17,41 +17,80 @@ import matplotlib.pyplot as plt
 import numpy as np
 import fig_functions as myfun
 
-def get_theta(N,s,v):
-    theta = v*np.log(N*s)/s**2
-    return theta
+# functions
+
+def sU_bounds(N,v):
+    # computes mutation rate U that maintains fixed v given s 
+    #
+    # inputs:
+    # s = selection coefficient
+    # N = Population size
+    # v = rate of adaptation
+    #
+    # outputs:
+    # list of bounds for s and U
     
-# basic parameters
+    s_min = 1/N 
+    s_max = np.sqrt(v*np.log(N*np.sqrt(v)))     # accuracy depends on Nv choice 
+    U_min = 0.1/(N*np.log(N*np.sqrt(v)))
+    U_max = 10/N0
+    
+    return [s_min,s_max,U_min,U_max]
+
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+    
+# set basic parameters of the figure
 [N0,s0,U0] = [1e9,1e-2,1e-5]
-v0=myfun.get_vDF(N0,s0,U0)
+v0 = myfun.get_vDF(N0,s0,U0)    # rate of adpatation (concurrent mutation regime)
 
-# Define window
-[s_min,s_max,U_min,U_max] = [1/N0, 5e1*s0,, 5e+2*U0]
+# setting bounds for the window and computing their log10 values for the log-plot
+[s_min,s_max,U_min,U_max] = sU_bounds(N0,v0)
+
+log10_s_min = np.log10(s_min)
+log10_s_max = np.log10(s_max)
+log10_U_min = np.log10(U_min)
+log10_U_max = np.log10(U_max)
+
+# Define range for s and U
 no_div = 100
+s1 = np.logspace(np.log10(s_min), np.log10(s_max), no_div)
+u1 = np.logspace(np.log10(U_min), np.log10(U_max), no_div)
 
-s1 = np.logspace(s_min, s_max, no_div)
-u1 = np.logspace(U_min, U_max, no_div)
+log10_s1 = np.log10(s1)
+log10_u1 = np.log10(u1)
 
-
-
+# special set of s values to help shade the drift barrier in sU space
+sd = np.logspace(np.log10(s_min), np.log10(20*s_min), no_div/10) 
+log10_sd = np.log10(sd)
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
-s = [(s_min*10**(i*np.log10(s_max/s_min)/no_div)) for i in range(no_div+1)]
 
-Us = [v0/(N0*s[i]**2) for i in range(no_div+1)]
-Uc = [conc_sU_tradeoff(s[i],N0,v0) for i in range(no_div+1)]
-U = get_sUtransition(s,Us,Uc,N0)
+# drift barrier 
+drift_shade = np.log10(np.asarray([[sd[i], U_min, U_max] for i in range(no_div/10)]))
+drift_barrier = np.log10(np.asarray([[10*s_min, u1[i]] for i in range(no_div)]))
 
-vs = [N0*Us[i]*s[i]**2 for i in range(no_div+1)]
-vc = [s[i]**2*(2*np.log(N0*(s[i]))-np.log(s[i]/Uc[i]))/(np.log(s[i]/Uc[i])**2) for i in range(no_div+1)]
+# successional-concurrent barrier
+succ_shade = np.log10(np.asarray([[s1[i],U_min,U_max] for i in range(no_div)]))
+conc_shade = np.log10(np.asarray([[s1[i],myfun.succ_conc_barrier(s1[i],N0,v0),U_max] for i in range(no_div)]))
+conc_barrier = np.log10(np.asarray([[s1[i],myfun.succ_conc_barrier(s1[i],N0,v0)] for i in range(no_div)]))
 
-wr = [U[i]/s[i] for i in range(no_div+1)]
+# discontinuous-concurrent barrier
+disc_shade = np.log10(np.asarray([[s1[i],min(s1[i],U_max),U_max] for i in range(no_div)]))
+disc_barrier = np.log10(np.asarray([[s1[i],min(s1[i],U_max)] for i in range(no_div)]))
+    
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
+# plot that includes thresholds and sU-tradeoff curve
 fig1, ax1 = plt.subplots(1,1,figsize=[8,8])
-#ax1.plot(np.log10(s),np.log10(Us),c="red",label="Succ Regime")
-#ax1.plot(np.log10(s),np.log10(Uc),c="blue",label="Conc Regime")
-ax1.plot(np.log10(s),np.log10(U),c="black",label="U(s)")
+ax1.fill_between(succ_shade[:,0],succ_shade[:,1],succ_shade[:,2],facecolor="blue")
+ax1.fill_between(conc_shade[:,0],conc_shade[:,1],conc_shade[:,2],facecolor="orange")
+#ax1.plot(conc_barrier[:,0],conc_barrier[:,1],c="black",label="conc/succ threshold")
+ax1.fill_between(disc_shade[:,0],disc_shade[:,1],disc_shade[:,2],facecolor="green")
+#ax1.plot(disc_barrier[:,0],disc_barrier[:,1],c="black",label="U(s)")
+
 #ax1.set_xticklabels(my_xlabel)
 #ax1.set_yticklabels(my_ylabel)        
 ax1.set_xlabel('Selection coefficient (log10)',fontsize=18,labelpad=20)

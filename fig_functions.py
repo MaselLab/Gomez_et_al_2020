@@ -34,6 +34,52 @@ def get_vDF(N,s,U):
     
     return v
 
+def theta(s,N,v):
+    # computes the characteristic width of the fitness distribution
+    #
+    # inputs:
+    # s = selection coefficient
+    # N = Population size
+    # v = rate of adaptation
+    #
+    # outputs:
+    # theta = characteristic width of the fitness distribution
+    
+    theta = v*np.log(N*s)/s**2
+    
+    return theta
+
+def s_transition2succ(N,v):
+    # approximates the transition point from concurrent to successional 
+    #
+    # inputs:
+    # s = selection coefficient
+    # N = Population size
+    # v = rate of adaptation
+    #
+    # outputs:
+    # s_t = estimated s marking transition to successional from concurrent
+    
+    s_t = np.sqrt(v*np.log(N*np.sqrt(v)))
+    
+    return s_t
+
+def succ_conc_barrier(s,N,v):
+    # computes mutation rate cutoff between succ and conc regime, given a 
+    # selection coefficient s.
+    #
+    # inputs:
+    # s = selection coefficient
+    # N = Population size
+    # v = rate of adaptation
+    #
+    # outputs:
+    # U = mutation rate cutoff    
+    
+    U = 1/(N*np.log(N*s))
+    
+    return U
+
 def sU_tradeoff(s,N,v):
     # Computes the U-s trade-off function that preserves rate of adaptation (v)
     # for a chosen population size (N)
@@ -46,23 +92,10 @@ def sU_tradeoff(s,N,v):
     # Outputs:
     # U - beneficial mutation rate yielding v, given N and s
 
-    if (N*Uc[i]*np.log(N*s[i]) < 1):    # successional regime 
-        U = v/N*s**2
+    if (theta(s,N,v) > 1):    # successional regime 
+        U = v/(N*s**2)
     else:                               # continuous concurrent mutations regime                              
-        U = s*np.exp(-(0.5*s**2/v)*(np.sqrt(8*v*np.log(N*s)/s**2+1)-1))
+        U = s*np.exp(-(0.5*s**2/v)*(np.sqrt(8*theta(s,N,v)+1)-1))
         
     return U
-    
-def get_min_s_disc_reg(N,v):
-    # Computes the U-s trade-off function that preserves rate of adaptation (v)
-    # for a chosen population size (N)
-    #    
-    # Inputs:
-    # N - populations size
-    # v - fixed rate of adaptation
-    #    
-    # Outputs:
-    # min_s - smallest s yielding v, given N, that remains in conc-regime
 
-    sp.minimize()
-    return min_s
