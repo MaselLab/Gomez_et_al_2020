@@ -1,6 +1,14 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
+Created on Wed Mar  6 12:22:08 2019
+
+@author: kgomez81
+"""
+
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+"""
 Created on Thu Jan 31 14:15:28 2019
 Masel Lab
 Project: Mutation-driven Adaptation
@@ -19,9 +27,9 @@ import fig_functions as myfun
 
 # functions
 
-def sU_bounds(N,v):
+def sU_bounds_genotype(N,v):
     # computes appropriate bounds of sU space for looking at tradeoff with 
-    # phenotype adaptation
+    # genotype adaptation
     #
     # inputs:
     # s = selection coefficient
@@ -31,13 +39,13 @@ def sU_bounds(N,v):
     # outputs:
     # list of bounds for s and U
 
-    sm = 1.1*myfun.s_max_Uc(N,v)                      # approx s for max Uc
-    st = 1.2*myfun.s_transition2succ(N,v)             # approx s for transition conc to succ
-    
+    sm = 1.3*myfun.s_max_Uc_genotype(N,v)           # approx s for max Uc_geno
+    st = 1.4*myfun.s_transition2succ_genotype(N,v)  # approx s for transition conc to succ (genotype adaptation )
+
     s_min = 1/N
     s_max = 5*st     
-    U_min = 0.01*myfun.sU_tradeoff_succ(s_max,N,v)
-    U_max = 100*myfun.sU_tradeoff_conc(sm,N,v)
+    U_min = 0.01*myfun.sU_tradeoff_genotype_succ(s_max,N,v)
+    U_max = 100*myfun.sU_tradeoff_genotype_conc(sm,N,v)
     
     return [s_min,s_max,U_min,U_max,sm,st]
 
@@ -47,18 +55,20 @@ def sU_bounds(N,v):
     
 # set basic parameters of the figure
 [N0,s0,U0] = [1e9,1e-2,1e-5]
-v0 = myfun.get_vDF(N0,s0,U0)    # rate of adpatation (concurrent mutation regime)
+v0 = myfun.get_vDF_genotype(N0,s0,U0)    # rate of adpatation (concurrent mutation regime)
 
-sp = myfun.s_max_Uc(N0,v0)
-Up = myfun.sU_tradeoff(sp,N0,v0)
+sp = myfun.s_max_Uc_genotype(N0,v0)
+Up = myfun.sU_tradeoff_genotype(sp,N0,v0)
 
 # setting bounds for the window and computing their log10 values for the log-plot
-[s_min,s_max,U_min,U_max,sc_max,sc_trans] = sU_bounds(N0,v0)
+[s_min,s_max,U_min,U_max,sc_max,sc_trans] = sU_bounds_genotype(N0,v0)
 
 log10_s_min = np.log10(s_min)
 log10_s_max = np.log10(s_max)
 log10_U_min = np.log10(U_min)
 log10_U_max = np.log10(U_max)
+log10_sc_max = np.log10(sc_max)
+log10_sc_trans = np.log10(sc_trans)
 
 # Define range for s and U
 no_div = 100
@@ -78,6 +88,7 @@ log10_sd = np.log10(sd)
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
+#
 # drift barrier (not sure about plotting this - sU relationship in disc space)
 drift_shade = np.log10(np.asarray([[sd[i], U_min, U_max] for i in range(no_div/10)]))
 drift_barrier = np.log10(np.asarray([[10*s_min, u1[i]] for i in range(no_div)]))
@@ -101,16 +112,15 @@ s_reg1 = np.logspace(log10_sc_max,log10_sc_trans,no_div1)
 s_reg2 = np.logspace(log10_sc_trans,log10_s_max,no_div1)
 
 # caluculate U along sU tradeoff for full curve, accounting for transition
-sU_tradeoff_curve = np.log10(np.asarray([[s_reg[i],myfun.sU_tradeoff(s_reg[i],N0,v0)] for i in range(no_div2)]))    
+sU_tradeoff_curve = np.log10(np.asarray([[s_reg[i],myfun.sU_tradeoff_genotype(s_reg[i],N0,v0)] for i in range(no_div2)]))    
 
 # caluculate U along sU tradeoff for concurrent regime
-sU_tradeoff_conc_curve1 = np.log10(np.asarray([[s_reg1[i],myfun.sU_tradeoff_conc(s_reg1[i],N0,v0)] for i in range(no_div1)]))    
-sU_tradeoff_conc_curve2 = np.log10(np.asarray([[s_reg2[i],myfun.sU_tradeoff_conc(s_reg2[i],N0,v0)] for i in range(no_div1)]))    
+sU_tradeoff_conc_curve1 = np.log10(np.asarray([[s_reg1[i],myfun.sU_tradeoff_genotype_conc(s_reg1[i],N0,v0)] for i in range(no_div1)]))    
+sU_tradeoff_conc_curve2 = np.log10(np.asarray([[s_reg2[i],myfun.sU_tradeoff_genotype_conc(s_reg2[i],N0,v0)] for i in range(no_div1)]))    
 
 # caluculate U along sU tradeoff for successional regime
-sU_tradeoff_succ_curve1 = np.log10(np.asarray([[s_reg1[i],myfun.sU_tradeoff_succ(s_reg1[i],N0,v0)] for i in range(no_div1)]))    
-sU_tradeoff_succ_curve2 = np.log10(np.asarray([[s_reg2[i],myfun.sU_tradeoff_succ(s_reg2[i],N0,v0)] for i in range(no_div1)]))    
-
+sU_tradeoff_succ_curve1 = np.log10(np.asarray([[s_reg1[i],myfun.sU_tradeoff_genotype_succ(s_reg1[i],N0,v0)] for i in range(no_div1)]))    
+sU_tradeoff_succ_curve2 = np.log10(np.asarray([[s_reg2[i],myfun.sU_tradeoff_genotype_succ(s_reg2[i],N0,v0)] for i in range(no_div1)]))    
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -133,13 +143,10 @@ ax1.set_ylim([log10_U_min,log10_U_max])
 ax1.set_xlabel(r'Selection coefficient ($\log_{10}s$)',fontsize=18,labelpad=20)
 ax1.set_ylabel(r'Mutation rate ($\log_{10}U$)',fontsize=18,labelpad=10)
 
-plt.text(0.83*log10_sc_max,0.55*log10_U_min,"Concurrent\n   Regime",fontsize=16)
-plt.text(0.85*log10_sc_max,0.93*log10_U_min,"Origin-Fixation\n     Regime",fontsize=16)
+plt.text(0.80*log10_sc_max,0.55*log10_U_min,"Concurrent\n   Regime",fontsize=16)
+plt.text(0.80*log10_sc_max,0.93*log10_U_min,"Origin-Fixation\n     Regime",fontsize=16)
 plt.text(1.15*log10_sc_max,0.4*log10_U_min,"Discontinuous\n   Regime",fontsize=16)
-plt.arrow(1.09*log10_sc_max,0.33*log10_U_min,-.1,1.5,linewidth=2,head_width=.07,color="black")
+plt.arrow(1.09*log10_sc_max,0.33*log10_U_min,-.1,1.1,linewidth=2,head_width=.07,color="black")
 
-fig1.savefig('fig_sUtradeoff_pheno_adapt.pdf')
-
-
-
+fig1.savefig('fig_sUtradeoff_geno_adapt.pdf')
 
