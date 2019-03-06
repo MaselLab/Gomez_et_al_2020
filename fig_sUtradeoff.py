@@ -29,13 +29,16 @@ def sU_bounds(N,v):
     #
     # outputs:
     # list of bounds for s and U
+
+    sm = 0.5*np.sqrt(v)/np.sqrt(np.log(0.5*N*np.sqrt(v)))
+    st = np.sqrt(v*np.log(N*np.sqrt(v)))
     
-    s_min = 1/N 
-    s_max = np.sqrt(v*np.log(N*np.sqrt(v)))     # accuracy depends on Nv choice 
-    U_min = 0.1/(N*np.log(N*np.sqrt(v)))
-    U_max = 10/N0
+    s_min = 1/N
+    s_max = 5*np.sqrt(v*np.log(N*np.sqrt(v)))     # accuracy depends on Nv choice 
+    U_min = min(0.1/(N*np.log(N*np.sqrt(v))),v/(N*s_max**2))
+    U_max = 10*sm*np.exp(-(0.5*sm**2/v)*(np.sqrt(8*myfun.theta(sm,N,v)+1)-1))
     
-    return [s_min,s_max,U_min,U_max]
+    return [s_min,s_max,U_min,U_max,sm,st]
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -44,16 +47,24 @@ def sU_bounds(N,v):
 [N0,s0,U0] = [1e9,1e-2,1e-5]
 v0 = myfun.get_vDF(N0,s0,U0)    # rate of adpatation (concurrent mutation regime)
 
+sp = np.sqrt(v0)/(2*np.sqrt(np.log(N0*np.sqrt(v0)/2)))
+Up = myfun.sU_tradeoff(sp,N0,v0)
+
 # setting bounds for the window and computing their log10 values for the log-plot
-[s_min,s_max,U_min,U_max] = sU_bounds(N0,v0)
+[s_min,s_max,U_min,U_max,sc_max,sc_trans] = sU_bounds(N0,v0)
 
 log10_s_min = np.log10(s_min)
 log10_s_max = np.log10(s_max)
 log10_U_min = np.log10(U_min)
 log10_U_max = np.log10(U_max)
+log10_sc_max = np.log10(sc_max)
+log10_sc_trans = np.log10(sc_trans)
 
 # Define range for s and U
 no_div = 100
+no_div1 = no_div/2
+no_div2 = 3*no_div/4
+
 s1 = np.logspace(np.log10(s_min), np.log10(s_max), no_div)
 u1 = np.logspace(np.log10(U_min), np.log10(U_max), no_div)
 
@@ -78,83 +89,59 @@ conc_barrier = np.log10(np.asarray([[s1[i],myfun.succ_conc_barrier(s1[i],N0,v0)]
 
 # discontinuous-concurrent barrier
 disc_shade = np.log10(np.asarray([[s1[i],min(s1[i],U_max),U_max] for i in range(no_div)]))
-disc_barrier = np.log10(np.asarray([[s1[i],min(s1[i],U_max)] for i in range(no_div)]))
-    
+disc_barrier = np.log10(np.asarray([[s1[i],min(0.1*s1[i],U_max)] for i in range(no_div)]))
+
+# sU-tradeoff curves in concurrent and successional regimes
+log10_sc_max = np.log10(sc_max)
+log10_sc_trans = np.log10(sc_trans)
+
+s_reg = np.logspace(log10_sc_max,log10_s_max,no_div2)
+s_reg1 = np.logspace(log10_sc_max,log10_sc_trans,no_div1)
+s_reg2 = np.logspace(log10_sc_trans,log10_s_max,no_div1)
+
+sU_tradeoff_curve = np.log10(np.asarray([[s_reg[i],myfun.sU_tradeoff(s_reg[i],N0,v0)] for i in range(no_div2)]))    
+
+sU_tradeoff_conc_curve1 = np.log10(np.asarray([[s_reg1[i],myfun.sU_tradeoff_conc(s_reg1[i],N0,v0)] for i in range(no_div1)]))    
+sU_tradeoff_conc_curve2 = np.log10(np.asarray([[s_reg2[i],myfun.sU_tradeoff_conc(s_reg2[i],N0,v0)] for i in range(no_div1)]))    
+
+sU_tradeoff_succ_curve1 = np.log10(np.asarray([[s_reg1[i],myfun.sU_tradeoff_succ(s_reg1[i],N0,v0)] for i in range(no_div1)]))    
+sU_tradeoff_succ_curve2 = np.log10(np.asarray([[s_reg2[i],myfun.sU_tradeoff_succ(s_reg2[i],N0,v0)] for i in range(no_div1)]))    
+
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
 # plot that includes thresholds and sU-tradeoff curve
 fig1, ax1 = plt.subplots(1,1,figsize=[8,8])
-ax1.fill_between(succ_shade[:,0],succ_shade[:,1],succ_shade[:,2],facecolor="blue")
-ax1.fill_between(conc_shade[:,0],conc_shade[:,1],conc_shade[:,2],facecolor="orange")
-#ax1.plot(conc_barrier[:,0],conc_barrier[:,1],c="black",label="conc/succ threshold")
-ax1.fill_between(disc_shade[:,0],disc_shade[:,1],disc_shade[:,2],facecolor="green")
-#ax1.plot(disc_barrier[:,0],disc_barrier[:,1],c="black",label="U(s)")
+ax1.fill_between(succ_shade[:,0],succ_shade[:,1],succ_shade[:,2],facecolor="deepskyblue")
+ax1.fill_between(conc_shade[:,0],conc_shade[:,1],conc_shade[:,2],facecolor="gold")
+ax1.fill_between(disc_shade[:,0],disc_shade[:,1],disc_shade[:,2],facecolor="limegreen")
 
-#ax1.set_xticklabels(my_xlabel)
-#ax1.set_yticklabels(my_ylabel)        
-ax1.set_xlabel('Selection coefficient (log10)',fontsize=18,labelpad=20)
-ax1.set_ylabel('Mutation rate (log10)',fontsize=18,labelpad=10)
-ax1.tick_params(axis='both',labelsize=14)        
-ax1.legend()
-ax1.axis('tight')        
-ax2 = plt.twinx(ax1)
-ax2.plot(np.log10(s),np.log10(wr),c="blue",label="U/s")
-ax2.set_ylabel('U/s (log10)',fontsize=18,labelpad=10)
-fig1.savefig('fig_sUtradeoff.pdf')
+ax1.plot(sU_tradeoff_conc_curve1[:,0],sU_tradeoff_conc_curve1[:,1],color="mediumblue",linewidth=2,linestyle="-")
+ax1.plot(sU_tradeoff_conc_curve2[:,0],sU_tradeoff_conc_curve2[:,1],color="mediumblue",linewidth=2,linestyle="--")
+ax1.plot(sU_tradeoff_succ_curve1[:,0],sU_tradeoff_succ_curve1[:,1],color="red",linewidth=2,linestyle="--")
+ax1.plot(sU_tradeoff_succ_curve2[:,0],sU_tradeoff_succ_curve2[:,1],color="red",linewidth=2,linestyle="-")
 
-#fig2, ax2 = plt.subplots(1,1,figsize=[8,8])
-#ax2.plot(np.log10(np.asarray(s)/s0),NsUreg1,label="Succ Regime")
+ax1.set_xlim([1.2*log10_sc_max,log10_s_max])
+ax1.set_ylim([log10_U_min,log10_U_max])
+
+ax1.set_xlabel(r'Selection coefficient ($\log_{10}s$)',fontsize=18,labelpad=20)
+ax1.set_ylabel(r'Mutation rate ($\log_{10}U$)',fontsize=18,labelpad=10)
+
+plt.text(0.83*log10_sc_max,0.6*log10_U_min,"Concurrent\n   Regime",fontsize=16)
+plt.text(0.85*log10_sc_max,0.96*log10_U_min,"Origin-Fixation\n     Regime",fontsize=16)
+plt.text(1.15*log10_sc_max,0.4*log10_U_min,"Discontinuous\n   Regime",fontsize=16)
+plt.arrow(1.09*log10_sc_max,0.33*log10_U_min,-.1,.65,linewidth=2,head_width=.07,color="black")
+
+fig1.savefig('fig_sUtradeoff_pheno_adapt.pdf')
+
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+# sU-tradeoff for genotype adaptation
+
+fig2, ax2 = plt.subplots(1,1,figsize=[8,8])
+ax2.plot(theta_curve[:,0],theta_curve[:,1],label="Succ Regime")
 #ax2.plot(np.log10(np.asarray(s)/s0),NsUreg2,label="Succ Regime")
 #ax2.legend()
 
 
-# PARAMETERS NEED TO BE SPACED ON A LOG SCALE TO HIGHLIGHT TRANSITIONS
-
-#s_arry = [(s_min+i*(s_max-s_min)/no_div)/s  for i in range(no_div+1)]
-#U_arry_succ = [(v/(N*s_arry[i]**2))/U for i in range(no_div+1)]
-#U_arry_conc = [(conc_sU_tradeoff(s_arry[i],N,v))/U for i in range(no_div+1)]
-#NsU_regime_succ = [np.log(N*U_arry_succ[i]*np.log(N*s_arry[i])) for i in range(no_div+1)]
-#NsU_regime_conc = [np.log(N*U_arry_conc[i]*np.log(N*s_arry[i])) for i in range(no_div+1)]
-
-
-# testing phase portait plotting
-
-
-x
-
-plt.figure(figsize=(18,6))
-plt.quiver(apv, avv, dapv, davv, color='b', alpha=.75)
-plt.box('off')
-plt.xlim(-2,2)
-plt.ylim(-2,2)
-plt.xlabel('Radians', fontsize=14)
-plt.ylabel('Radians/Second', fontsize=14)
-plt.title('Phase portrait for a simple pendulum', fontsize=16);
-
-
-
-def f(sU_vect, N, v):
-    S, U = sU_vect
-    Theta = v*np.log(N*S)/S**2
-    if():
-        dU = -2*U/S
-        dS = 1
-    else:
-        dU = ( (S + 8*S*Theta)/v + (2 - 4*np.log(N*S))/(S*np.sqrt(1+8*Theta)) )*U
-        dS = 1
-    return [dS, dU]
-
-S1, U1 = np.meshgrid(s1, u1)
-dS1, dU1 = np.zeros(S1.shape), np.zeros(U1.shape)
-
-NI, NJ = S1.shape
-
-for i in range(NI):
-    for j in range(NJ):
-        x, y = S1[i, j], U1[i, j]
-        dS1[i,j], dU1[i,j] = f([x, y], N0, v0)
-        
-Q = plt.quiver(S1, U1, dS1, dU1, color='r')
-plt.xlabel('$S1$')
-plt.ylabel('$U1$')

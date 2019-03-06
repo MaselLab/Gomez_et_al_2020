@@ -92,10 +92,41 @@ def sU_tradeoff(s,N,v):
     # Outputs:
     # U - beneficial mutation rate yielding v, given N and s
 
-    if (theta(s,N,v) > 1):    # successional regime 
+    if (theta(s,N,v) < 1):              # successional regime 
         U = v/(N*s**2)
-    else:                               # continuous concurrent mutations regime                              
+    else:                               # concurrent mutations regime                              
         U = s*np.exp(-(0.5*s**2/v)*(np.sqrt(8*theta(s,N,v)+1)-1))
         
     return U
 
+def sU_tradeoff_succ(s,N,v):
+    # Computes the U-s trade-off function that preserves rate of adaptation (v)
+    # for a chosen population size (N)
+    #    
+    # Inputs:
+    # s - selection coefficient
+    # N - populations size
+    # v - fixed rate of adaptation
+    #    
+    # Outputs:
+    # U - beneficial mutation rate yielding v, given N and s
+    
+    U = v/(N*s**2)
+    
+    return U
+    
+def sU_tradeoff_conc(s,N,v):
+    # Computes the U-s trade-off function that preserves rate of adaptation (v)
+    # for a chosen population size (N)
+    #    
+    # Inputs:
+    # s - selection coefficient
+    # N - populations size
+    # v - fixed rate of adaptation
+    #    
+    # Outputs:
+    # U - beneficial mutation rate yielding v, given N and s
+
+    U = s*np.exp(-(0.5*s**2/v)*(np.sqrt(8*theta(s,N,v)+1)-1))
+        
+    return U
