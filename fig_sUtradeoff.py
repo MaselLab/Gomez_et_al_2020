@@ -134,6 +134,12 @@ ax1.set_xlabel(r'Selection coefficient ($\log_{10}s$)',fontsize=18,labelpad=20)
 ax1.set_ylabel(r'Mutation rate ($\log_{10}U$)',fontsize=18,labelpad=10)
 #ax1.legend()
 
+xh_loc = (log10_s_max-1.2*log10_sc_max)
+yh_loc = (log10_U_max-log10_U_min)
+
+plt.text(1.2*log10_sc_max+0.7*xh_loc,log10_U_min+0.9*yh_loc,r'$N = 10^9$',fontsize=16)
+plt.text(1.2*log10_sc_max+0.7*xh_loc,log10_U_min+0.85*yh_loc,r'$v = 5.3\times 10^{-5}$',fontsize=16)
+
 plt.text(0.83*log10_sc_max,0.55*log10_U_min,"Concurrent\n   Regime",fontsize=16)
 plt.text(0.85*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fontsize=16)
 plt.text(1.15*log10_sc_max,0.4*log10_U_min,"Discontinuous\n   Regime",fontsize=16)
