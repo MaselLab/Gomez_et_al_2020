@@ -145,7 +145,7 @@ plt.text(0.85*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fonts
 plt.text(1.15*log10_sc_max,0.4*log10_U_min,"Discontinuous\n   Regime",fontsize=16)
 plt.arrow(1.09*log10_sc_max,0.33*log10_U_min,-.1,1.5,linewidth=2,head_width=.07,color="black")
 
-fig1.savefig('fig_sUtradeoff_pheno_adapt.pdf')
+fig1.savefig('figures\\fig_sUtradeoff_pheno_adapt.pdf')
 
 
 
