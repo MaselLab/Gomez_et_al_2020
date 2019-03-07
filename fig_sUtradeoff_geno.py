@@ -132,19 +132,20 @@ ax1.fill_between(succ_shade[:,0],succ_shade[:,1],succ_shade[:,2],facecolor="deep
 ax1.fill_between(conc_shade[:,0],conc_shade[:,1],conc_shade[:,2],facecolor="gold")
 ax1.fill_between(disc_shade[:,0],disc_shade[:,1],disc_shade[:,2],facecolor="limegreen")
 
-ax1.plot(sU_tradeoff_conc_curve1[:,0],sU_tradeoff_conc_curve1[:,1],color="mediumblue",linewidth=2,linestyle="-")
+ax1.plot(sU_tradeoff_conc_curve1[:,0],sU_tradeoff_conc_curve1[:,1],color="mediumblue",linewidth=2,linestyle="-",label="Concurrent")
 ax1.plot(sU_tradeoff_conc_curve2[:,0],sU_tradeoff_conc_curve2[:,1],color="mediumblue",linewidth=2,linestyle=":")
 ax1.plot(sU_tradeoff_succ_curve1[:,0],sU_tradeoff_succ_curve1[:,1],color="red",linewidth=2,linestyle=":")
-ax1.plot(sU_tradeoff_succ_curve2[:,0],sU_tradeoff_succ_curve2[:,1],color="red",linewidth=2,linestyle="-")
+ax1.plot(sU_tradeoff_succ_curve2[:,0],sU_tradeoff_succ_curve2[:,1],color="red",linewidth=2,linestyle="-",label="Origin-fixation")
 
 ax1.set_xlim([1.2*log10_sc_max,log10_s_max])
 ax1.set_ylim([log10_U_min,log10_U_max])
 
 ax1.set_xlabel(r'Selection coefficient ($\log_{10}s$)',fontsize=18,labelpad=20)
 ax1.set_ylabel(r'Mutation rate ($\log_{10}U$)',fontsize=18,labelpad=10)
+#ax1.legend()
 
 plt.text(0.80*log10_sc_max,0.55*log10_U_min,"Concurrent\n   Regime",fontsize=16)
-plt.text(0.80*log10_sc_max,0.93*log10_U_min,"Origin-Fixation\n     Regime",fontsize=16)
+plt.text(0.80*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fontsize=16)
 plt.text(1.15*log10_sc_max,0.4*log10_U_min,"Discontinuous\n   Regime",fontsize=16)
 plt.arrow(1.09*log10_sc_max,0.33*log10_U_min,-.1,1.1,linewidth=2,head_width=.07,color="black")
 
