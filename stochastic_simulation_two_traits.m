@@ -92,20 +92,20 @@ for timestep=1:steps
     % calculate growth due to selection
     fitx_arry = s1*fitx'*ones(1,dim(2));           % array with # of mutations in trait 1
     fity_arry = s2*ones(dim(1),1)*fity;            % array with # of mutations in trait 2
-    fit = fitx_arry + fity_arry;          % total fitness
+    fit = fitx_arry + fity_arry;                   % total fitness
     meanfitness = sum(sum(times(freq,fit)));
     
     newfreq=times(exp(fit-meanfitness),freq);  % after selection
     newfreq=newfreq/sum(sum(newfreq));          % make sure frequencies still add to one.
     
     % calculate changes in abundances due to mutations
-    z1=zeros(dim(1),1);
-    mutatex=[z1 newfreq];
-    mutatex(:,dim(2)+1)=[];                     % newfreq already has padding, get rid of extra padding from shift
+    z1=zeros(1,dim(2));
+    mutatex=[z1; newfreq];
+    mutatex(dim(1)+1,:)=[];                     % newfreq already has padding, get rid of extra padding from shift
     
-    z2=zeros(1,dim(2));
-    mutatey=[z2; newfreq];
-    mutatey(dim(1)+1,:)=[];                     % newfreq already has padding, get rid of extra padding from shift
+    z2=zeros(dim(1),1);
+    mutatey=[z2 newfreq];
+    mutatey(:,dim(2)+1)=[];                     % newfreq already has padding, get rid of extra padding from shift
     
     nomutate=(1-u1-u2)*newfreq;
     postmutate=nomutate+u1*mutatex+u2*mutatey;    

@@ -71,5 +71,74 @@ pickle_file = open(pickle_file_name,'wb')
 pickle.dump([N,s,U,v,parameters,grand_means,sarry,Uarry,v1_data,v2_data],pickle_file,pickle.HIGHEST_PROTOCOL)
 pickle_file.close()
 
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------    
+# checking the discontinuous regime
+
+#libraries
+import pickle
+import scipy as sp
+import numpy as np
+import copy as cpy
+import 
+
+# basic functions needed for processing data
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# read matlab outputs and create python data for figure using grand means
+
+
+data_file=open('data/mutBiasCI_data_all_simulation_grand_means_ml-03-1.dat')
+grand_means = data_file.read().splitlines()
+data_file.close()
+data_file=open('data/mutBiasCI_data_all_simulation_parameters_ml-03-0.dat')
+parameters = data_file.read().splitlines()
+data_file.close()
+del data_file
+
+num_of_sims = len(grand_means)     # number of simulations
+for i in range(num_of_sims):
+    grand_means[i]='grand_means[i]=np.array(['+grand_means[i].replace('\t',',')+'])'
+    exec(grand_means[i])
+    parameters[i]='parameters[i]=np.array(['+parameters[i].replace('\t',',')+'])'
+    exec(parameters[i])
     
+grand_means = np.asarray(grand_means)
+parameters = np.asarray(parameters)
+
+# basic parameters (these should be exported with paremeters)
+[N,s,U] = [1e9, 1e-2, 1e-5]
+v = s**2*(2*np.log(N*s)-np.log(s/U))/(np.log(s/U)**2)
+[dim_s,dim_U] = [21,40]       # these are the number of samples I took
+
+# reconstruct array of parameters 
+sarry = np.zeros([dim_s, 1])
+Uarry = np.zeros([dim_U, 1])
+sU_pair = np.zeros([dim_s,2])
+v_err = np.zeros([dim_s,4])
+v1_data = np.zeros([dim_s, dim_U])
+
+for i in range(dim_s):
+    sarry[i,0] = parameters[i*dim_U,1]
+    for j in range(dim_U):
+        if(i==1):
+            Uarry[j,0] = parameters[j,2]
+        v1_data[i,j] = grand_means[i*dim_U+j,1]
+        
+# construct U(s) tradeoff in disc regime
+for i in range(dim_s):
+    sU_pair[i,:] = [sarry[i],Uarry[0]]
+    v_err[i,:] = np.asarray([0,v1_data[i,0],v,np.abs(v1_data[i,0]-v)])
+    for j in range(dim_U-1):
+         if (np.abs(v1_data[i,j+1]-v) <= np.abs(v1_data[i,j]-v)):
+             sU_pair[i,1] = Uarry[j+1]
+             v_err[i,:] = np.asarray([j+1,v1_data[i,j+1],v,np.abs(v1_data[i,j+1]-v)])
+        
+# saving data [s,U,v_data,parameters,grand_means,dim_s,dim_U]
+pickle_file_name = 'fig_discVdata.pickle'
+pickle_file = open(pickle_file_name,'wb') 
+pickle.dump([sU_pair[:,0],sU_pair[:,1],v_err,parameters,grand_means,dim_s,dim_U],pickle_file,pickle.HIGHEST_PROTOCOL)
+pickle_file.close()
     
