@@ -1,4 +1,4 @@
-function [v,v1,v2,varx,vary,cov] = stochastic_simulation_two_traits(N,s1,u1,s2,u2,steps,...
+function [v,v1,v2,varx,vary,cov] = stochastic_simulation_two_traits(N,s1,u1,s2,u2,ud1,ud2,steps,...
                                     collect_data,start_time,end_time,outputfile)
 % The code below has been modified from the source code made
 % availabe by Pearce MT and Fisher DS, obtained from:
@@ -20,6 +20,8 @@ function [v,v1,v2,varx,vary,cov] = stochastic_simulation_two_traits(N,s1,u1,s2,u
 % input :u1: mutation rate per locus of trait 1.
 % input :s2: effect size of beneficial mutation in trait 2. 
 % input :u2: mutation rate per locus of trait 2.
+% input :ud1: deleterious mutation rate per locus of trait 1.
+% input :ud2: deleterious mutation rate per locus of trait 2.
 % input :steps: number of steps for simulation.
 % input :collect_data: true/false - collect detailed data on 2d distr. per generation
 % input :start_time: start time for collecting detailed data on 2d distribution
@@ -99,6 +101,8 @@ for timestep=1:steps
     newfreq=newfreq/sum(sum(newfreq));          % make sure frequencies still add to one.
     
     % calculate changes in abundances due to mutations
+    
+    % beneficial mutations
     z1=zeros(1,dim(2));
     mutatex=[z1; newfreq];
     mutatex(dim(1)+1,:)=[];                     % newfreq already has padding, get rid of extra padding from shift
@@ -107,8 +111,17 @@ for timestep=1:steps
     mutatey=[z2 newfreq];
     mutatey(:,dim(2)+1)=[];                     % newfreq already has padding, get rid of extra padding from shift
     
-    nomutate=(1-u1-u2)*newfreq;
-    postmutate=nomutate+u1*mutatex+u2*mutatey;    
+    % deletirious mutations (note: del mutations in lowest classes ignored)
+    z1=zeros(1,dim(2));
+    mutatexdel=[newfreq; z1];
+    mutatexdel(1,:)=[];                     % newfreq already has padding, get rid of extra padding from shift
+    
+    z2=zeros(dim(1),1);
+    mutateydel=[newfreq z2];
+    mutateydel(:,1)=[];                     % newfreq already has padding, get rid of extra padding from shift
+    
+    nomutate=(1-u1-u2-ud1-ud2)*newfreq;
+    postmutate=nomutate+u1*mutatex+u2*mutatey+ud1*mutatexdel+ud2*mutateydel;    
     newfreq=nomutate+postmutate;
     
     % For subpopulations with size less than the stoch_cutoff, draw size
