@@ -81,7 +81,6 @@ import pickle
 import scipy as sp
 import numpy as np
 import copy as cpy
-import 
 
 # basic functions needed for processing data
 # -----------------------------------------------------------------------------
@@ -90,10 +89,10 @@ import
 # read matlab outputs and create python data for figure using grand means
 
 
-data_file=open('data/mutBiasCI_data_all_simulation_grand_means_ml-03-1.dat')
+data_file=open('data/mutBiasCI_data_all_simulation_grand_means_ml-05-1.dat')
 grand_means = data_file.read().splitlines()
 data_file.close()
-data_file=open('data/mutBiasCI_data_all_simulation_parameters_ml-03-0.dat')
+data_file=open('data/mutBiasCI_data_all_simulation_parameters_ml-05-0.dat')
 parameters = data_file.read().splitlines()
 data_file.close()
 del data_file
@@ -111,11 +110,11 @@ parameters = np.asarray(parameters)
 # basic parameters (these should be exported with paremeters)
 [N,s,U] = [1e9, 1e-2, 1e-5]
 v = s**2*(2*np.log(N*s)-np.log(s/U))/(np.log(s/U)**2)
-[dim_s,dim_U] = [21,40]       # these are the number of samples I took
+[dim_s,dim_U] = [41,41]       # these are the number of samples I took
 
 # reconstruct array of parameters 
 sarry = np.zeros([dim_s, 1])
-Uarry = np.zeros([dim_U, 1])
+Uarry = np.zeros([dim_s, dim_U])
 sU_pair = np.zeros([dim_s,2])
 v_err = np.zeros([dim_s,4])
 v1_data = np.zeros([dim_s, dim_U])
@@ -123,21 +122,29 @@ v1_data = np.zeros([dim_s, dim_U])
 for i in range(dim_s):
     sarry[i,0] = parameters[i*dim_U,1]
     for j in range(dim_U):
-        if(i==1):
-            Uarry[j,0] = parameters[j,2]
         v1_data[i,j] = grand_means[i*dim_U+j,1]
+        Uarry[i,j] = parameters[i*dim_U+j,2]
         
 # construct U(s) tradeoff in disc regime
 for i in range(dim_s):
-    sU_pair[i,:] = [sarry[i],Uarry[0]]
-    v_err[i,:] = np.asarray([0,v1_data[i,0],v,np.abs(v1_data[i,0]-v)])
+    sU_pair[i,:] = [sarry[i],Uarry[i,0]]
+    v_err[i,:] = np.asarray([i,v1_data[i,0],v,np.abs(v1_data[i,0]-v)/v])
     for j in range(dim_U-1):
-         if (np.abs(v1_data[i,j+1]-v) <= np.abs(v1_data[i,j]-v)):
-             sU_pair[i,1] = Uarry[j+1]
-             v_err[i,:] = np.asarray([j+1,v1_data[i,j+1],v,np.abs(v1_data[i,j+1]-v)])
+        if (np.abs(v1_data[i,j+1]-v) < np.abs(v_err[i,1]-v)):
+             sU_pair[i,1] = Uarry[i,j+1]
+             v_err[i,:] = np.asarray([i,v1_data[i,j+1],v,2*np.abs(v1_data[i,j+1]-v)/v])
+
+logU_check = np.zeros([dim_s,1])
+for i in range(dim_s):
+    if(np.log10(sarry[i])<-1.5):
+        logU_check[i,0] = -6.3*(np.log10(sarry[i])+1.5)-9.6
+    else:
+        logU_check[i,0] = -2*(np.log10(sarry[i])+1.5)-10
         
+sU_pair_log = np.log10(sU_pair)
+
 # saving data [s,U,v_data,parameters,grand_means,dim_s,dim_U]
-pickle_file_name = 'fig_discVdata.pickle'
+pickle_file_name = 'fig_discVdata-05.pickle'
 pickle_file = open(pickle_file_name,'wb') 
 pickle.dump([sU_pair[:,0],sU_pair[:,1],v_err,parameters,grand_means,dim_s,dim_U],pickle_file,pickle.HIGHEST_PROTOCOL)
 pickle_file.close()

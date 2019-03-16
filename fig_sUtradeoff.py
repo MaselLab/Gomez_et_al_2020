@@ -58,7 +58,7 @@ Up = myfun.sU_tradeoff(sp,N0,v0)
 log10_s_min = np.log10(s_min)
 log10_s_max = np.log10(s_max)
 log10_U_min = np.log10(U_min)
-log10_U_max = np.log10(U_max)
+log10_U_max = np.log10(10*U_max)
 
 # Define range for s and U
 no_div = 100
@@ -83,12 +83,12 @@ drift_shade = np.log10(np.asarray([[sd[i], U_min, U_max] for i in range(no_div/1
 drift_barrier = np.log10(np.asarray([[10*s_min, u1[i]] for i in range(no_div)]))
 
 # successional-concurrent barrier (same in pheno and genotype sU space)
-succ_shade = np.log10(np.asarray([[s1[i],U_min,U_max] for i in range(no_div)]))
-conc_shade = np.log10(np.asarray([[s1[i],myfun.succ_conc_barrier(s1[i],N0,v0),U_max] for i in range(no_div)]))
+succ_shade = np.log10(np.asarray([[s1[i],U_min,10*U_max] for i in range(no_div)]))
+conc_shade = np.log10(np.asarray([[s1[i],myfun.succ_conc_barrier(s1[i],N0,v0),10*U_max] for i in range(no_div)]))
 conc_barrier = np.log10(np.asarray([[s1[i],myfun.succ_conc_barrier(s1[i],N0,v0)] for i in range(no_div)]))
 
 # discontinuous-concurrent barrier (same in pheno and genotype sU space)
-disc_shade = np.log10(np.asarray([[s1[i],min(s1[i],U_max),U_max] for i in range(no_div)]))
+disc_shade = np.log10(np.asarray([[s1[i],min(s1[i],10*U_max),10*U_max] for i in range(no_div)]))
 disc_barrier = np.log10(np.asarray([[s1[i],min(0.1*s1[i],U_max)] for i in range(no_div)]))
 
 # s-thresholds and curves in phenotype space
@@ -111,7 +111,6 @@ sU_tradeoff_conc_curve2 = np.log10(np.asarray([[s_reg2[i],myfun.sU_tradeoff_conc
 sU_tradeoff_succ_curve1 = np.log10(np.asarray([[s_reg1[i],myfun.sU_tradeoff_succ(s_reg1[i],N0,v0)] for i in range(no_div1)]))    
 sU_tradeoff_succ_curve2 = np.log10(np.asarray([[s_reg2[i],myfun.sU_tradeoff_succ(s_reg2[i],N0,v0)] for i in range(no_div1)]))    
 
-
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
@@ -126,6 +125,12 @@ ax1.plot(sU_tradeoff_conc_curve1[:,0],sU_tradeoff_conc_curve1[:,1],color="medium
 ax1.plot(sU_tradeoff_conc_curve2[:,0],sU_tradeoff_conc_curve2[:,1],color="mediumblue",linewidth=2,linestyle=":")
 ax1.plot(sU_tradeoff_succ_curve1[:,0],sU_tradeoff_succ_curve1[:,1],color="red",linewidth=2,linestyle=":")
 ax1.plot(sU_tradeoff_succ_curve2[:,0],sU_tradeoff_succ_curve2[:,1],color="red",linewidth=2,linestyle="-",label="Origin-fixation")
+
+ax1.plot(sU_pair_log[:,0],sU_pair_log[:,1],color="black",linewidth=2,linestyle="-")
+ax1.errorbar(sU_pair_log[:,0],sU_pair_log[:,1],v_err[:,3],color="black",linewidth=2,linestyle="-")
+
+ax1.plot(sU_pair_log[:,0],logU_check+1,color="magenta",linewidth=2,linestyle="--")
+ax1.plot(sU_pair_log[:,0],logU_check-1,color="magenta",linewidth=2,linestyle="--")
 
 ax1.set_xlim([1.2*log10_sc_max,log10_s_max])
 ax1.set_ylim([log10_U_min,log10_U_max])
