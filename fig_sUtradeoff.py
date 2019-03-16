@@ -132,6 +132,7 @@ ax1.errorbar(sU_pair_log[:,0],sU_pair_log[:,1],v_err[:,3],color="black",linewidt
 ax1.plot(sU_pair_log[:,0],logU_check+1,color="magenta",linewidth=2,linestyle="--")
 ax1.plot(sU_pair_log[:,0],logU_check-1,color="magenta",linewidth=2,linestyle="--")
 
+ax1.grid()
 ax1.set_xlim([1.2*log10_sc_max,log10_s_max])
 ax1.set_ylim([log10_U_min,log10_U_max])
 

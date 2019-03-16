@@ -136,10 +136,19 @@ for i in range(dim_s):
 
 logU_check = np.zeros([dim_s,1])
 for i in range(dim_s):
-    if(np.log10(sarry[i])<-1.5):
-        logU_check[i,0] = -6.3*(np.log10(sarry[i])+1.5)-9.6
+    if(np.log10(sarry[i])<-2.5):
+        logU_check[i,0] = -2.5*(np.log10(sarry[i])+2.95)-1.5
+    elif((np.log10(sarry[i])>=-2.5) and  (np.log10(sarry[i])<-1.5)):
+        logU_check[i,0] = -6.3*(np.log10(sarry[i])+1.5)-8.2
     else:
-        logU_check[i,0] = -2*(np.log10(sarry[i])+1.5)-10
+        logU_check[i,0] = -2*(np.log10(sarry[i])+1.5)-10.3
+
+#logU_check = np.zeros([dim_s,1])
+#for i in range(dim_s):
+#    if(np.log10(sarry[i])<-1.5):
+#        logU_check[i,0] = -6.3*(np.log10(sarry[i])+1.5)-9.6
+#    else:
+#        logU_check[i,0] = -2*(np.log10(sarry[i])+1.5)-10
         
 sU_pair_log = np.log10(sU_pair)
 
