@@ -86,47 +86,73 @@ import copy as cpy
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# read matlab outputs and create python data for figure using grand means
-
-
-data_file=open('data/mutBiasCI_data_all_simulation_grand_means_ml-05-1.dat')
-grand_means = data_file.read().splitlines()
-data_file.close()
-data_file=open('data/mutBiasCI_data_all_simulation_parameters_ml-05-0.dat')
-parameters = data_file.read().splitlines()
-data_file.close()
-del data_file
-
-num_of_sims = len(grand_means)     # number of simulations
-for i in range(num_of_sims):
-    grand_means[i]='grand_means[i]=np.array(['+grand_means[i].replace('\t',',')+'])'
-    exec(grand_means[i])
-    parameters[i]='parameters[i]=np.array(['+parameters[i].replace('\t',',')+'])'
-    exec(parameters[i])
-    
-grand_means = np.asarray(grand_means)
-parameters = np.asarray(parameters)
 
 # basic parameters (these should be exported with paremeters)
 [N,s,U] = [1e9, 1e-2, 1e-5]
 v = s**2*(2*np.log(N*s)-np.log(s/U))/(np.log(s/U)**2)
-[dim_s,dim_U] = [41,41]       # these are the number of samples I took
+
+# read matlab outputs and create python data for figure using grand means
+data_file=open('data/mutBiasCI_data_all_simulation_grand_means_ml-05-1.dat')
+grand_means1 = data_file.read().splitlines()
+data_file.close()
+data_file=open('data/mutBiasCI_data_all_simulation_parameters_ml-05-0.dat')
+parameters1 = data_file.read().splitlines()
+data_file.close()
+del data_file
+
+num_of_sims = len(grand_means1)     # number of simulations
+for i in range(num_of_sims):
+    grand_means1[i]=grand_means1[i].replace('NaN','0')
+    grand_means1[i]='grand_means1[i]=np.array(['+grand_means1[i].replace('\t',',')+'])'
+    exec(grand_means1[i])
+    parameters1[i]='parameters1[i]=np.array(['+parameters1[i].replace('\t',',')+'])'
+    exec(parameters1[i])
+
+data_file=open('data/mutBiasCI_data_all_simulation_grand_means_ml-06-1.dat')
+grand_means2 = data_file.read().splitlines()
+data_file.close()
+data_file=open('data/mutBiasCI_data_all_simulation_parameters_ml-06-0.dat')
+parameters2 = data_file.read().splitlines()
+data_file.close()
+del data_file
+
+num_of_sims = len(grand_means2)     # number of simulations
+for i in range(num_of_sims):    
+    grand_means2[i]=grand_means2[i].replace('NaN','0')
+    grand_means2[i]='grand_means2[i]=np.array(['+grand_means2[i].replace('\t',',')+'])'
+    exec(grand_means2[i])
+    parameters2[i]='parameters2[i]=np.array(['+parameters2[i].replace('\t',',')+'])'
+    exec(parameters2[i])
+
+grand_means = grand_means1 + grand_means2[0:41*16]    # extra empty data for some reason
+parameters = parameters1 + parameters2[0:41*16]
+    
+grand_means = np.asarray(grand_means)
+parameters = np.asarray(parameters)
+
+[dim_s1,dim_s2,dim_U] = [41,43,41]       # these are the number of samples I took
 
 # reconstruct array of parameters 
-sarry = np.zeros([dim_s, 1])
-Uarry = np.zeros([dim_s, dim_U])
-sU_pair = np.zeros([dim_s,2])
-v_err = np.zeros([dim_s,4])
-v1_data = np.zeros([dim_s, dim_U])
+sarry = np.zeros([dim_s1+dim_s2, 1])
+Uarry = np.zeros([dim_s1+dim_s2, dim_U])
+sU_pair = np.zeros([dim_s1+dim_s2,2])
+v_err = np.zeros([dim_s1+dim_s2,4])
+v1_data = np.zeros([dim_s1+dim_s2, dim_U])
 
-for i in range(dim_s):
+for i in range(dim_s1):
     sarry[i,0] = parameters[i*dim_U,1]
     for j in range(dim_U):
         v1_data[i,j] = grand_means[i*dim_U+j,1]
         Uarry[i,j] = parameters[i*dim_U+j,2]
+
+for i in range(dim_s2):
+    sarry[i+dim_s1,0] = parameters[(i+dim_s1)*dim_U,1]
+    for j in range(dim_U):
+        v1_data[i+dim_s1,j] = grand_means[(i+dim_s1)*dim_U+j,1]
+        Uarry[i+dim_s1,j] = parameters[(i+dim_s1)*dim_U+j,2]
         
 # construct U(s) tradeoff in disc regime
-for i in range(dim_s):
+for i in range(dim_s1):
     sU_pair[i,:] = [sarry[i],Uarry[i,0]]
     v_err[i,:] = np.asarray([i,v1_data[i,0],v,np.abs(v1_data[i,0]-v)/v])
     for j in range(dim_U-1):
@@ -134,14 +160,15 @@ for i in range(dim_s):
              sU_pair[i,1] = Uarry[i,j+1]
              v_err[i,:] = np.asarray([i,v1_data[i,j+1],v,2*np.abs(v1_data[i,j+1]-v)/v])
 
-logU_check = np.zeros([dim_s,1])
-for i in range(dim_s):
-    if(np.log10(sarry[i])<-2.5):
-        logU_check[i,0] = -2.5*(np.log10(sarry[i])+2.95)-1.5
-    elif((np.log10(sarry[i])>=-2.5) and  (np.log10(sarry[i])<-1.5)):
-        logU_check[i,0] = -6.3*(np.log10(sarry[i])+1.5)-8.2
-    else:
-        logU_check[i,0] = -2*(np.log10(sarry[i])+1.5)-10.3
+for i in range(dim_s2):
+    sU_pair[i+dim_s1,:] = [sarry[i+dim_s1],Uarry[i+dim_s1,0]]
+    v_err[i+dim_s1,:] = np.asarray([i+dim_s1,v1_data[i+dim_s1,0],v,np.abs(v1_data[i+dim_s1,0]-v)/v])
+    for j in range(dim_U-1):
+        if (np.abs(v1_data[i+dim_s1,j+1]-v) < np.abs(v_err[i+dim_s1,1]-v)):
+             sU_pair[i+dim_s1,1] = Uarry[i+dim_s1,j+1]
+             v_err[i+dim_s1,:] = np.asarray([i+dim_s1,v1_data[i+dim_s1,j+1],v,2*np.abs(v1_data[i+dim_s1,j+1]-v)/v])
+
+sU_pair_log = np.log10(sU_pair)
 
 #logU_check = np.zeros([dim_s,1])
 #for i in range(dim_s):
@@ -150,11 +177,52 @@ for i in range(dim_s):
 #    else:
 #        logU_check[i,0] = -2*(np.log10(sarry[i])+1.5)-10
         
-sU_pair_log = np.log10(sU_pair)
 
+# -------------------------------------------------------------------------------
+
+    
+grand_means = np.asarray(grand_means)
+parameters = np.asarray(parameters)
+
+
+
+# reconstruct array of parameters 
+sarry2 = np.zeros([dim_s, 1])
+Uarry2 = np.zeros([dim_s, dim_U])
+sU_pair2 = np.zeros([dim_s,2])
+v_err2 = np.zeros([dim_s,4])
+v1_data2 = np.zeros([dim_s, dim_U])
+
+for i in range(dim_s):
+    sarry2[i,0] = parameters[i*dim_U,1]
+    for j in range(dim_U):
+        v1_data2[i,j] = grand_means[i*dim_U+j,1]
+        Uarry2[i,j] = parameters[i*dim_U+j,2]
+        
+# construct U(s) tradeoff in disc regime
+for i in range(dim_s):
+    sU_pair2[i,:] = [sarry2[i],Uarry2[i,0]]
+    v_err2[i,:] = np.asarray([i,v1_data2[i,0],v,np.abs(v1_data2[i,0]-v)/v])
+    for j in range(dim_U-1):
+        if (np.abs(v1_data2[i,j+1]-v) < np.abs(v_err2[i,1]-v)):
+             sU_pair2[i,1] = Uarry2[i,j+1]
+             v_err2[i,:] = np.asarray([i,v1_data2[i,j+1],v,2*np.abs(v1_data2[i,j+1]-v)/v])
+
+logU_check = np.zeros([dim_s,1])
+# -------------------------------------------------------------------------------
 # saving data [s,U,v_data,parameters,grand_means,dim_s,dim_U]
-pickle_file_name = 'fig_discVdata-05.pickle'
+pickle_file_name = 'fig_discVdata-06.pickle'
 pickle_file = open(pickle_file_name,'wb') 
 pickle.dump([sU_pair[:,0],sU_pair[:,1],v_err,parameters,grand_means,dim_s,dim_U],pickle_file,pickle.HIGHEST_PROTOCOL)
 pickle_file.close()
     
+    
+logU_check = np.zeros([dim_s,1])
+
+for i in range(dim_s):
+    if(np.log10(sarry[i])<-2.5):
+        logU_check[i,0] = -2.5*(np.log10(sarry[i])+2.95)-1.5
+    elif((np.log10(sarry[i])>=-2.5) and  (np.log10(sarry[i])<-1.5)):
+        logU_check[i,0] = -6.3*(np.log10(sarry[i])+1.5)-8.2
+    else:
+        logU_check[i,0] = -2*(np.log10(sarry[i])+1.5)-10.3
