@@ -4,32 +4,34 @@ s = 1e-2;
 U = 1e-5;
 v = s^2*(2*log(N*s)-log(s/U))/(log(s/U)^2);                 % extend this to a range of v
 digits(16)
-
-data_pts = 17;
 rng(7);                                                     % set seed for random number generator
 
-sarry = (1e-3)*(2e-2/1e-3).^((0:1:data_pts)./data_pts);     % range for possible s & U values
-Uarry = ones(size(sarry));
+sarry = 10.^[-3.2,-3.1,-3,-2.9,-2.8,-2.7,-2.6,-2.5,-2.4,-2.3,-2.2,-2.1,-2,-1.9,-1.8,-1.7,-1.6];
+Uarry = 10.^[-0.975,-1.175,-1.375,-1.58,-1.81,-2.04,-2.32,-2.65,-2.98,-3.394,-3.863,-4.396,-5,-5.59145,-6.3087,-7.15715,-8.13285];
+data_pts = length(sarry);
 
-for i=1:length(sarry)
-    si = sarry(i);
-    Ui = exp( (0.5*si^2/v) * ( 1 + 2*v*log(si)/si^2 - sqrt(1 + 8*v*log(N*si)/si^2) ) );
-    Uarry(i) = Ui; 
-    varry(i) = si.^2.*(2*log(N*si)-log(si./Ui))./(log(si./Ui).^2);      % checking that Ui is correct solution
-    qarry(i) = 2*log(N*si)./log(si./Ui);
-end
+% sarry = (1e-3)*(2e-2/1e-3).^((0:1:data_pts)./data_pts);     % range for possible s & U values
+% Uarry = ones(size(sarry));
+
+% for i=1:length(sarry)
+%     si = sarry(i);
+%     Ui = exp( (0.5*si^2/v) * ( 1 + 2*v*log(si)/si^2 - sqrt(1 + 8*v*log(N*si)/si^2) ) );
+%     Uarry(i) = Ui; 
+%     varry(i) = si.^2.*(2*log(N*si)-log(si./Ui))./(log(si./Ui).^2);      % checking that Ui is correct solution
+%     qarry(i) = 2*log(N*si)./log(si./Ui);
+% end
 
 % Examine whether s,U combinations give the traveling wave regime
 % [(1:51)' log10(sarry') log10(Uarry'./sarry') log10(N*Uarry') log10(N*Uarry'.*log(N*sarry')) qarry'] 
 
-steps = 1e6;
+steps = 5e5;
 start_time = 5e4;                     % collect data on distribution at start time
 end_time = 6.5e4;                       % collect data on distribution at end time
-outputfile = '~/Documents/mutBiasCI/data/mutBiasCI_data_for_2d_distribution_ml-02'; 
+outputfile = '~/Documents/mutBiasCI/data/mutBiasCI_data_for_2d_distribution_ml-08'; 
 number_of_sims = 0.5*data_pts*(data_pts+1);
 
 collect_distribution_data = zeros(number_of_sims,1);
-collect_distribution_data([6 12 30 57])=1;
+collect_distribution_data([8 17 40 65])=1;
 indx_of_collected_data = [];
 
 NsU = zeros(number_of_sims,5);          % array that stores the parameters [N,s1,u1,s2,u2]
@@ -49,6 +51,6 @@ for i=1:data_pts
 end
 toc
 
-dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_parameters_ml-02-0.dat',NsU,'delimiter',',','precision',16);
-dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_grand_means_ml-02-1.dat',sim_data,'delimiter',',','precision',16);
-dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_indx_of_collected_data_ml-02-2.dat',indx_of_collected_data,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_parameters_ml-08-0.dat',NsU,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_grand_means_ml-08-1.dat',sim_data,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_indx_of_collected_data_ml-08-2.dat',indx_of_collected_data,'delimiter',',','precision',16);

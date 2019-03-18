@@ -124,8 +124,8 @@ for i in range(num_of_sims):
     parameters2[i]='parameters2[i]=np.array(['+parameters2[i].replace('\t',',')+'])'
     exec(parameters2[i])
 
-grand_means = grand_means1 + grand_means2[0:41*16]    # extra empty data for some reason
-parameters = parameters1 + parameters2[0:41*16]
+grand_means = grand_means1 + grand_means2    # extra empty data for some reason
+parameters = parameters1 + parameters2
     
 grand_means = np.asarray(grand_means)
 parameters = np.asarray(parameters)
@@ -158,7 +158,7 @@ for i in range(dim_s1):
     for j in range(dim_U-1):
         if (np.abs(v1_data[i,j+1]-v) < np.abs(v_err[i,1]-v)):
              sU_pair[i,1] = Uarry[i,j+1]
-             v_err[i,:] = np.asarray([i,v1_data[i,j+1],v,2*np.abs(v1_data[i,j+1]-v)/v])
+             v_err[i,:] = np.asarray([i,v1_data[i,j+1],v,np.abs(v1_data[i,j+1]-v)/v])
 
 for i in range(dim_s2):
     sU_pair[i+dim_s1,:] = [sarry[i+dim_s1],Uarry[i+dim_s1,0]]
@@ -166,8 +166,14 @@ for i in range(dim_s2):
     for j in range(dim_U-1):
         if (np.abs(v1_data[i+dim_s1,j+1]-v) < np.abs(v_err[i+dim_s1,1]-v)):
              sU_pair[i+dim_s1,1] = Uarry[i+dim_s1,j+1]
-             v_err[i+dim_s1,:] = np.asarray([i+dim_s1,v1_data[i+dim_s1,j+1],v,2*np.abs(v1_data[i+dim_s1,j+1]-v)/v])
+             v_err[i+dim_s1,:] = np.asarray([i+dim_s1,v1_data[i+dim_s1,j+1],v,np.abs(v1_data[i+dim_s1,j+1]-v)/v])
 
+# --------- get best estimates for sU tradeoff --------------------------------
+
+# values to keep
+sU_pair = np.concatenate((sU_pair[41:52,:],sU_pair[1:13,:],sU_pair[52:67,:],sU_pair[26:30,:],sU_pair[67:,:]),axis=0)
+new_verr = np.concatenate((v_err[41:52,3],v_err[1:13,3],v_err[52:67,3],v_err[26:30,3],v_err[67:,3]),axis=0)
+            
 sU_pair_log = np.log10(sU_pair)
 
 #logU_check = np.zeros([dim_s,1])

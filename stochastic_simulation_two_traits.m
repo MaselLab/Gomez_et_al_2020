@@ -40,6 +40,9 @@ nosefitness = 0;            % total fitness of the front
 meanfitness = 0;            % mean fitness of the population
 meanfitx = 0;               % mean fitness in x 
 meanfity = 0;               % mean fitness in y
+meanfit_s = 0;              % mean fitness of the population
+meanfitx_s = 0;             % mean fitness in x 
+meanfity_s = 0;             % mean fitness in y
 varx = 0;                   % variance in trait 1
 vary = 0;                   % variance in trait 2
 cov = 0;                    % covariance between trait 1 and 2
@@ -152,6 +155,9 @@ for timestep=1:steps
             varx = sum(sum(times(newpop,(fitx_arry-meanfitx).^2)))/Na;
             vary = sum(sum(times(newpop,(fity_arry-meanfity).^2)))/Na;
             cov = sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity))))/Na;
+            meanfit_s = meanfitness;
+            meanfitx_s = meanfitx;
+            meanfity_s = meanfity;
         end
     end
     
@@ -189,12 +195,12 @@ for timestep=1:steps
         fprintf(fileID2,'\n');
         fprintf(fileID3,'\n');
     end
-
+    
 end
 
-v = meanfitness/steps;
-v1 = meanfitx/steps;
-v2 = meanfity/steps;
+v = (meanfitness-meanfit_s)/(steps-5000);
+v1 = (meanfitx-meanfitx_s)/(steps-5000);
+v2 = (meanfity-meanfity_s)/(steps-5000);
 
 % close output files
 if(collect_data)
@@ -204,4 +210,3 @@ if(collect_data)
 end
 
 end
-
