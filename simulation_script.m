@@ -34,16 +34,16 @@ collect_distribution_data = zeros(number_of_sims,1);
 collect_distribution_data([8 17 40 65])=1;
 indx_of_collected_data = [];
 
-NsU = zeros(number_of_sims,5);          % array that stores the parameters [N,s1,u1,s2,u2]
+NsU = zeros(number_of_sims,7);          % array that stores the parameters [N,s1,u1,s2,u2]
 sim_data = zeros(number_of_sims,6);     % data collected [v,v1,v2,varx,vary,cov]
 
 tic
 for i=1:data_pts
     for j=i:data_pts
         indx = round(j+(i-1)*data_pts-0.5*i*(i-1))
-        NsU(indx,:)=[N sarry(i) Uarry(i) sarry(j) Uarry(j)];
+        NsU(indx,:)=[N sarry(i) Uarry(i) sarry(j) Uarry(j) Uarry(i) Uarry(j)];
         [sim_data(indx,1),sim_data(indx,2),sim_data(indx,3),sim_data(indx,4),sim_data(indx,5),sim_data(indx,6)] ...
-            = stochastic_simulation_two_traits(N,sarry(i),Uarry(i),sarry(j),Uarry(j),steps,collect_distribution_data(indx),start_time,end_time,[outputfile '-' num2str(indx)]);
+            = stochastic_simulation_two_traits(N,sarry(i),Uarry(i),sarry(j),Uarry(j),Uarry(i),Uarry(j),steps,collect_distribution_data(indx),start_time,end_time,[outputfile '-' num2str(indx)]);
         if(collect_distribution_data(indx))
             indx_of_collected_data = [indx_of_collected_data; indx];
         end
