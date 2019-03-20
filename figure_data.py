@@ -82,11 +82,6 @@ import scipy as sp
 import numpy as np
 import copy as cpy
 
-# basic functions needed for processing data
-# -----------------------------------------------------------------------------
-
-# -----------------------------------------------------------------------------
-
 # basic parameters (these should be exported with paremeters)
 [N,s,U] = [1e9, 1e-2, 1e-5]
 v = s**2*(2*np.log(N*s)-np.log(s/U))/(np.log(s/U)**2)
@@ -169,12 +164,27 @@ for i in range(dim_s2):
              v_err[i+dim_s1,:] = np.asarray([i+dim_s1,v1_data[i+dim_s1,j+1],v,np.abs(v1_data[i+dim_s1,j+1]-v)/v])
 
 # --------- get best estimates for sU tradeoff --------------------------------
-
-# values to keep
 sU_pair = np.concatenate((sU_pair[41:52,:],sU_pair[1:13,:],sU_pair[52:67,:],sU_pair[26:30,:],sU_pair[67:,:]),axis=0)
-new_verr = np.concatenate((v_err[41:52,3],v_err[1:13,3],v_err[52:67,3],v_err[26:30,3],v_err[67:,3]),axis=0)
-            
-sU_pair_log = np.log10(sU_pair)
+v_err = np.concatenate((v_err[41:52,:],v_err[1:13,:],v_err[52:67,:],v_err[26:30,:],v_err[67:,:]),axis=0)            
+
+# -------------------------------------------------------------------------------
+# saving data [s,U,v_data,parameters,grand_means]
+pickle_file_name = 'data/fig_discVdata-06.pickle'
+pickle_file = open(pickle_file_name,'wb') 
+pickle.dump([sU_pair,v_err,parameters,grand_means],pickle_file,pickle.HIGHEST_PROTOCOL)
+pickle_file.close()
+    
+# function defining regions scanned in to get target U
+    
+#logU_check = np.zeros([dim_s,1])
+#
+#for i in range(dim_s):
+#    if(np.log10(sarry[i])<-2.5):
+#        logU_check[i,0] = -2.5*(np.log10(sarry[i])+2.95)-1.5
+#    elif((np.log10(sarry[i])>=-2.5) and  (np.log10(sarry[i])<-1.5)):
+#        logU_check[i,0] = -6.3*(np.log10(sarry[i])+1.5)-8.2
+#    else:
+#        logU_check[i,0] = -2*(np.log10(sarry[i])+1.5)-10.3    
 
 #logU_check = np.zeros([dim_s,1])
 #for i in range(dim_s):
@@ -182,53 +192,3 @@ sU_pair_log = np.log10(sU_pair)
 #        logU_check[i,0] = -6.3*(np.log10(sarry[i])+1.5)-9.6
 #    else:
 #        logU_check[i,0] = -2*(np.log10(sarry[i])+1.5)-10
-        
-
-# -------------------------------------------------------------------------------
-
-    
-grand_means = np.asarray(grand_means)
-parameters = np.asarray(parameters)
-
-
-
-# reconstruct array of parameters 
-sarry2 = np.zeros([dim_s, 1])
-Uarry2 = np.zeros([dim_s, dim_U])
-sU_pair2 = np.zeros([dim_s,2])
-v_err2 = np.zeros([dim_s,4])
-v1_data2 = np.zeros([dim_s, dim_U])
-
-for i in range(dim_s):
-    sarry2[i,0] = parameters[i*dim_U,1]
-    for j in range(dim_U):
-        v1_data2[i,j] = grand_means[i*dim_U+j,1]
-        Uarry2[i,j] = parameters[i*dim_U+j,2]
-        
-# construct U(s) tradeoff in disc regime
-for i in range(dim_s):
-    sU_pair2[i,:] = [sarry2[i],Uarry2[i,0]]
-    v_err2[i,:] = np.asarray([i,v1_data2[i,0],v,np.abs(v1_data2[i,0]-v)/v])
-    for j in range(dim_U-1):
-        if (np.abs(v1_data2[i,j+1]-v) < np.abs(v_err2[i,1]-v)):
-             sU_pair2[i,1] = Uarry2[i,j+1]
-             v_err2[i,:] = np.asarray([i,v1_data2[i,j+1],v,2*np.abs(v1_data2[i,j+1]-v)/v])
-
-logU_check = np.zeros([dim_s,1])
-# -------------------------------------------------------------------------------
-# saving data [s,U,v_data,parameters,grand_means,dim_s,dim_U]
-pickle_file_name = 'fig_discVdata-06.pickle'
-pickle_file = open(pickle_file_name,'wb') 
-pickle.dump([sU_pair[:,0],sU_pair[:,1],v_err,parameters,grand_means,dim_s,dim_U],pickle_file,pickle.HIGHEST_PROTOCOL)
-pickle_file.close()
-    
-    
-logU_check = np.zeros([dim_s,1])
-
-for i in range(dim_s):
-    if(np.log10(sarry[i])<-2.5):
-        logU_check[i,0] = -2.5*(np.log10(sarry[i])+2.95)-1.5
-    elif((np.log10(sarry[i])>=-2.5) and  (np.log10(sarry[i])<-1.5)):
-        logU_check[i,0] = -6.3*(np.log10(sarry[i])+1.5)-8.2
-    else:
-        logU_check[i,0] = -2*(np.log10(sarry[i])+1.5)-10.3

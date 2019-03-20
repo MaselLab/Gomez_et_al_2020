@@ -52,6 +52,23 @@ def get_vDF_genotype(N,s,U):
     
     return v
 
+def get_qDF(N,s,U):
+    # Calculates the rate of adaptation v, derived in Desai and Fisher 2007
+    # for a given population size (N), selection coefficient (s) and beneficial
+    # mutation rate (U)
+    #
+    # Inputs:
+    # N - population size
+    # s - selection coefficient
+    # U - beneficial mutation rate
+    #
+    # Output: 
+    # v - rate of adaptation
+        
+    q = 2*np.log(N*s)/np.log(s/U)
+    
+    return q
+    
 def theta(s,N,v):
     # computes the characteristic width of the fitness distribution
     #

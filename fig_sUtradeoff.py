@@ -16,6 +16,7 @@ size N.
 import matplotlib.pyplot as plt
 import numpy as np
 import fig_functions as myfun
+import pickle
 
 # functions
 
@@ -45,9 +46,16 @@ def sU_bounds(N,v):
 # create data for figures of sU tradeoff for pheno and genotype adaptation
 # -----------------------------------------------------------------------------
     
+# load data for simulation estimates
+pickle_file_name = 'fig_discVdata-06.pickle'
+pickle_file = open("data/" + pickle_file_name,'rb') 
+[sU_pair,v_data,parameters,grand_means] = pickle.load(pickle_file)
+pickle_file.close()
+
 # set basic parameters of the figure
 [N0,s0,U0] = [1e9,1e-2,1e-5]
 v0 = myfun.get_vDF(N0,s0,U0)    # rate of adpatation (concurrent mutation regime)
+q0 = v0*np.log(s0/U0)/s0**2+1
 
 sp = myfun.s_max_Uc(N0,v0)
 Up = myfun.sU_tradeoff(sp,N0,v0)
@@ -88,8 +96,8 @@ conc_shade = np.log10(np.asarray([[s1[i],myfun.succ_conc_barrier(s1[i],N0,v0),10
 conc_barrier = np.log10(np.asarray([[s1[i],myfun.succ_conc_barrier(s1[i],N0,v0)] for i in range(no_div)]))
 
 # discontinuous-concurrent barrier (same in pheno and genotype sU space)
-disc_shade = np.log10(np.asarray([[s1[i],min(s1[i],10*U_max),10*U_max] for i in range(no_div)]))
-disc_barrier = np.log10(np.asarray([[s1[i],min(0.1*s1[i],U_max)] for i in range(no_div)]))
+disc_shade = np.log10(np.asarray([[s1[i],min(0.1*s1[i],10*U_max),10*U_max] for i in range(no_div)]))
+disc_barrier = np.log10(np.asarray([[s1[i],min((q0-1)*s1[i]*np.exp(-(q0-1)*s0**2/v0),10*U_max)] for i in range(no_div)]))
 
 # s-thresholds and curves in phenotype space
 log10_sc_max = np.log10(sc_max)
@@ -97,10 +105,10 @@ log10_sc_trans = np.log10(sc_trans)
 
 # pick s values between thresholds
 s_reg = np.logspace(log10_sc_max,log10_s_max,no_div2)
-s_reg1 = np.logspace(-3.4,log10_sc_trans,no_div1)
+s_reg1 = np.logspace(-3.5,log10_sc_trans,no_div1)
 s_reg2 = np.logspace(log10_sc_trans,log10_s_max,no_div1)
-s_reg3 = np.logspace(-2.1,log10_sc_trans,no_div1)
-s_reg4 = np.logspace(-2.4,log10_s_max,no_div1)
+s_reg3 = np.logspace(-2.4,log10_sc_trans,no_div1)
+s_reg4 = np.logspace(-3.5,log10_s_max,no_div1)
 
 # caluculate U along sU tradeoff for full curve, accounting for transition
 sU_tradeoff_curve = np.log10(np.asarray([[s_reg[i],myfun.sU_tradeoff(s_reg[i],N0,v0)] for i in range(no_div2)]))    
@@ -112,6 +120,21 @@ sU_tradeoff_conc_curve2 = np.log10(np.asarray([[s_reg4[i],myfun.sU_tradeoff_conc
 # caluculate U along sU tradeoff for successional regime
 sU_tradeoff_succ_curve1 = np.log10(np.asarray([[s_reg1[i],myfun.sU_tradeoff_succ(s_reg1[i],N0,v0)] for i in range(no_div1)]))    
 sU_tradeoff_succ_curve2 = np.log10(np.asarray([[s_reg2[i],myfun.sU_tradeoff_succ(s_reg2[i],N0,v0)] for i in range(no_div1)]))    
+
+sU_pair_log = np.log10(sU_pair)
+
+
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# identify simulations
+
+indx = [4,6,8,10,12,14,16,18,20,22,24,26,29,31,33,36,38]
+sU_comp = []
+
+for i in range(len(indx)):
+    sU_comp += [[np.log10(sU_pair[indx[i],0]),np.log10(sU_pair[indx[i],1])]]
+
+sU_comp = np.asarray(sU_comp)
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -128,8 +151,13 @@ ax1.plot(sU_tradeoff_conc_curve2[:,0],sU_tradeoff_conc_curve2[:,1],color="medium
 ax1.plot(sU_tradeoff_succ_curve1[:,0],sU_tradeoff_succ_curve1[:,1],color="red",linewidth=2,linestyle=":")
 ax1.plot(sU_tradeoff_succ_curve2[:,0],sU_tradeoff_succ_curve2[:,1],color="red",linewidth=2,linestyle="-",label="Origin-fixation")
 
+#ax1.plot(disc_barrier[:,0],disc_barrier[:,1],linestyle=":")
+
 ax1.plot(sU_pair_log[0:32,0],sU_pair_log[0:32,1],color="black",linewidth=2,linestyle="-")
-ax1.scatter(sU_pair_log[:,0],sU_pair_log[:,1],color="black",marker='.')
+#ax1.scatter(sU_pair_log[32:,0],sU_pair_log[32:,1],color="black",marker='.')
+#for i in range(len(indx)):
+for i in range(len(indx)):
+    ax1.scatter(sU_comp[i,0],sU_comp[i,1],color=(1-1.0*i/len(indx),0+0.25*i/len(indx),0.25+0.75*i/len(indx)),linewidth=4)
 #ax1.errorbar(sU_pair_log[:,0],sU_pair_log[:,1],2*new_verr[:],color="black",linewidth=2,linestyle="-")
 
 #ax1.plot(sU_pair_log[:,0],logU_check+1,color="magenta",linewidth=2,linestyle="--")
@@ -145,12 +173,12 @@ ax1.set_ylabel(r'Mutation rate ($\log_{10}U$)',fontsize=18,labelpad=10)
 xh_loc = (log10_s_max-1.2*log10_sc_max)
 yh_loc = (log10_U_max-log10_U_min)
 
-plt.text(1.2*log10_sc_max+0.7*xh_loc,log10_U_min+0.85*yh_loc,r'$N = 10^9$',fontsize=16)
-plt.text(1.2*log10_sc_max+0.7*xh_loc,log10_U_min+0.80*yh_loc,r'$v = 5.3\times 10^{-5}$',fontsize=16)
+plt.text(1.2*log10_sc_max+0.75*xh_loc,log10_U_min+0.65*yh_loc,r'$N = 10^9$',fontsize=16)
+plt.text(1.2*log10_sc_max+0.75*xh_loc,log10_U_min+0.60*yh_loc,r'$v = 5.3\times 10^{-5}$',fontsize=16)
 
 plt.text(0.83*log10_sc_max,0.55*log10_U_min,"Concurrent\n   Regime",fontsize=16)
 plt.text(0.85*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fontsize=16)
-plt.text(0.9*log10_sc_max,0.13*log10_U_min,"Discontinuous\n     Regime",color="black",fontsize=16)
+plt.text(0.85*log10_sc_max,0.13*log10_U_min,"Discontinuous\n     Regime",color="black",fontsize=16)
 #plt.arrow(1.09*log10_sc_max,0.33*log10_U_min,-.1,1.5,linewidth=2,head_width=.07,color="black")
 
 fig1.savefig('figures\\fig_sUtradeoff_pheno_adapt.pdf')
