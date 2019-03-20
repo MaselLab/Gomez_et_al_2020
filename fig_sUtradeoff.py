@@ -158,11 +158,10 @@ ax1.plot(sU_tradeoff_succ_curve2[:,0],sU_tradeoff_succ_curve2[:,1],color="red",l
 
 #ax1.plot(disc_barrier[:,0],disc_barrier[:,1],linestyle=":")
 
-ax1.plot(sU_pair_log[0:32,0],sU_pair_log[0:32,1],color="black",linewidth=2,linestyle="-")
-ax1.scatter(sU_pair_log[32:,0],sU_pair_log[32:,1],color="black",marker='.')
+#ax1.plot(sU_pair_log[0:32,0],sU_pair_log[0:32,1],color="black",linewidth=2,linestyle="-")
+#ax1.scatter(sU_pair_log[32:,0],sU_pair_log[32:,1],color="black",marker='.')
 #for i in range(len(indx)):
-for i in range(len(indx)):
-    ax1.scatter(sU_comp[i,0],sU_comp[i,1],color=(1-1.0*i/len(indx),0+0.25*i/len(indx),0.25+0.75*i/len(indx)),linewidth=4)
+ax1.scatter(sU_comp[:,0],sU_comp[:,1],color="black",linewidth=4)
 #ax1.errorbar(sU_pair_log[:,0],sU_pair_log[:,1],2*new_verr[:],color="black",linewidth=2,linestyle="-")
 
 #ax1.plot(sU_pair_log[:,0],logU_check+1,color="magenta",linewidth=2,linestyle="--")

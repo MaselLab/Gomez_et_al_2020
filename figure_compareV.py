@@ -30,7 +30,7 @@ pickle_file = open("data/" + pickle_file_name,'rb')
 [N,s,U,v,parameters,grand_means,sarry,Uarry,v1_data,v2_data] = pickle.load(pickle_file)
 pickle_file.close()
 
-v_comp = np.log10(v1_data/v2_data)
+v_comp = v1_data/v2_data
 [m,n] = v_comp.shape
 [m,n] = [int(m),int(n)]
 
@@ -56,8 +56,8 @@ y_border = [min(np.floor(1.0+m*i/1000.0),m) for i in range(1001)]
 # create heatmap of v reduction
 # -----------------------------------------------------------------------------
 fig1, ax1 = plt.subplots(1,1,figsize=[15,10])
-fit_distr_2d = ax1.pcolormesh(v_comp.transpose(),cmap=plt.cm.RdYlBu)
-#fit_distr_2d = ax1.pcolormesh(v_comp.transpose(),cmap=plt.cm.gray_r)
+#fit_distr_2d = ax1.pcolormesh(v_comp.transpose(),cmap=plt.cm.RdYlBu)
+fit_distr_2d = ax1.pcolormesh(v_comp.transpose(),cmap=plt.cm.gray_r)
 cbar = plt.colorbar(fit_distr_2d,pad = 0.15)
 #ax1.plot(x_border,y_border,color="black")
 #ax1.axis('tight')        
@@ -65,10 +65,10 @@ ax1.set_xticks(np.arange(arry_dim)+0.5)
 ax1.set_yticks(np.arange(arry_dim)+0.5)        
 ax1.set_xticklabels(my_slabel)
 ax1.set_yticklabels(my_slabel)        
-ax1.set_xlabel('Selection coefficient trait 1 ($\log_{10}$)',multialignment='center',fontsize=18,labelpad=10)
-ax1.set_ylabel('Selection coefficient trait 2 ($\log_{10}$)',multialignment='center',fontsize=18,labelpad=10)
+ax1.set_xlabel('Selection coefficient trait 1',multialignment='center',fontsize=18,labelpad=10)
+ax1.set_ylabel('Selection coefficient trait 2',multialignment='center',fontsize=18,labelpad=10)
 ax1.tick_params(axis='both',labelsize=12)
-cbar.ax.text(2.8,0.6,'$\log_{10}$ of $v_1/v_2$',rotation=270,fontsize=22)
+cbar.ax.text(2.8,0.6,'Ratio of $v_1/v_2$',rotation=270,fontsize=22)
 
 plt.text(1,m-1,r'$N = 10^9$',fontsize=18)
 plt.text(1,m-1.7,r'$v = 5.3\times 10^{-5}$',fontsize=18)
@@ -90,6 +90,6 @@ fig1.subplots_adjust(bottom=0.2,left=0.2)
 plt.text(.21,-2.5,'Trait 1 favored by selection',fontsize=22)
 plt.text(-0.205,13.1,'Trait 2 favored by mutation',rotation=90,fontsize=22)
 
-fig1.savefig('figures/fig_compareVdata2b.pdf')
+fig1.savefig('figures/fig_compareVdata2.pdf')
 
 # need to creat a figure with v_g rather than v_w used above

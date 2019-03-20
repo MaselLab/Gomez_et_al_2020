@@ -6,8 +6,10 @@ v = s^2*(2*log(N*s)-log(s/U))/(log(s/U)^2);                 % extend this to a r
 digits(16)
 rng(7);                                                     % set seed for random number generator
 
-sarry = 10.^[-3.2,-3.1,-3,-2.9,-2.8,-2.7,-2.6,-2.5,-2.4,-2.3,-2.2,-2.1,-2,-1.9,-1.8,-1.7,-1.6];
-Uarry = 10.^[-0.975,-1.175,-1.375,-1.58,-1.81,-2.04,-2.32,-2.65,-2.98,-3.394,-3.863,-4.396,-5,-5.59145,-6.3087,-7.15715,-8.13285];
+sarry = 10.^[-3.2,-3.1,-3,-2.9,-2.8,-2.7,-2.6,-2.5,-2.4,-2.3,-2.2,-2.1,-2,-1.9,-1.8,-1.7,-1.6,-1.5];
+% Uarry = 10.^[-0.975,-1.175,-1.375,-1.58,-1.81,-2.04,-2.32,-2.65,-2.98,-3.394,-3.863,-4.396,-5,-5.59145,-6.3087,-7.15715,-8.13285];
+Uarry = 10.^[-0.975,-1.175,-1.375,-1.58,-1.81,-2.04,-2.32,-2.65,-2.98,-3.394,-3.863,-4.396,-5,-5.59145,-6.3087,-7.15715,-8.13285,-9.218528233424163];
+
 data_pts = length(sarry);
 
 % sarry = (1e-3)*(2e-2/1e-3).^((0:1:data_pts)./data_pts);     % range for possible s & U values
@@ -27,18 +29,18 @@ data_pts = length(sarry);
 steps = 5e5;
 start_time = 5e4;                     % collect data on distribution at start time
 end_time = 6.5e4;                       % collect data on distribution at end time
-outputfile = '~/Documents/mutBiasCI/data/mutBiasCI_data_for_2d_distribution_ml-08'; 
+outputfile = '~/Documents/mutBiasCI/data/mutBiasCI_data_for_2d_distribution_ml-10'; 
 number_of_sims = 0.5*data_pts*(data_pts+1);
 
 collect_distribution_data = zeros(number_of_sims,1);
-collect_distribution_data([8 17 40 65])=1;
+collect_distribution_data([])=1;
 indx_of_collected_data = [];
 
 NsU = zeros(number_of_sims,7);          % array that stores the parameters [N,s1,u1,s2,u2]
 sim_data = zeros(number_of_sims,6);     % data collected [v,v1,v2,varx,vary,cov]
 
 tic
-for i=1:data_pts
+for i=data_pts:data_pts
     for j=i:data_pts
         indx = round(j+(i-1)*data_pts-0.5*i*(i-1))
         NsU(indx,:)=[N sarry(i) Uarry(i) sarry(j) Uarry(j) Uarry(i) Uarry(j)];
@@ -51,6 +53,6 @@ for i=1:data_pts
 end
 toc
 
-dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_parameters_ml-08-0.dat',NsU,'delimiter',',','precision',16);
-dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_grand_means_ml-08-1.dat',sim_data,'delimiter',',','precision',16);
-dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_indx_of_collected_data_ml-08-2.dat',indx_of_collected_data,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_parameters_ml-10-0.dat',NsU,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_grand_means_ml-10-1.dat',sim_data,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_indx_of_collected_data_ml-10-2.dat',indx_of_collected_data,'delimiter',',','precision',16);
