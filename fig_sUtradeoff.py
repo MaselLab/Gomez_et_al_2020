@@ -128,13 +128,18 @@ sU_pair_log = np.log10(sU_pair)
 # -----------------------------------------------------------------------------
 # identify simulations
 
-indx = [4,6,8,10,12,14,16,18,20,22,24,26,29,31,33,36,38]
+indx = [4,6,8,10,12,14,16,18,20,22,24,26,29,31,33,36,38,40]
 sU_comp = []
 
 for i in range(len(indx)):
     sU_comp += [[np.log10(sU_pair[indx[i],0]),np.log10(sU_pair[indx[i],1])]]
 
 sU_comp = np.asarray(sU_comp)
+
+sU_comp = np.asarray([[-3.3,-0.825],[-3.2,-0.975],[-3.1,-1.175],[-3,-1.375],
+                      [-2.9,-1.58],[-2.8,-1.81],[-2.7,-2.04],[-2.6,-2.32],[-2.5,-2.65],
+                      [-2.4,-2.98],[-2.3,-3.375],[-2.2,-3.765],[-2.1,-4.275],[-2,-4.93],
+                      [-1.9,-5.54],[-1.8,-6.429],[-1.7,-7.34],[-1.6,-8.32]])
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -154,7 +159,7 @@ ax1.plot(sU_tradeoff_succ_curve2[:,0],sU_tradeoff_succ_curve2[:,1],color="red",l
 #ax1.plot(disc_barrier[:,0],disc_barrier[:,1],linestyle=":")
 
 ax1.plot(sU_pair_log[0:32,0],sU_pair_log[0:32,1],color="black",linewidth=2,linestyle="-")
-#ax1.scatter(sU_pair_log[32:,0],sU_pair_log[32:,1],color="black",marker='.')
+ax1.scatter(sU_pair_log[32:,0],sU_pair_log[32:,1],color="black",marker='.')
 #for i in range(len(indx)):
 for i in range(len(indx)):
     ax1.scatter(sU_comp[i,0],sU_comp[i,1],color=(1-1.0*i/len(indx),0+0.25*i/len(indx),0.25+0.75*i/len(indx)),linewidth=4)
@@ -173,8 +178,8 @@ ax1.set_ylabel(r'Mutation rate ($\log_{10}U$)',fontsize=18,labelpad=10)
 xh_loc = (log10_s_max-1.2*log10_sc_max)
 yh_loc = (log10_U_max-log10_U_min)
 
-plt.text(1.2*log10_sc_max+0.75*xh_loc,log10_U_min+0.65*yh_loc,r'$N = 10^9$',fontsize=16)
-plt.text(1.2*log10_sc_max+0.75*xh_loc,log10_U_min+0.60*yh_loc,r'$v = 5.3\times 10^{-5}$',fontsize=16)
+plt.text(1.2*log10_sc_max+0.70*xh_loc,log10_U_min+0.65*yh_loc,r'$N = 10^9$',fontsize=16)
+plt.text(1.2*log10_sc_max+0.70*xh_loc,log10_U_min+0.60*yh_loc,r'$v = 5.3\times 10^{-5}$',fontsize=16)
 
 plt.text(0.83*log10_sc_max,0.55*log10_U_min,"Concurrent\n   Regime",fontsize=16)
 plt.text(0.85*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fontsize=16)
