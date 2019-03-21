@@ -124,7 +124,7 @@ for i in range(arry_dim):
         if (i!=j+i):
             v1_data[j+i,i] = grand_means[indx,2]
             v2_data[j+i,i] = grand_means[indx,1]
-            
+           
 pickle_file_name = 'data/fig_compareVdata-08.pickle'
 pickle_file = open(pickle_file_name,'wb') 
 pickle.dump([N,s,U,v,parameters,grand_means,sarry,Uarry,v1_data,v2_data],pickle_file,pickle.HIGHEST_PROTOCOL)

@@ -77,18 +77,18 @@ ax2 = ax1.twinx()
 ax2.yaxis.set_ticks(np.arange(0+0.5/(len(my_Ulabel)),1+0.5/(len(my_Ulabel)),1.0/(len(my_Ulabel))))
 ax2.set_yticklabels(my_Ulabel)
 ax2.tick_params(labelsize=12)
-ax2.set_ylabel('Mutation rate trait 2 ($\log_{10}$)',fontsize=18,labelpad=20)
+ax2.set_ylabel('Mutation rate trait 2',fontsize=18,labelpad=20)
 
 ax3 = ax1.twiny()
 ax3.xaxis.set_ticks(np.arange(0+0.5/(len(my_Ulabel)),1+0.5/(len(my_Ulabel)),1.0/(len(my_Ulabel))))
 ax3.set_xticklabels(my_Ulabel)
 ax3.tick_params(labelsize=12)
-ax3.set_xlabel('Mutation rate trait 1 ($\log_{10}$)',fontsize=18,labelpad=20)
+ax3.set_xlabel('Mutation rate trait 1',fontsize=18,labelpad=20)
 #plt.tight_layout()
 fig1.subplots_adjust(bottom=0.2,left=0.2)
 
-plt.text(.21,-2.5,'Trait 1 favored by selection',fontsize=22)
-plt.text(-0.205,13.1,'Trait 2 favored by mutation',rotation=90,fontsize=22)
+plt.text(.21,-2.7,'Trait 1 favored by selection',fontsize=22)
+plt.text(-0.205,13.8,'Trait 2 favored by mutation',rotation=90,fontsize=22)
 
 fig1.savefig('figures/fig_compareVdata2.pdf')
 

@@ -136,10 +136,10 @@ for i in range(len(indx)):
 
 sU_comp = np.asarray(sU_comp)
 
-sU_comp = np.asarray([[-3.3,-0.825],[-3.2,-0.975],[-3.1,-1.175],[-3,-1.375],
+sU_comp = np.asarray([[-3.2,-0.975],[-3.1,-1.175],[-3,-1.375],
                       [-2.9,-1.58],[-2.8,-1.81],[-2.7,-2.04],[-2.6,-2.32],[-2.5,-2.65],
                       [-2.4,-2.98],[-2.3,-3.375],[-2.2,-3.765],[-2.1,-4.275],[-2,-4.93],
-                      [-1.9,-5.54],[-1.8,-6.429],[-1.7,-7.34],[-1.6,-8.32]])
+                      [-1.9,-5.54],[-1.8,-6.429],[-1.7,-7.34],[-1.6,-8.32],[-1.5,-9.4]])
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -185,8 +185,4 @@ plt.text(0.85*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fonts
 plt.text(0.85*log10_sc_max,0.13*log10_U_min,"Discontinuous\n     Regime",color="black",fontsize=16)
 #plt.arrow(1.09*log10_sc_max,0.33*log10_U_min,-.1,1.5,linewidth=2,head_width=.07,color="black")
 
-fig1.savefig('figures\\fig_sUtradeoff_pheno_adapt.pdf')
-
-
-
-
+fig1.savefig('figures/fig_sUtradeoff_pheno_adapt.pdf')
