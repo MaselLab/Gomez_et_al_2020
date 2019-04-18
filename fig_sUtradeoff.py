@@ -53,15 +53,15 @@ pickle_file = open("data/" + pickle_file_name,'rb')
 pickle_file.close()
 
 # set basic parameters of the figure
-[N0,s0,U0] = [1e9,1e-2,1e-5]
-v0 = myfun.get_vDF(N0,s0,U0)    # rate of adpatation (concurrent mutation regime)
-q0 = v0*np.log(s0/U0)/s0**2+1
+[N1,s1,U1] = [1e9,1e-2,1e-5]
+v1 = myfun.get_vDF(N1,s1,U1)    # rate of adpatation (concurrent mutation regime)
+q0 = v1*np.log(s1/U1)/s1**2+1
 
-sp = myfun.s_max_Uc(N0,v0)
-Up = myfun.sU_tradeoff(sp,N0,v0)
+sp = myfun.s_max_Uc(N1,v1)
+Up = myfun.sU_tradeoff(sp,N1,v1)
 
 # setting bounds for the window and computing their log10 values for the log-plot
-[s_min,s_max,U_min,U_max,sc_max,sc_trans] = sU_bounds(N0,v0)
+[s_min,s_max,U_min,U_max,sc_max,sc_trans] = sU_bounds(N1,v1)
 
 log10_s_min = np.log10(s_min)
 log10_s_max = np.log10(s_max)
@@ -92,12 +92,12 @@ drift_barrier = np.log10(np.asarray([[10*s_min, u1[i]] for i in range(no_div)]))
 
 # successional-concurrent barrier (same in pheno and genotype sU space)
 succ_shade = np.log10(np.asarray([[s1[i],U_min,10*U_max] for i in range(no_div)]))
-conc_shade = np.log10(np.asarray([[s1[i],myfun.succ_conc_barrier(s1[i],N0,v0),10*U_max] for i in range(no_div)]))
-conc_barrier = np.log10(np.asarray([[s1[i],myfun.succ_conc_barrier(s1[i],N0,v0)] for i in range(no_div)]))
+conc_shade = np.log10(np.asarray([[s1[i],myfun.succ_conc_barrier(s1[i],N1,v1),10*U_max] for i in range(no_div)]))
+conc_barrier = np.log10(np.asarray([[s1[i],myfun.succ_conc_barrier(s1[i],N1,v1)] for i in range(no_div)]))
 
 # discontinuous-concurrent barrier (same in pheno and genotype sU space)
 disc_shade = np.log10(np.asarray([[s1[i],min(0.1*s1[i],10*U_max),10*U_max] for i in range(no_div)]))
-disc_barrier = np.log10(np.asarray([[s1[i],min((q0-1)*s1[i]*np.exp(-(q0-1)*s0**2/v0),10*U_max)] for i in range(no_div)]))
+disc_barrier = np.log10(np.asarray([[s1[i],min((q0-1)*s1[i]*np.exp(-(q0-1)*s1**2/v1),10*U_max)] for i in range(no_div)]))
 
 # s-thresholds and curves in phenotype space
 log10_sc_max = np.log10(sc_max)
@@ -111,15 +111,15 @@ s_reg3 = np.logspace(-2.4,log10_sc_trans,no_div1)
 s_reg4 = np.logspace(-3.5,log10_s_max,no_div1)
 
 # caluculate U along sU tradeoff for full curve, accounting for transition
-sU_tradeoff_curve = np.log10(np.asarray([[s_reg[i],myfun.sU_tradeoff(s_reg[i],N0,v0)] for i in range(no_div2)]))    
+sU_tradeoff_curve = np.log10(np.asarray([[s_reg[i],myfun.sU_tradeoff(s_reg[i],N1,v1)] for i in range(no_div2)]))    
 
 # caluculate U along sU tradeoff for concurrent regime
-sU_tradeoff_conc_curve1 = np.log10(np.asarray([[s_reg3[i],myfun.sU_tradeoff_conc(s_reg3[i],N0,v0)] for i in range(no_div1)]))    
-sU_tradeoff_conc_curve2 = np.log10(np.asarray([[s_reg4[i],myfun.sU_tradeoff_conc(s_reg4[i],N0,v0)] for i in range(no_div1)]))    
+sU_tradeoff_conc_curve1 = np.log10(np.asarray([[s_reg3[i],myfun.sU_tradeoff_conc(s_reg3[i],N1,v1)] for i in range(no_div1)]))    
+sU_tradeoff_conc_curve2 = np.log10(np.asarray([[s_reg4[i],myfun.sU_tradeoff_conc(s_reg4[i],N1,v1)] for i in range(no_div1)]))    
 
 # caluculate U along sU tradeoff for successional regime
-sU_tradeoff_succ_curve1 = np.log10(np.asarray([[s_reg1[i],myfun.sU_tradeoff_succ(s_reg1[i],N0,v0)] for i in range(no_div1)]))    
-sU_tradeoff_succ_curve2 = np.log10(np.asarray([[s_reg2[i],myfun.sU_tradeoff_succ(s_reg2[i],N0,v0)] for i in range(no_div1)]))    
+sU_tradeoff_succ_curve1 = np.log10(np.asarray([[s_reg1[i],myfun.sU_tradeoff_succ(s_reg1[i],N1,v1)] for i in range(no_div1)]))    
+sU_tradeoff_succ_curve2 = np.log10(np.asarray([[s_reg2[i],myfun.sU_tradeoff_succ(s_reg2[i],N1,v1)] for i in range(no_div1)]))    
 
 sU_pair_log = np.log10(sU_pair)
 
@@ -159,7 +159,7 @@ ax1.plot(sU_tradeoff_succ_curve2[:,0],sU_tradeoff_succ_curve2[:,1],color="red",l
 #ax1.plot(disc_barrier[:,0],disc_barrier[:,1],linestyle=":")
 
 #ax1.plot(sU_pair_log[0:32,0],sU_pair_log[0:32,1],color="black",linewidth=2,linestyle="-")
-#ax1.scatter(sU_pair_log[32:,0],sU_pair_log[32:,1],color="black",marker='.')
+ax1.scatter(sU_pair_log[:,0],sU_pair_log[:,1],color="black",marker='.')
 #for i in range(len(indx)):
 ax1.scatter(sU_comp[:,0],sU_comp[:,1],color="black",linewidth=4)
 #ax1.errorbar(sU_pair_log[:,0],sU_pair_log[:,1],2*new_verr[:],color="black",linewidth=2,linestyle="-")
@@ -173,6 +173,7 @@ ax1.set_ylim([log10_U_min,log10_U_max])
 ax1.set_xlabel(r'Selection coefficient ($\log_{10}s$)',fontsize=18,labelpad=20)
 ax1.set_ylabel(r'Mutation rate ($\log_{10}U$)',fontsize=18,labelpad=10)
 #ax1.legend()
+ax1.tick_params(labelsize=16)
 
 xh_loc = (log10_s_max-1.2*log10_sc_max)
 yh_loc = (log10_U_max-log10_U_min)
@@ -180,9 +181,36 @@ yh_loc = (log10_U_max-log10_U_min)
 plt.text(1.2*log10_sc_max+0.70*xh_loc,log10_U_min+0.65*yh_loc,r'$N = 10^9$',fontsize=16)
 plt.text(1.2*log10_sc_max+0.70*xh_loc,log10_U_min+0.60*yh_loc,r'$v = 5.3\times 10^{-5}$',fontsize=16)
 
-plt.text(0.83*log10_sc_max,0.55*log10_U_min,"Concurrent\n   Regime",fontsize=16)
+plt.text(0.9*log10_sc_max,0.55*log10_U_min,"Traveling Wave\n    Regime",fontsize=16)
 plt.text(0.85*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fontsize=16)
 plt.text(0.85*log10_sc_max,0.13*log10_U_min,"Discontinuous\n     Regime",color="black",fontsize=16)
 #plt.arrow(1.09*log10_sc_max,0.33*log10_U_min,-.1,1.5,linewidth=2,head_width=.07,color="black")
 
-fig1.savefig('figures/fig_sUtradeoff_pheno_adapt.pdf')
+fig1.savefig('figures/fig_sUtradeoff_pheno_adaptN1v1.pdf')
+
+#--------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
+# region with larger v
+
+
+
+
+#--------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
+# region with smaller v
+
+
+
+
+#--------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
+
+
+
+
+#--------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------

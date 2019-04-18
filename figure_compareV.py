@@ -36,11 +36,16 @@ v_comp = v1_data/v2_data
 
 for i in range(n-1):
     for j in range(m-1-i):
-        v_comp[i,m-1-j]= None
+        v_comp[i,m-1-j]= 1
 
+for i in range(n):
+    for j in range(m-i):
+        if (v_comp[i+j,i]< 1):
+            v_comp[i+j,i]=1
+        
 arry_dim = len(sarry)
-my_slabel = ['$10^{'+str(np.round(np.log10(sarry[i,0]),2))+'}$' for i in range(len(sarry))]
-my_Ulabel = ['$10^{'+str(np.round(np.log10(Uarry[i,0]),2))+'}$' for i in range(len(Uarry))]
+my_slabel = ['$10^{'+str(np.round(np.log10(sarry[i,0]),1))+'}$' for i in range(len(sarry))]
+my_Ulabel = ['$10^{'+str(np.round(np.log10(Uarry[i,0]),1))+'}$' for i in range(len(Uarry))]
 
 #my_slabel = ['$'+str(np.round(np.log10(sarry[i,0]),2))+'$' for i in range(len(sarry))]
 #my_Ulabel = ['$'+str(np.round(np.log10(Uarry[i,0]),2))+'$' for i in range(len(Uarry))]
@@ -60,7 +65,7 @@ fig1, ax1 = plt.subplots(1,1,figsize=[15,10])
 fit_distr_2d = ax1.pcolormesh(v_comp.transpose(),cmap=plt.cm.gray_r)
 cbar = plt.colorbar(fit_distr_2d,pad = 0.15)
 #ax1.plot(x_border,y_border,color="black")
-#ax1.axis('tight')        
+ax1.axis('tight')        
 ax1.set_xticks(np.arange(arry_dim)+0.5)
 ax1.set_yticks(np.arange(arry_dim)+0.5)        
 ax1.set_xticklabels(my_slabel)
@@ -72,12 +77,14 @@ cbar.ax.text(2.8,0.6,'Ratio of $v_1/v_2$',rotation=270,fontsize=22)
 
 plt.text(1,m-1,r'$N = 10^9$',fontsize=18)
 plt.text(1,m-1.7,r'$v = 5.3\times 10^{-5}$',fontsize=18)
+#ax1.add_patch(Rectangle((someX - 0.1, someY - 0.1), 0.2, 0.2,
+#                      alpha=1, facecolor='none'))
 
 ax2 = ax1.twinx()
 ax2.yaxis.set_ticks(np.arange(0+0.5/(len(my_Ulabel)),1+0.5/(len(my_Ulabel)),1.0/(len(my_Ulabel))))
 ax2.set_yticklabels(my_Ulabel)
 ax2.tick_params(labelsize=12)
-ax2.set_ylabel('Mutation rate trait 2',fontsize=18,labelpad=20)
+ax2.set_ylabel('Mutation rate trait 2',fontsize=18,labelpad=20,rotation=270)
 
 ax3 = ax1.twiny()
 ax3.xaxis.set_ticks(np.arange(0+0.5/(len(my_Ulabel)),1+0.5/(len(my_Ulabel)),1.0/(len(my_Ulabel))))
@@ -85,11 +92,51 @@ ax3.set_xticklabels(my_Ulabel)
 ax3.tick_params(labelsize=12)
 ax3.set_xlabel('Mutation rate trait 1',fontsize=18,labelpad=20)
 #plt.tight_layout()
+
 fig1.subplots_adjust(bottom=0.2,left=0.2)
 
-plt.text(.21,-2.7,'Trait 1 favored by selection',fontsize=22)
-plt.text(-0.205,13.8,'Trait 2 favored by mutation',rotation=90,fontsize=22)
+plt.text(.21,-3.0,'Trait 1 favored by selection',fontsize=22)
+plt.text(-0.185,16.0,'Trait 2 favored by mutation',rotation=90,fontsize=22)
+        
+# color x axis
+ax1.annotate("",
+            xy=(0,-.90), xycoords='data',
+            xytext=(8,-0.90), textcoords='data',
+            arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='g',lw=5),
+            annotation_clip=False)
 
-fig1.savefig('figures/fig_compareVdata2.pdf')
+ax1.annotate("",
+            xy=(8,-0.90), xycoords='data',
+            xytext=(19,-0.90), textcoords='data',
+            arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='y',lw=5),
+            annotation_clip=False)
+
+ax1.annotate("",
+            xy=(19,-0.90), xycoords='data',
+            xytext=(21,-0.90), textcoords='data',
+            arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='b',lw=5),
+            annotation_clip=False)
+            
+# color y axis
+ax1.annotate("",
+            xy=(-1.65,0), xycoords='data',
+            xytext=(-1.6,8), textcoords='data',
+            arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='g',lw=5),
+            annotation_clip=False)
+
+ax1.annotate("",
+            xy=(-1.65,8), xycoords='data',
+            xytext=(-1.6,19), textcoords='data',
+            arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='y',lw=5),
+            annotation_clip=False)
+
+ax1.annotate("",
+            xy=(-1.65,19), xycoords='data',
+            xytext=(-1.6,21), textcoords='data',
+            arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='b',lw=5),
+            annotation_clip=False)
+
+            
+fig1.savefig('figures/fig_compareVdata2.pdf',bbox_inches='tight')
 
 # need to creat a figure with v_g rather than v_w used above

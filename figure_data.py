@@ -84,10 +84,10 @@ import copy as cpy
 # read matlab outputs and create python data for figure using grand means
 # -----------------------------------------------------------------------------
 
-data_file=open('data/mutBiasCI_data_all_simulation_grand_means_ml-08-1.dat')
+data_file=open('data/mutBiasCI_data_all_simulation_grand_means_ml-08-1-v2.dat')
 grand_means = data_file.read().splitlines()
 data_file.close()
-data_file=open('data/mutBiasCI_data_all_simulation_parameters_ml-08-0.dat')
+data_file=open('data/mutBiasCI_data_all_simulation_parameters_ml-08-0-v2.dat')
 parameters = data_file.read().splitlines()
 data_file.close()
 del data_file

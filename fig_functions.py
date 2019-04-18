@@ -227,7 +227,7 @@ def sU_tradeoff_succ(s,N,v):
     # Outputs:
     # U - beneficial mutation rate yielding v, given N and s
     
-    U = v/(N*s**2)
+    U = v*(1+s)**2/(2*N*s**2)
     
     return U
     
@@ -243,7 +243,7 @@ def sU_tradeoff_genotype_succ(s,N,v):
     # Outputs:
     # U - beneficial mutation rate yielding v, given N and s
     
-    U = v/(N*s)
+    U = v*(1+s)**2/(2*N*s)
     
     return U
 
