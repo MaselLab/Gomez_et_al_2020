@@ -49,7 +49,7 @@ def sU_bounds(N,v):
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
     
-def get_graph_data(N,s,v,log_s_lbd1,log_s_lbd2):
+def get_graph_data(N,s,v,log_s_lbd1,log_s_lbd2,log_s_lbd3):
     # computes tradeoff curves given parameters
     #
     # inputs:
@@ -81,8 +81,8 @@ def get_graph_data(N,s,v,log_s_lbd1,log_s_lbd2):
     s_reg2 = np.logspace(log10_sc_trans,log10_s_max,no_div1)
     s_reg3 = np.logspace(log_s_lbd2,log10_sc_trans,no_div1)
     s_reg4 = np.logspace(log_s_lbd1,log10_s_max,no_div1)
-    s_reg5 = np.logspace(log_s_lbd2,log10_s_max,no_div1)
-    s_reg6 = np.logspace(log_s_lbd1,log10_s_max,no_div1)
+    s_reg5 = np.logspace(log_s_lbd2,log_s_lbd3,no_div1)
+    s_reg6 = np.logspace(log_s_lbd1,log_s_lbd3,no_div1)
     
     # successional-concurrent barrier (same in pheno and genotype sU space)
     succ_shade = np.log10(np.asarray([[s1[i],U_min,10*U_max] for i in range(no_div)]))
@@ -111,39 +111,41 @@ def get_graph_data(N,s,v,log_s_lbd1,log_s_lbd2):
 # -----------------------------------------------------------------------------
 
 # simulation estimates for N-medium, v-medium
-pickle_file_name = 'fig_discVdata-06.pickle'
-pickle_file = open("data/" + pickle_file_name,'rb') 
-[sU_pair,v_data,parameters,grand_means] = pickle.load(pickle_file)
+pickle_file = open('data/fig_sUtradeoff_simdata-01.pickle','rb') 
+[Nv_param,sU_data] = pickle.load(pickle_file)
 pickle_file.close()
 
-indx = [4,6,8,10,12,14,16,18,20,22,24,26,29,31,33,36,38,40]
-sU_pair_log = np.log10(sU_pair)
-sU_comp = []
+for i in range(6):
+    sU_data[i]=np.log10(sU_data[i])
 
-for i in range(len(indx)):
-    sU_comp += [[np.log10(sU_pair[indx[i],0]),np.log10(sU_pair[indx[i],1])]]
-
-sU_comp = np.asarray(sU_comp)
-
-# manual estimates
-sU_comp = np.asarray([[-3.2,-0.975],[-3.1,-1.175],[-3,-1.375],
-                      [-2.9,-1.58],[-2.8,-1.81],[-2.7,-2.04],[-2.6,-2.32],[-2.5,-2.65],
-                      [-2.4,-2.98],[-2.3,-3.375],[-2.2,-3.765],[-2.1,-4.275],[-2,-4.93],
-                      [-1.9,-5.54],[-1.8,-6.429],[-1.7,-7.34],[-1.6,-8.32],[-1.5,-9.4]])
+#indx = [4,6,8,10,12,14,16,18,20,22,24,26,29,31,33,36,38,40]
+#sU_pair_log = np.log10(sU_pair)
+#sU_comp = []
+#
+#for i in range(len(indx)):
+#    sU_comp += [[np.log10(sU_pair[indx[i],0]),np.log10(sU_pair[indx[i],1])]]
+#
+#sU_comp = np.asarray(sU_comp)
+#
+## manual estimates
+#sU_comp = np.asarray([[-3.2,-0.975],[-3.1,-1.175],[-3,-1.375],
+#                      [-2.9,-1.58],[-2.8,-1.81],[-2.7,-2.04],[-2.6,-2.32],[-2.5,-2.65],
+#                      [-2.4,-2.98],[-2.3,-3.375],[-2.2,-3.765],[-2.1,-4.275],[-2,-4.93],
+#                      [-1.9,-5.54],[-1.8,-6.429],[-1.7,-7.34],[-1.6,-8.32],[-1.5,-9.4]])
 
 # -----------------------------------------------------------------------------
 # set basic parameters of the figure for varying v
 # -----------------------------------------------------------------------------
 
-[Nl,Nm,Nh,s,U] = [1e6,1e9,1e20,1e-2,1e-5]
+[Nl,Nm,Nh,s,U] = [1e6,1e9,1e18,1e-2,1e-5]
 vl = myfun.get_vDF(Nl,s,U)
 vm = myfun.get_vDF(Nm,s,U)
 vh = myfun.get_vDF(Nh,s,U)
 
-[log_s_lbd1,log_s_lbd2] = [-3.5,-2.4]
-[succ_sh_vl,conc_sh_vl,disc_sh_vl,c_curve1_vl,c_curve2_vl,s_curve1_vl,s_curve2_vl,sU_curve1_vl,sU_curve2_vl] = get_graph_data(Nm,s,vl,log_s_lbd1,log_s_lbd2)
-[succ_sh_vm,conc_sh_vm,disc_sh_vm,c_curve1_vm,c_curve2_vm,s_curve1_vm,s_curve2_vm,sU_curve1_vm,sU_curve2_vm] = get_graph_data(Nm,s,vm,log_s_lbd1,0.95*log_s_lbd2)
-[succ_sh_vh,conc_sh_vh,disc_sh_vh,c_curve1_vh,c_curve2_vh,s_curve1_vh,s_curve2_vh,sU_curve1_vh,sU_curve2_vh] = get_graph_data(Nm,s,vh,log_s_lbd1,0.85*log_s_lbd2)
+[log_s_lbd1,log_s_lbd2,log_s_lbd3] = [-3.5,-2.4,-0.5]
+[succ_sh_vl,conc_sh_vl,disc_sh_vl,c_curve1_vl,c_curve2_vl,s_curve1_vl,s_curve2_vl,sU_curve1_vl,sU_curve2_vl] = get_graph_data(Nm,s,vl,log_s_lbd1,log_s_lbd2,log_s_lbd3)
+[succ_sh_vm,conc_sh_vm,disc_sh_vm,c_curve1_vm,c_curve2_vm,s_curve1_vm,s_curve2_vm,sU_curve1_vm,sU_curve2_vm] = get_graph_data(Nm,s,vm,log_s_lbd1,0.95*log_s_lbd2,log_s_lbd3)
+[succ_sh_vh,conc_sh_vh,disc_sh_vh,c_curve1_vh,c_curve2_vh,s_curve1_vh,s_curve2_vh,sU_curve1_vh,sU_curve2_vh] = get_graph_data(Nm,s,vh,log_s_lbd1,0.85*log_s_lbd2,log_s_lbd3)
 
 [s_min,s_max,U_min,U_max,sc_max,sc_trans] = sU_bounds(Nm,vm)
 [log10_s_min,log10_s_max,log10_U_min,log10_U_max,log10_sc_max,log10_sc_trans] = \
@@ -184,7 +186,9 @@ ax1.plot(sU_curve2_vh[:,0],sU_curve2_vh[:,1],color="red",linewidth=2,linestyle="
 #ax1.plot(s_curve2_vh[:,0],s_curve2_vh[:,1],color="red",linewidth=2,linestyle="-",label="Origin-fixation")
 
 # plot of piecewise concurrent/successional curves
-#ax1.scatter(sU_pair_log[:,0],sU_pair_log[:,1],color="black",marker='.')
+ax1.scatter(sU_data[0][:,0],sU_data[0][:,1],color="mediumblue",marker='.')
+ax1.scatter(sU_data[1][:,0],sU_data[1][:,1],color="purple",marker='.')
+ax1.scatter(sU_data[2][:,0],sU_data[2][:,1],color="red",marker='.')
 #ax1.scatter(sU_comp[:,0],sU_comp[:,1],color="black",linewidth=4)
 
 # set figure dimensions
@@ -199,10 +203,10 @@ ax1.legend(loc=3)
 xh_loc = (log10_s_max-1.2*log10_sc_max)
 yh_loc = (log10_U_max-log10_U_min)
 
-plt.text(1.2*log10_sc_max+0.70*xh_loc,log10_U_min+0.65*yh_loc,r'$N = 10^9$',fontsize=16)
+plt.text(1.1*log10_sc_max+0.70*xh_loc,log10_U_min+0.65*yh_loc,r'$N = 10^9$',fontsize=16)
 #plt.text(1.2*log10_sc_max+0.70*xh_loc,log10_U_min+0.60*yh_loc,r'$v = 5.3\times 10^{-5}$',fontsize=16)
 plt.text(1.0*log10_sc_max,0.55*log10_U_min,"Traveling Wave\n    Regime",fontsize=16)
-plt.text(0.75*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fontsize=16)
+plt.text(0.75*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fig1ontsize=16)
 plt.text(0.85*log10_sc_max,0.13*log10_U_min,"Discontinuous\n     Regime",color="black",fontsize=16)
 
 fig1.savefig('figures/fig_sUtradeoff_pheno_adapt_v.pdf')

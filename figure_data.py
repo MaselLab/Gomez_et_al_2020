@@ -251,3 +251,43 @@ pickle_file.close()
 #        logU_check[i,0] = -6.3*(np.log10(sarry[i])+1.5)-9.6
 #    else:
 #        logU_check[i,0] = -2*(np.log10(sarry[i])+1.5)-10
+
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------    
+# Download estimates from matlab and store data for tradeoff curve figures
+
+#libraries
+import pickle
+import scipy as sp
+import numpy as np
+import copy as cpy
+
+# read matlab outputs and create python data for figure using grand means
+Nv_param=[]
+sU_data=[]
+
+def read_my_data(mydata):
+    n = len(mydata)     
+    for i in range(n):
+        mydata[i]='mydata[i]=['+mydata[i].replace('\t',',')+']'
+        exec(mydata[i])
+    return np.asarray(mydata)
+   
+for i in range(6):
+    data_file=open('data/SAapprox/mutBiasCI_estimate_U_ml-2-'+str(i+1)+'-0.dat')
+    temp_param = data_file.read().splitlines()
+    Nv_param += [read_my_data(temp_param)] 
+    data_file.close()
+    
+    data_file=open('data/SAapprox/mutBiasCI_estimate_U_ml-2-'+str(i+1)+'-1.dat')
+    temp_data = data_file.read().splitlines()
+    sU_data += [read_my_data(temp_data)]
+    data_file.close()
+
+del data_file
+
+pickle_file_name = 'data/fig_sUtradeoff_simdata-01.pickle'
+pickle_file = open(pickle_file_name,'wb') 
+pickle.dump([Nv_param,sU_data],pickle_file,pickle.HIGHEST_PROTOCOL)
+pickle_file.close()
