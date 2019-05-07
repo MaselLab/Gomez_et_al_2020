@@ -285,6 +285,26 @@ for i in range(6):
     sU_data += [read_my_data(temp_data)]
     data_file.close()
 
+Nv_param2=[]
+sU_data2=[]
+
+for i in range(2):
+    data_file=open('data/SAapprox/mutBiasCI_estimate_U_ml-3-'+str(i+1)+'-0.dat')
+    temp_param = data_file.read().splitlines()
+    Nv_param2 += [read_my_data(temp_param)] 
+    data_file.close()
+    
+    data_file=open('data/SAapprox/mutBiasCI_estimate_U_ml-3-'+str(i+1)+'-1.dat')
+    temp_data = data_file.read().splitlines()
+    sU_data2 += [read_my_data(temp_data)]
+    data_file.close()
+
+Nv_param[0] = Nv_param2[0]
+Nv_param[2] = Nv_param2[1] 
+
+sU_data[0] = sU_data2[0]
+sU_data[2] = sU_data2[1]
+
 del data_file
 
 pickle_file_name = 'data/fig_sUtradeoff_simdata-01.pickle'

@@ -189,7 +189,7 @@ def sU_tradeoff(s,N,v):
     # Outputs:
     # U - beneficial mutation rate yielding v, given N and s
 
-    U1 = v/(2*N*s**2)                 # successional regime 
+    U1 = v*(1+s)**2/(2*N*s**2)                 # successional regime 
     U2 = s*np.exp(-(0.5*s**2/v)*(np.sqrt(8*theta(s,N,v)+1)-1))  # concurrent mutations regime      
     
     U = max(U1,U2)

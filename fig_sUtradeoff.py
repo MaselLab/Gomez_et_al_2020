@@ -164,11 +164,11 @@ ax1.fill_between(succ_sh_vm[:,0],succ_sh_vm[:,1],succ_sh_vm[:,2],facecolor="deep
 ax1.fill_between(conc_sh_vm[:,0],conc_sh_vm[:,1],conc_sh_vm[:,2],facecolor="gold")
 ax1.fill_between(disc_sh_vm[:,0],disc_sh_vm[:,1],disc_sh_vm[:,2],facecolor="limegreen")
 
-ax1.plot(sU_curve1_vl[:,0],sU_curve1_vl[:,1],color="mediumblue",linewidth=2,linestyle="-",label='v='+'%e' % vl)
+ax1.plot(sU_curve1_vl[:,0],sU_curve1_vl[:,1],color="mediumblue",linewidth=2,linestyle="-",label='v='+'%.2e' % vl)
 ax1.plot(sU_curve2_vl[:,0],sU_curve2_vl[:,1],color="mediumblue",linewidth=2,linestyle=":")
-ax1.plot(sU_curve1_vm[:,0],sU_curve1_vm[:,1],color="purple",linewidth=2,linestyle="-",label='v='+'%e' % vm)
+ax1.plot(sU_curve1_vm[:,0],sU_curve1_vm[:,1],color="purple",linewidth=2,linestyle="-",label='v='+'%.2e' % vm)
 ax1.plot(sU_curve2_vm[:,0],sU_curve2_vm[:,1],color="purple",linewidth=2,linestyle=":")
-ax1.plot(sU_curve1_vh[:,0],sU_curve1_vh[:,1],color="red",linewidth=2,linestyle="-",label='v='+'%e' % vh)
+ax1.plot(sU_curve1_vh[:,0],sU_curve1_vh[:,1],color="red",linewidth=2,linestyle="-",label='v='+'%.2e' % vh)
 ax1.plot(sU_curve2_vh[:,0],sU_curve2_vh[:,1],color="red",linewidth=2,linestyle=":")
 
 # plot of piecewise concurrent/successional curves
@@ -185,10 +185,10 @@ ax1.plot(sU_curve2_vh[:,0],sU_curve2_vh[:,1],color="red",linewidth=2,linestyle="
 #ax1.plot(s_curve1_vh[:,0],s_curve1_vh[:,1],color="red",linewidth=2,linestyle=":")
 #ax1.plot(s_curve2_vh[:,0],s_curve2_vh[:,1],color="red",linewidth=2,linestyle="-",label="Origin-fixation")
 
-# plot of piecewise concurrent/successional curves
-ax1.scatter(sU_data[0][:,0],sU_data[0][:,1],color="mediumblue",marker='.')
-ax1.scatter(sU_data[1][:,0],sU_data[1][:,1],color="purple",marker='.')
-ax1.scatter(sU_data[2][:,0],sU_data[2][:,1],color="red",marker='.')
+# plot simulated data points of sU tradeoff concurrent/successional curves
+ax1.scatter(sU_data[0][:,0],sU_data[0][:,1],color="mediumblue",linewidth=2)
+ax1.scatter(sU_data[1][:,0],sU_data[1][:,1],color="purple",linewidth=2)
+ax1.scatter(sU_data[2][:,0],sU_data[2][:,1],color="red",linewidth=2)
 #ax1.scatter(sU_comp[:,0],sU_comp[:,1],color="black",linewidth=4)
 
 # set figure dimensions
@@ -217,9 +217,9 @@ fig1.savefig('figures/fig_sUtradeoff_pheno_adapt_v.pdf')
 # selecting parameters for sU tradeoff curves with varying N
 
 [Nl,Nm,Nh,s,U] = [1e7,1e9,1e11,1e-2,1e-5]
-[succ_sh_Nl,conc_sh_Nl,disc_sh_Nl,c_curve1_Nl,c_curve2_Nl,s_curve1_Nl,s_curve2_Nl,sU_curve1_Nl,sU_curve2_Nl] = get_graph_data(Nl,s,vm,log_s_lbd1,log_s_lbd2)
-[succ_sh_Nm,conc_sh_Nm,disc_sh_Nm,c_curve1_Nm,c_curve2_Nm,s_curve1_Nm,s_curve2_Nm,sU_curve1_Nm,sU_curve2_Nm] = get_graph_data(Nm,s,vm,log_s_lbd1,log_s_lbd2)
-[succ_sh_Nh,conc_sh_Nh,disc_sh_Nh,c_curve1_Nh,c_curve2_Nh,s_curve1_Nh,s_curve2_Nh,sU_curve1_Nh,sU_curve2_Nh] = get_graph_data(Nh,s,vm,log_s_lbd1,log_s_lbd2)
+[succ_sh_Nl,conc_sh_Nl,disc_sh_Nl,c_curve1_Nl,c_curve2_Nl,s_curve1_Nl,s_curve2_Nl,sU_curve1_Nl,sU_curve2_Nl] = get_graph_data(Nl,s,vm,log_s_lbd1,log_s_lbd2,log_s_lbd3)
+[succ_sh_Nm,conc_sh_Nm,disc_sh_Nm,c_curve1_Nm,c_curve2_Nm,s_curve1_Nm,s_curve2_Nm,sU_curve1_Nm,sU_curve2_Nm] = get_graph_data(Nm,s,vm,log_s_lbd1,log_s_lbd2,log_s_lbd3)
+[succ_sh_Nh,conc_sh_Nh,disc_sh_Nh,c_curve1_Nh,c_curve2_Nh,s_curve1_Nh,s_curve2_Nh,sU_curve1_Nh,sU_curve2_Nh] = get_graph_data(Nh,s,vm,log_s_lbd1,log_s_lbd2,log_s_lbd3)
 
 [s_min,s_max,U_min,U_max,sc_max,sc_trans] = sU_bounds(Nm,vm)
 [log10_s_min,log10_s_max,log10_U_min,log10_U_max,log10_sc_max,log10_sc_trans] = \
@@ -232,12 +232,18 @@ fig1.savefig('figures/fig_sUtradeoff_pheno_adapt_v.pdf')
     
 fig2, ax2 = plt.subplots(1,1,figsize=[8,8])
 
-ax2.plot(sU_curve1_Nl[:,0],sU_curve1_Nl[:,1],color="mediumblue",linewidth=2,linestyle="-",label='N='+'%e' % Nl)
+ax2.plot(sU_curve1_Nl[:,0],sU_curve1_Nl[:,1],color="mediumblue",linewidth=2,linestyle="-",label='N='+'%.1e' % Nl)
 ax2.plot(sU_curve2_Nl[:,0],sU_curve2_Nl[:,1],color="mediumblue",linewidth=2,linestyle=":")
-ax2.plot(sU_curve1_Nm[:,0],sU_curve1_Nm[:,1],color="purple",linewidth=2,linestyle="-",label='N='+'%e' % Nm)
+ax2.plot(sU_curve1_Nm[:,0],sU_curve1_Nm[:,1],color="purple",linewidth=2,linestyle="-",label='N='+'%.1e' % Nm)
 ax2.plot(sU_curve2_Nm[:,0],sU_curve2_Nm[:,1],color="purple",linewidth=2,linestyle=":")
-ax2.plot(sU_curve1_Nh[:,0],sU_curve1_Nh[:,1],color="red",linewidth=2,linestyle="-",label='N='+'%e' % Nh)
+ax2.plot(sU_curve1_Nh[:,0],sU_curve1_Nh[:,1],color="red",linewidth=2,linestyle="-",label='N='+'%.1e' % Nh)
 ax2.plot(sU_curve2_Nh[:,0],sU_curve2_Nh[:,1],color="red",linewidth=2,linestyle=":")
+
+
+# plot simulated data points of sU tradeoff concurrent/successional curves
+ax2.scatter(sU_data[3][:,0],sU_data[3][:,1],color="mediumblue",linewidth=2)
+ax2.scatter(sU_data[4][:,0],sU_data[4][:,1],color="purple",linewidth=2)
+ax2.scatter(sU_data[5][:,0],sU_data[5][:,1],color="red",linewidth=2)
 
 #ax1.plot(sU_pair_log[0:32,0],sU_pair_log[0:32,1],color="black",linewidth=2,linestyle="-")
 #ax2.scatter(sU_pair_log[:,0],sU_pair_log[:,1],color="black",marker='.')
