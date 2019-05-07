@@ -206,7 +206,7 @@ yh_loc = (log10_U_max-log10_U_min)
 plt.text(1.1*log10_sc_max+0.70*xh_loc,log10_U_min+0.65*yh_loc,r'$N = 10^9$',fontsize=16)
 #plt.text(1.2*log10_sc_max+0.70*xh_loc,log10_U_min+0.60*yh_loc,r'$v = 5.3\times 10^{-5}$',fontsize=16)
 plt.text(1.0*log10_sc_max,0.55*log10_U_min,"Traveling Wave\n    Regime",fontsize=16)
-plt.text(0.75*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fig1ontsize=16)
+plt.text(0.75*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fontsize=16)
 plt.text(0.85*log10_sc_max,0.13*log10_U_min,"Discontinuous\n     Regime",color="black",fontsize=16)
 
 fig1.savefig('figures/fig_sUtradeoff_pheno_adapt_v.pdf')
