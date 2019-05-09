@@ -13,6 +13,7 @@ data and create figures in the mutation-driven adaptation manuscript.
 import pickle
 import matplotlib.pyplot as plt
 import scipy as sp
+import scipy.optimize as op
 import numpy as np
 from numpy import inf
 
@@ -278,3 +279,6 @@ def sU_tradeoff_genotype_conc(s,N,v):
     U = s*np.exp(-(0.5*s/v)*(np.sqrt(8*theta_genotype(s,N,v)+1)-1))
         
     return U
+
+def hall_U_approx(s,N,v):
+    return 2*np.sqrt(2*v/np.log(N**2*v))/s**2  

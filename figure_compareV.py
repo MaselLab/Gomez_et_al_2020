@@ -25,7 +25,7 @@ import matplotlib.mlab as mlab
     
 # load processed matlab data for figure
 # -----------------------------------------------------------------------------
-pickle_file_name = 'fig_compareVdata-08.pickle'
+pickle_file_name = 'fig_compareVdata-15.pickle'
 pickle_file = open("data/" + pickle_file_name,'rb') 
 [N,s,U,v,parameters,grand_means,sarry,Uarry,v1_data,v2_data] = pickle.load(pickle_file)
 pickle_file.close()
@@ -95,48 +95,47 @@ ax3.set_xlabel('Mutation rate trait 1',fontsize=18,labelpad=20)
 
 fig1.subplots_adjust(bottom=0.2,left=0.2)
 
-plt.text(.21,-3.0,'Trait 1 favored by selection',fontsize=22)
-plt.text(-0.185,16.0,'Trait 2 favored by mutation',rotation=90,fontsize=22)
+plt.text(.21,-2.1,'Trait 1 favored by selection',fontsize=22)
+plt.text(-0.185,11.5,'Trait 2 favored by mutation',rotation=90,fontsize=22)
         
 # color x axis
 ax1.annotate("",
-            xy=(0,-.90), xycoords='data',
-            xytext=(8,-0.90), textcoords='data',
+            xy=(0,-.60), xycoords='data',
+            xytext=(5,-0.60), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='g',lw=5),
             annotation_clip=False)
 
 ax1.annotate("",
-            xy=(8,-0.90), xycoords='data',
-            xytext=(19,-0.90), textcoords='data',
+            xy=(5,-.60), xycoords='data',
+            xytext=(10,-.60), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='y',lw=5),
             annotation_clip=False)
 
 ax1.annotate("",
-            xy=(19,-0.90), xycoords='data',
-            xytext=(21,-0.90), textcoords='data',
+            xy=(10,-.60), xycoords='data',
+            xytext=(15,-.60), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='b',lw=5),
             annotation_clip=False)
             
 # color y axis
 ax1.annotate("",
-            xy=(-1.65,0), xycoords='data',
-            xytext=(-1.6,8), textcoords='data',
+            xy=(-1.2,0), xycoords='data',
+            xytext=(-1.2,5), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='g',lw=5),
             annotation_clip=False)
 
 ax1.annotate("",
-            xy=(-1.65,8), xycoords='data',
-            xytext=(-1.6,19), textcoords='data',
+            xy=(-1.2,5), xycoords='data',
+            xytext=(-1.2,10), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='y',lw=5),
             annotation_clip=False)
 
 ax1.annotate("",
-            xy=(-1.65,19), xycoords='data',
-            xytext=(-1.6,21), textcoords='data',
+            xy=(-1.2,10), xycoords='data',
+            xytext=(-1.2,15), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='b',lw=5),
             annotation_clip=False)
-
             
-fig1.savefig('figures/fig_compareVdata2.pdf',bbox_inches='tight')
+fig1.savefig('figures/fig_compareVdata3.pdf',bbox_inches='tight')
 
 # need to creat a figure with v_g rather than v_w used above
