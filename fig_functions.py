@@ -210,7 +210,7 @@ def sU_tradeoff_genotype(s,N,v):
     # U - beneficial mutation rate yielding v, given N and s
 
     if (theta_genotype(s,N,v) < 1):              # successional regime 
-        U = v/(2*N*s)
+        U = v*(1+s)**2/(2*N*s)
     else:                               # concurrent mutations regime                              
         U = s*np.exp(-(0.5*s/v)*(np.sqrt(8*theta_genotype(s,N,v)+1)-1))
         
@@ -228,7 +228,7 @@ def sU_tradeoff_succ(s,N,v):
     # Outputs:
     # U - beneficial mutation rate yielding v, given N and s
     
-    U = v/(2*N*s**2)
+    U = v*(1+s)**2/(2*N*s**2)
     
     return U
     
