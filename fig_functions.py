@@ -281,4 +281,6 @@ def sU_tradeoff_genotype_conc(s,N,v):
     return U
 
 def hall_U_approx(s,N,v):
-    return 2*np.sqrt(2*v/np.log(N**2*v))/s**2  
+    theta = N*np.sqrt(v)
+    U = 2*(theta**3/np.sqrt(6**(1/6)*theta))/s**2
+    return U 
