@@ -1,66 +1,48 @@
 %% setup array for parameters N,s1,s2,u1,u2
+% Simulate the s-U relationship in the discontinuous regime with
+% deleterious mutations included
+
 N = 1e9;
 s = 1e-2;
 U = 1e-5;
 v = s^2*(2*log(N*s)-log(s/U))/(log(s/U)^2);                 % extend this to a range of v
 digits(16)
+
 rng(7);                                                     % set seed for random number generator
 
-sarry = 10.^[-3.2,-3.1,-3,-2.9,-2.8,-2.7,-2.6,-2.5,-2.4,-2.3,-2.2,-2.1,-2,-1.9,-1.8,-1.7,-1.6,-1.5,-1.4,-1.3,-1.2];
-% Uarry = 10.^[-0.975,-1.175,-1.375,-1.58,-1.81,-2.04,-2.32,-2.65,-2.98,-3.394,-3.863,-4.396,-5,-5.59145,-6.3087, ...
-%                 -7.15715,-8.13285,-9.218528233424163,-10.475065512980564 -10.675065512980563 -10.875065512980562];
-Uarry = 10.^[-0.975,-1.175,-1.375,-1.58,-1.81,-2.04,-2.32,-2.65,-2.98,-3.394,-3.863,-4.396,-5,-5.59145,-6.3087, ...
-                -7.15715,-8.13285,-9.4000,-10.299999999677,-10.7500000000095,-11.250000000147];
-            
-data_pts = length(sarry);
+% s and U pairs that give v=5.308e-5 with N=1e9
+sU = dlmread('data/mutBiasCI_estimate_U_ml-6-2-1.dat',',');
+sarry = sU(:,1);
+Uarry = sU(:,2);
 
-% sarry = (1e-3)*(2e-2/1e-3).^((0:1:data_pts)./data_pts);     % range for possible s & U values
-% Uarry = ones(size(sarry));
-% for i=1:length(sarry)
-%     si = sarry(i);
-%     Ui = exp( (0.5*si^2/v) * ( 1 + 2*v*log(si)/si^2 - sqrt(1 + 8*v*log(N*si)/si^2) ) );
-%     Uarry(i) = Ui; 
-%     varry(i) = si.^2.*(2*log(N*si)-log(si./Ui))./(log(si./Ui).^2);      % checking that Ui is correct solution
-%     qarry(i) = 2*log(N*si)./log(si./Ui);
-% end
-% Examine whether s,U combinations give the traveling wave regime
-% [(1:51)' log10(sarry') log10(Uarry'./sarry') log10(N*Uarry') log10(N*Uarry'.*log(N*sarry')) qarry'] 
+steps = 1.0e6;
+start_time = 5e3;                     % collect data on distribution at start time
+end_time = 5e3;                       % collect data on distribution at end time
+outputfile = '~/Documents/mutBiasCI/data/mutBiasCI_data_for_2d_distribution_ml-16'; 
 
-steps = 5e5;
-start_time = 5e4;                     % collect data on distribution at start time
-end_time = 6.5e4;                       % collect data on distribution at end time
-outputfile = '~/Documents/mutBiasCI/data/mutBiasCI_data_for_2d_distribution_ml-13'; 
-% number_of_sims = 0.5*data_pts*(data_pts+1);
-% number_of_sims = data_pts;
-number_of_sims = 4*(data_pts-4) + 10;
+data_pts_s = length(sarry);
+number_of_sims = floor(0.5*data_pts_s*(data_pts_s+1));
 
 collect_distribution_data = zeros(number_of_sims,1);
-collect_distribution_data([3 30])=1;
 indx_of_collected_data = [];
 
 NsU = zeros(number_of_sims,7);          % array that stores the parameters [N,s1,u1,s2,u2]
 sim_data = zeros(number_of_sims,6);     % data collected [v,v1,v2,varx,vary,cov]
 
+indx = 0;
 tic
-for i=1:data_pts
-    for j=max(i,data_pts-3):data_pts
-        
-        l = (j-data_pts+4)-max(0,i-data_pts+3);
-        k = min((i-1)*4,(data_pts-4)*4);
-        m = max(0,10-0.5*(data_pts-i+1)*(data_pts-i+2));
-        indx = l+k+m
-        
-        NsU(indx,:)=[N sarry(i) Uarry(i) sarry(j) Uarry(j) Uarry(i) Uarry(j)];
+for i=1:data_pts_s
+    for j=i:data_pts_s
+        indx = indx + 1
+        NsU(indx,:)=[N,sarry(i),Uarry(i),sarry(j),Uarry(j),Uarry(i),Uarry(j)];
         [sim_data(indx,1),sim_data(indx,2),sim_data(indx,3),sim_data(indx,4),sim_data(indx,5),sim_data(indx,6)] ...
-            = stochastic_simulation_two_traits(N,sarry(i),Uarry(i),sarry(j),Uarry(j),Uarry(i),Uarry(j),steps,collect_distribution_data(indx), ...
-            start_time,end_time,[outputfile '-' num2str(indx)]);
-        if(collect_distribution_data(indx))
-            indx_of_collected_data = [indx_of_collected_data; indx];
-        end
+            = stochastic_simulation_two_traits2(N,sarry(i),Uarry(i),sarry(j),Uarry(j),Uarry(i),Uarry(j),steps, ...
+                collect_distribution_data(indx),start_time,end_time,[outputfile '-' num2str(indx)]);
     end
+    
 end
 toc
 
-dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_parameters_ml-13-0.dat',NsU,'delimiter',',','precision',16);
-dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_grand_means_ml-13-1.dat',sim_data,'delimiter',',','precision',16);
-dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_indx_of_collected_data_ml-13-2.dat',indx_of_collected_data,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_parameters_ml-16-0.dat',NsU,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_grand_means_ml-16-1.dat',sim_data,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_indx_of_collected_data_ml-16-2.dat',indx_of_collected_data,'delimiter',',','precision',16);

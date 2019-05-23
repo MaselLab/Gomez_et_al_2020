@@ -25,7 +25,7 @@ import matplotlib.mlab as mlab
     
 # load processed matlab data for figure
 # -----------------------------------------------------------------------------
-pickle_file_name = 'fig_compareVdata-15.pickle'
+pickle_file_name = 'fig_compareVdata-16.pickle'
 pickle_file = open("data/" + pickle_file_name,'rb') 
 [N,s,U,v,parameters,grand_means,sarry,Uarry,v1_data,v2_data] = pickle.load(pickle_file)
 pickle_file.close()
@@ -34,11 +34,11 @@ v_comp = v1_data/v2_data
 [m,n] = v_comp.shape
 [m,n] = [int(m),int(n)]
 
-for i in range(n-1):
+for i in range(n-1):                # remove upper portion of grid 
     for j in range(m-1-i):
         v_comp[i,m-1-j]= 1
 
-for i in range(n):
+for i in range(n):                  #set v1/v2 < 1 to 1 for correct scaling  
     for j in range(m-i):
         if (v_comp[i+j,i]< 1):
             v_comp[i+j,i]=1
@@ -63,7 +63,7 @@ y_border = [min(np.floor(1.0+m*i/1000.0),m) for i in range(1001)]
 fig1, ax1 = plt.subplots(1,1,figsize=[15,10])
 #fit_distr_2d = ax1.pcolormesh(v_comp.transpose(),cmap=plt.cm.RdYlBu)
 fit_distr_2d = ax1.pcolormesh(v_comp.transpose(),cmap=plt.cm.gray_r)
-cbar = plt.colorbar(fit_distr_2d,pad = 0.15)
+cbar = plt.colorbar(fit_distr_2d,pad = 0.15,ticks=[1.0+.1*i for i in range(13)])
 #ax1.plot(x_border,y_border,color="black")
 ax1.axis('tight')        
 ax1.set_xticks(np.arange(arry_dim)+0.5)
@@ -100,42 +100,40 @@ plt.text(-0.185,11.5,'Trait 2 favored by mutation',rotation=90,fontsize=22)
         
 # color x axis
 ax1.annotate("",
-            xy=(0,-.60), xycoords='data',
-            xytext=(5,-0.60), textcoords='data',
+            xy=(0,-.70), xycoords='data',
+            xytext=(5,-0.70), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='g',lw=5),
             annotation_clip=False)
 
 ax1.annotate("",
-            xy=(5,-.60), xycoords='data',
-            xytext=(10,-.60), textcoords='data',
+            xy=(5,-.70), xycoords='data',
+            xytext=(10,-.70), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='y',lw=5),
             annotation_clip=False)
 
 ax1.annotate("",
-            xy=(10,-.60), xycoords='data',
-            xytext=(15,-.60), textcoords='data',
+            xy=(10,-.70), xycoords='data',
+            xytext=(15,-.70), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='b',lw=5),
             annotation_clip=False)
             
 # color y axis
 ax1.annotate("",
-            xy=(-1.2,0), xycoords='data',
-            xytext=(-1.2,5), textcoords='data',
+            xy=(-1.4,0), xycoords='data',
+            xytext=(-1.4,5), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='g',lw=5),
             annotation_clip=False)
 
 ax1.annotate("",
-            xy=(-1.2,5), xycoords='data',
-            xytext=(-1.2,10), textcoords='data',
+            xy=(-1.4,5), xycoords='data',
+            xytext=(-1.4,10), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='y',lw=5),
             annotation_clip=False)
 
 ax1.annotate("",
-            xy=(-1.2,10), xycoords='data',
-            xytext=(-1.2,15), textcoords='data',
+            xy=(-1.4,10), xycoords='data',
+            xytext=(-1.4,15), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='b',lw=5),
             annotation_clip=False)
             
-fig1.savefig('figures/fig_compareVdata3.pdf',bbox_inches='tight')
-
-# need to creat a figure with v_g rather than v_w used above
+fig1.savefig('figures/fig_two_trait_compare_v.pdf',bbox_inches='tight')

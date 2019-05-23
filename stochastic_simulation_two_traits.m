@@ -92,7 +92,7 @@ for timestep=1:steps
     %%%%%%%%%%%% 
     % Find expected frequencies after selection and mutation
     dim=size(pop);  
-    freq=pop/N;                                 % array with frequencies of the each class
+    freq=pop/sum(sum(pop));                                 % array with frequencies of the each class
     
     % calculate growth due to selection
     fitx_arry = s1*fitx'*ones(1,dim(2));           % array with # of mutations in trait 1
@@ -143,15 +143,15 @@ for timestep=1:steps
     meanfity = sum(sum(times(newpop,fity_arry)))/Na;
     
     nosefitness = max(max(times(fit,sign(newpop))));    % calculate most fitness of most fit class
-    pop = newpop;
+    pop = newpop*(N/Na);
     
     % recompute time-average of variances and covariances
-    if timestep > 5000
+    if timestep > 3000
         varx = (1/timestep)*((timestep-1)*varx + sum(sum(times(newpop,(fitx_arry-meanfitx).^2)))/Na);
         vary = (1/timestep)*((timestep-1)*vary + sum(sum(times(newpop,(fity_arry-meanfity).^2)))/Na);
         cov = (1/timestep)*((timestep-1)*cov + sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity))))/Na);
     else
-        if timestep==5000
+        if timestep==3000
             varx = sum(sum(times(newpop,(fitx_arry-meanfitx).^2)))/Na;
             vary = sum(sum(times(newpop,(fity_arry-meanfity).^2)))/Na;
             cov = sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity))))/Na;
@@ -198,9 +198,9 @@ for timestep=1:steps
     
 end
 
-v = (meanfitness-meanfit_s)/(steps-5000);
-v1 = (meanfitx-meanfitx_s)/(steps-5000);
-v2 = (meanfity-meanfity_s)/(steps-5000);
+v = (meanfitness-meanfit_s)/(steps-3000);
+v1 = (meanfitx-meanfitx_s)/(steps-3000);
+v2 = (meanfity-meanfity_s)/(steps-3000);
 
 % close output files
 if(collect_data)
