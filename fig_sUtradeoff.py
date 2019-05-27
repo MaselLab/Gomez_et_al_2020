@@ -172,11 +172,11 @@ ax1.plot(sU_curve2_vh[:,0],sU_curve2_vh[:,1],color="red",linewidth=2,linestyle="
 
 # plot three isoquants calculated from theory with Hallatschek
 # -----------------------------------------------------------------------------
-ax1.plot(sU_curve1h_vl[:,0],sU_curve1h_vl[:,1],color="blue",linewidth=2,linestyle="-",label='v='+'%.2e' % vl)
+ax1.plot(sU_curve1h_vl[:,0],sU_curve1h_vl[:,1],color="blue",linewidth=2,linestyle="-")
 ax1.plot(sU_curve2h_vl[:,0],sU_curve2h_vl[:,1],color="blue",linewidth=2,linestyle=":")
-ax1.plot(sU_curve1h_vm[:,0],sU_curve1h_vm[:,1],color="purple",linewidth=2,linestyle="-",label='v='+'%.2e' % vm)
+ax1.plot(sU_curve1h_vm[:,0],sU_curve1h_vm[:,1],color="purple",linewidth=2,linestyle="-")
 ax1.plot(sU_curve2h_vm[:,0],sU_curve2h_vm[:,1],color="purple",linewidth=2,linestyle=":")
-ax1.plot(sU_curve1h_vh[:,0],sU_curve1h_vh[:,1],color="red",linewidth=2,linestyle="-",label='v='+'%.2e' % vh)
+ax1.plot(sU_curve1h_vh[:,0],sU_curve1h_vh[:,1],color="red",linewidth=2,linestyle="-")
 ax1.plot(sU_curve2h_vh[:,0],sU_curve2h_vh[:,1],color="red",linewidth=2,linestyle=":")
 
 # plot simulated data points of sU tradeoff concurrent/successional curves
@@ -198,12 +198,12 @@ ax1.legend(loc=3)
 # -----------------------------------------------------------------------------
 xh_loc = (log10_s_max-1.2*log10_sc_max)
 yh_loc = (log10_U_max-log10_U_min)
-plt.text(1.1*log10_sc_max+0.70*xh_loc,log10_U_min+0.65*yh_loc,r'$N = 10^9$',fontsize=16)
-plt.text(1.0*log10_sc_max,0.55*log10_U_min,"Discrete wave\n    Regime",fontsize=16)
+plt.text(1.1*log10_sc_max+0.00*xh_loc,log10_U_min+0.19*yh_loc,r'$N = 10^9$',fontsize=16)
+plt.text(1.0*log10_sc_max,0.55*log10_U_min,"Multiple Mutations\n       Regime",fontsize=16)
 plt.text(0.75*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fontsize=16)
-plt.text(0.85*log10_sc_max,0.13*log10_U_min,"Diffusive wave\n     Regime",color="black",fontsize=16)
+plt.text(0.75*log10_sc_max,0.16*log10_U_min,"Multiple Mutations\n   Diffusive wave\n        Regime",color="black",fontsize=16)
 
-plt.close()
+#plt.close()
 
 # save figure
 fig1.savefig('figures/fig_v_isoquants_vary_v.pdf')
