@@ -35,9 +35,13 @@ import copy as cpy
 #sim_data_parameters = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-15-0.dat')
 #pickle_file_name = 'data/fig_compareVdata-15.pickle'
 
-sim_data_grandmeans = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_grand_means_ml-16-1.dat'
-sim_data_parameters = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-16-0.dat'
-pickle_file_name = 'data/fig_compareVdata-16.pickle'
+#sim_data_grandmeans = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_grand_means_ml-16-1.dat'
+#sim_data_parameters = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-16-0.dat'
+#pickle_file_name = 'data/fig_compareVdata-16.pickle'
+
+sim_data_grandmeans = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_grand_means_ml-19-1.dat'
+sim_data_parameters = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-19-0.dat'
+pickle_file_name = 'data/fig_compareVdata-19.pickle'
 
 # read matlab outputs and create python data for figure using grand means
 # -----------------------------------------------------------------------------
@@ -98,7 +102,6 @@ import scipy as sp
 import numpy as np
 import copy as cpy
 
-
 # functions
 # -----------------------------------------------------------------------------
 def read_my_data(mydata):
@@ -115,9 +118,13 @@ def read_my_data(mydata):
 #sim_data_sU_pairs = 'data/SAapprox/mutBiasCI_estimate_U_ml-2-'
 #pickle_file_name = 'data/fig_sUtradeoff_simdata-01.pickle'
 
-sim_data_parameters = 'data/SAapprox/mutBiasCI_estimate_U_ml-6-'
-sim_data_sU_pairs = 'data/SAapprox/mutBiasCI_estimate_U_ml-6-'
-pickle_file_name = 'data/fig_sUtradeoff_simdata-06.pickle'
+#sim_data_parameters = 'data/SAapprox/mutBiasCI_estimate_U_ml-6-'
+#sim_data_sU_pairs = 'data/SAapprox/mutBiasCI_estimate_U_ml-6-'
+#pickle_file_name = 'data/fig_sUtradeoff_simdata-06.pickle'
+
+sim_data_parameters = 'data/SAapprox/mutBiasCI_estimate_U_ml-19-'
+sim_data_sU_pairs = 'data/SAapprox/mutBiasCI_estimate_U_ml-19-'
+pickle_file_name = 'data/fig_sUtradeoff_simdata-19.pickle'
 
 # read, process and save data from files
 # -----------------------------------------------------------------------------

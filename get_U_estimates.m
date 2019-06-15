@@ -1,4 +1,4 @@
-function [Uarry,Uthry] = get_U_estimates(N,trgt_rate,sarry,steps,n,rate_flag)
+function [Uarry,Uthry,rate] = get_U_estimates(N,trgt_rate,sarry,steps,n,rate_flag)
 % main function for estimating U's to achieve target v
 % inputs:
 % N - pop size
@@ -16,16 +16,17 @@ rng(7);     % set seed for random number generator
 
 Uarry = ones(size(sarry));
 Uthry = ones(size(sarry));
+rate = ones(size(sarry));
 data_pts = length(sarry);
 
 for i=1:data_pts
     U0 = initial_U(N,trgt_rate,sarry(i),rate_flag);
     Uthry(i) = U0;
-    Uarry(i) = approximate_U(N,trgt_rate,sarry(i),U0,steps,n,rate_flag);
+    [Uarry(i),rate(i)] = approximate_U(N,trgt_rate,sarry(i),U0,steps,n,rate_flag);
 end
 
 %%    
-    function Ut = approximate_U(N,trgt_rate,si,U0,steps,n,rate_flag)
+    function [Ut,est_rate] = approximate_U(N,trgt_rate,si,U0,steps,n,rate_flag)
     % Script attempts to find Ut such that trgt_rate = R or v, given 
     % N, s, and a target rate of evolution (trgt_rate), and starting at U0
     % algorithm based on robbins-monro approach
@@ -40,6 +41,7 @@ end
     % 
     % Outputs:
     % Ut - estimate of U that provides target rate of adaptation vt
+    % est_rate - return the last rate (R/v) associated with Ut 
 
         Ut = U0;
         log10Ut = log10(U0);
@@ -54,7 +56,12 @@ end
                 log10Ut = min(log10(0.5),log10Ut + (1/k)*log10(trgt_rate/vn));
             end
         end
-    
+        
+        if (rate_flag ==0)
+            est_rate = vn/si;
+        else
+            est_rate = vn;
+        end
     end
 %%
     function Ui = initial_U(Ni,trgt_rate_i,si,rate_flag)

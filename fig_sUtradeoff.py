@@ -41,7 +41,13 @@ def sU_bounds(N,v):
     return [s_min,s_max,U_min,U_max,sm,st]
     
 def hall_U_approx(s,N,v):
-    U = (1.2*v**(1.5)/s**2)/(6**(1/6.0)*N*np.sqrt(v))**(1/6.0)  #adjusted hallatschek by constant
+    # hallatschek approximation has to be adjusted by a constant
+    U = (0.38*v**(1.5)/s**2)/np.log(6**(1/6.0)*N*np.sqrt(v))**(1/2.0)  
+    return U 
+
+def hall_U_approx_geno(s,N,R):
+    # hallatschek approximation has to be adjusted by a constant
+    U = (0.38*(R*s)**(1.5)/s**2)/np.log(6**(1/6.0)*N*np.sqrt(R*s))**(1/2.0)  
     return U 
 
 def get_graph_data(N,s,v,log_s_lbd1,log_s_lbd2,log_s_lbd3):
@@ -275,7 +281,7 @@ plt.text(1.2*log10_sc_max+0.70*xh_loc,log10_U_min+0.60*yh_loc,r'$v = 5.3\times 1
 
 plt.close()
 
-fig2.savefig('figures/fig_v_isoquants_vary_N.pdf')
+#fig2.savefig('figures/fig_v_isoquants_vary_N.pdf')
 
 # -----------------------------------------------------------------------------
 #                           OLD CODE
