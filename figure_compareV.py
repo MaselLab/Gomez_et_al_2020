@@ -26,8 +26,9 @@ import matplotlib.mlab as mlab
 # set file name of data
 # -----------------------------------------------------------------------------
 
-pickle_file_name = 'fig_compareVdata-16.pickle'
-#pickle_file_name = 'fig_compareVdata-19.pickle'
+#pickle_file_name = 'fig_compareVdata-16.pickle'    # data for comparison with fixed v
+#pickle_file_name = 'fig_compareVdata-19.pickle'    # data for comparison with fixed R
+pickle_file_name = 'fig_compareVdata-20.pickle'    # data for comparison with fixed R
 
 # load processed matlab data for figure
 # -----------------------------------------------------------------------------
@@ -49,7 +50,7 @@ for i in range(n-1):                # remove upper portion of grid
 for i in range(n):                  #set R1/R2 or v1/v2 < 1 to 1 for cbar map correction  
     for j in range(m-i):
 # *****************************************************************************        
-#        rate_comp[i+j,i]=rate_comp[i+j,i]*(sarry[i]/sarry[i+j])
+        rate_comp[i+j,i]=rate_comp[i+j,i]*(sarry[i]/sarry[i+j])
 # *****************************************************************************
         if (rate_comp[i+j,i]< 1):
             rate_comp[i+j,i]=1
@@ -74,11 +75,11 @@ y_border = [min(np.floor(1.0+m*i/1000.0),m) for i in range(1001)]
 fig1, ax1 = plt.subplots(1,1,figsize=[15,10])
 
 # *****************************************************************************
-fit_distr_2d = ax1.pcolormesh(rate_comp.transpose(),cmap=plt.cm.gray_r)
-cbar = plt.colorbar(fit_distr_2d,pad = 0.15,ticks=[1.0+.1*i for i in range(13)])
+#fit_distr_2d = ax1.pcolormesh(rate_comp.transpose(),cmap=plt.cm.gray_r)
+#cbar = plt.colorbar(fit_distr_2d,pad = 0.15,ticks=[1.0+.1*i for i in range(13)])
 
-#fit_distr_2d = ax1.pcolormesh(np.log10(rate_comp.transpose()),cmap=plt.cm.gray_r)
-#cbar = plt.colorbar(fit_distr_2d,pad = 0.15)
+fit_distr_2d = ax1.pcolormesh(np.log10(rate_comp.transpose()),cmap=plt.cm.gray_r)
+cbar = plt.colorbar(fit_distr_2d,pad = 0.15)
 # *****************************************************************************
 
 #ax1.plot(x_border,y_border,color="black")
@@ -91,14 +92,14 @@ ax1.set_xlabel('Selection coefficient trait 1',multialignment='center',fontsize=
 ax1.set_ylabel('Selection coefficient trait 2',multialignment='center',fontsize=18,labelpad=10)
 ax1.tick_params(axis='both',labelsize=12)
 # *****************************************************************************
-#cbar.ax.text(2.8,0.6,'Ratio of $R_1/R_2$',rotation=270,fontsize=22)     # use this label of comparing R
-cbar.ax.text(2.8,0.6,'Ratio of $v_1/v_2$',rotation=270,fontsize=22)    # use this label of comparing v
+cbar.ax.text(2.8,0.6,'Ratio of $R_1/R_2$',rotation=270,fontsize=22)     # use this label of comparing R
+#cbar.ax.text(2.8,0.6,'Ratio of $v_1/v_2$',rotation=270,fontsize=22)    # use this label of comparing v
 # *****************************************************************************
 
 plt.text(1,m-1,r'$N = 10^9$',fontsize=18)
 # *****************************************************************************
-#plt.text(1,m-1.7,r'$R = 5.3\times 10^{-3}$',fontsize=18)     # use this label of comparing R
-plt.text(1,m-1.7,r'$v = 5.3\times 10^{-5}$',fontsize=18)     # use this label of comparing v
+plt.text(1,m-1.7,r'$R = 5.3\times 10^{-3}$',fontsize=18)     # use this label of comparing R
+#plt.text(1,m-1.7,r'$v = 5.3\times 10^{-5}$',fontsize=18)     # use this label of comparing v
 # *****************************************************************************
 
 #ax1.add_patch(Rectangle((someX - 0.1, someY - 0.1), 0.2, 0.2, alpha=1, facecolor='none'))
