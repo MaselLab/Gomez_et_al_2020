@@ -125,8 +125,8 @@ ax3.set_xlabel('Mutation rate trait 1',fontsize=18,labelpad=20)
 
 fig1.subplots_adjust(bottom=0.2,left=0.2)
 
-plt.text(.21,-2.1,'Trait 1 favored by selection',fontsize=22)
-plt.text(-0.19,11.5,'Trait 2 favored by mutation',rotation=90,fontsize=22)
+plt.text(.2,-2.1,'Trait 1 favored by selection',fontsize=22)
+plt.text(-0.181,11.5,'Trait 2 favored by mutation',rotation=90,fontsize=22)
         
 # color x axis
 ax1.annotate("",
@@ -149,20 +149,20 @@ ax1.annotate("",
             
 # color y axis
 ax1.annotate("",
-            xy=(-1.5,0), xycoords='data',
-            xytext=(-1.5,5), textcoords='data',
+            xy=(-1.4,0), xycoords='data',
+            xytext=(-1.4,5), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='cyan',lw=5),
             annotation_clip=False)
 
 ax1.annotate("",
-            xy=(-1.5,5), xycoords='data',
-            xytext=(-1.5,10), textcoords='data',
+            xy=(-1.4,5), xycoords='data',
+            xytext=(-1.4,10), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='yellow',lw=5),
             annotation_clip=False)
 
 ax1.annotate("",
-            xy=(-1.5,10), xycoords='data',
-            xytext=(-1.5,15), textcoords='data',
+            xy=(-1.4,10), xycoords='data',
+            xytext=(-1.4,15), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='lime',lw=5),
             annotation_clip=False)
             
