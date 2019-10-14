@@ -205,9 +205,9 @@ ax1.legend(loc=3)
 xh_loc = (log10_s_max-1.2*log10_sc_max)
 yh_loc = (log10_U_max-log10_U_min)
 plt.text(1.1*log10_sc_max+0.00*xh_loc,log10_U_min+0.19*yh_loc,r'$N = 10^9$',fontsize=16)
-plt.text(1.0*log10_sc_max,0.55*log10_U_min,"Multiple Mutations\n       Regime",fontsize=16)
+plt.text(1.0*log10_sc_max,0.55*log10_U_min,"Multiple Mutations\n Regime (U << s)",fontsize=16)
 plt.text(0.75*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fontsize=16)
-plt.text(0.75*log10_sc_max,0.16*log10_U_min,"Multiple Mutations\n   Diffusive wave\n        Regime",color="black",fontsize=16)
+plt.text(0.75*log10_sc_max,0.16*log10_U_min,"Multiple Mutations\n  Regime (U > s)",color="black",fontsize=16)
 
 #plt.close()
 
