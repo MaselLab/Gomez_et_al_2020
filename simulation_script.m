@@ -1,5 +1,5 @@
 %% setup array for parameters N,s1,s2,u1,u2
-% Simulate the s-U relationship in the discontinuous regime with
+% Simulate the s-U relationship in the U>s regime with
 % deleterious mutations included
 
 N = 1e9;

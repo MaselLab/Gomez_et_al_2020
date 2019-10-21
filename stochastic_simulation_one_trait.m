@@ -4,7 +4,7 @@ function v = stochastic_simulation_one_trait(N,s1,u1,ud1,steps)
 % 
 % https://datadryad.org/resource/doi:10.5061/dryad.f36v6 
 %
-% Stochastic simulation for two chromosome model. 
+% Stochastic simulation for one chromosome model. 
 % Each step is one generation. Rates (such as s,u) are per generation. 
 % The expected size of each subpop after selection, mutation, and mating is computed.
 % If expected size < :cutoff: then the size is drawn from Poisson
