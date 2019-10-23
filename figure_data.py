@@ -130,9 +130,17 @@ def read_my_data(mydata):
 #sim_data_sU_pairs = 'data/SAapprox/mutBiasCI_estimate_U_ml-19-'
 #pickle_file_name = 'data/fig_sUtradeoff_simdata-19.pickle'
 
-sim_data_parameters = 'data/SAapprox/mutBiasCI_estimate_U_ml-20-'
-sim_data_sU_pairs = 'data/SAapprox/mutBiasCI_estimate_U_ml-20-'
-pickle_file_name = 'data/fig_sUtradeoff_simdata-20.pickle'
+#sim_data_parameters = 'data/SAapprox/mutBiasCI_estimate_U_ml-20-'
+#sim_data_sU_pairs = 'data/SAapprox/mutBiasCI_estimate_U_ml-20-'
+#pickle_file_name = 'data/fig_sUtradeoff_simdata-20.pickle'
+
+#sim_data_parameters = 'data/SAapprox/mutBiasCI_estimate_U_ml-21-'
+#sim_data_sU_pairs = 'data/SAapprox/mutBiasCI_estimate_U_ml-21-'
+#pickle_file_name = 'data/fig_sUtradeoff_simdata-21.pickle'
+
+sim_data_parameters = 'data/SAapprox/mutBiasCI_estimate_U_ml-22-'
+sim_data_sU_pairs = 'data/SAapprox/mutBiasCI_estimate_U_ml-22-'
+pickle_file_name = 'data/fig_sUtradeoff_simdata-22.pickle'
 
 # read, process and save data from files
 # -----------------------------------------------------------------------------

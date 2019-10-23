@@ -125,8 +125,9 @@ def get_graph_data(N,s,v,log_s_lbd1,log_s_lbd2,log_s_lbd3):
 # -----------------------------------------------------------------------------
 
 #my_saved_data = 'data/fig_sUtradeoff_simdata-01.pickle'
+#my_saved_data = 'data/fig_sUtradeoff_simdata-06.pickle'
 
-my_saved_data = 'data/fig_sUtradeoff_simdata-06.pickle'
+my_saved_data = 'data/fig_sUtradeoff_simdata-22.pickle'
 
 # load estimates for v isoquants from simulations
 # -----------------------------------------------------------------------------
@@ -144,14 +145,24 @@ for i in range(6):
 # set basic parameters of the figure for varying v
 # -----------------------------------------------------------------------------
 [Nl,Nm,Nh,s,U] = [1e6,1e9,1e18,1e-2,1e-5]
-vl = myfun.get_vDF(Nl,s,U)
+
 vm = myfun.get_vDF(Nm,s,U)
-vh = myfun.get_vDF(Nh,s,U)
+vl = vm*10**(-1)
+vh = vm*10**(1)
 
 [log_s_lbd1,log_s_lbd2,log_s_lbd3] = [-3.5,-2.3,-0.5]
-[succ_sh_vl,conc_sh_vl,disc_sh_vl,c_curve1_vl,c_curve2_vl,s_curve1_vl,s_curve2_vl,sU_curve1_vl,sU_curve2_vl,sU_curve1h_vl,sU_curve2h_vl] = get_graph_data(Nm,s,vl,log_s_lbd1,log_s_lbd2,log_s_lbd3)
-[succ_sh_vm,conc_sh_vm,disc_sh_vm,c_curve1_vm,c_curve2_vm,s_curve1_vm,s_curve2_vm,sU_curve1_vm,sU_curve2_vm,sU_curve1h_vm,sU_curve2h_vm] = get_graph_data(Nm,s,vm,log_s_lbd1,0.95*log_s_lbd2,log_s_lbd3)
-[succ_sh_vh,conc_sh_vh,disc_sh_vh,c_curve1_vh,c_curve2_vh,s_curve1_vh,s_curve2_vh,sU_curve1_vh,sU_curve2_vh,sU_curve1h_vh,sU_curve2h_vh] = get_graph_data(Nm,s,vh,log_s_lbd1,0.85*log_s_lbd2,log_s_lbd3)
+
+[succ_sh_vl,conc_sh_vl,disc_sh_vl,c_curve1_vl,c_curve2_vl,s_curve1_vl, \
+     s_curve2_vl,sU_curve1_vl,sU_curve2_vl,sU_curve1h_vl,sU_curve2h_vl] \
+     = get_graph_data(Nm,s,vl,log_s_lbd1,1.1*log_s_lbd2,log_s_lbd3)
+         
+[succ_sh_vm,conc_sh_vm,disc_sh_vm,c_curve1_vm,c_curve2_vm,s_curve1_vm, \
+     s_curve2_vm,sU_curve1_vm,sU_curve2_vm,sU_curve1h_vm,sU_curve2h_vm] \
+     = get_graph_data(Nm,s,vm,log_s_lbd1,0.95*log_s_lbd2,log_s_lbd3)
+
+[succ_sh_vh,conc_sh_vh,disc_sh_vh,c_curve1_vh,c_curve2_vh,s_curve1_vh, \
+     s_curve2_vh,sU_curve1_vh,sU_curve2_vh,sU_curve1h_vh,sU_curve2h_vh] \
+     = get_graph_data(Nm,s,vh,log_s_lbd1,0.85*log_s_lbd2,log_s_lbd3)
 
 [s_min,s_max,U_min,U_max,sc_max,sc_trans] = sU_bounds(Nm,vm)
 [log10_s_min,log10_s_max,log10_U_min,log10_U_max,log10_sc_max,log10_sc_trans] = \
