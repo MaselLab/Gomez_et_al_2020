@@ -96,7 +96,7 @@ ax1.set_xticklabels(my_slabel)
 ax1.set_yticklabels(my_Ulabel[::-1])        
 ax1.set_xlabel('Selection coefficient trait 1',multialignment='center',fontsize=18,labelpad=10)
 ax1.set_ylabel('Mutation rate trait 2',multialignment='center',fontsize=18,labelpad=10)
-ax1.tick_params(axis='both',labelsize=12)
+ax1.tick_params(axis='both',labelsize=18)
 # *****************************************************************************
 #cbar.ax.text(2.8,0.6,'Ratio of $R_1/R_2$',rotation=270,fontsize=22)     # use this label of comparing R
 cbar.ax.text(2.8,0.6,'Ratio of $v_1/v_2$',rotation=270,fontsize=22)    # use this label of comparing v
@@ -113,20 +113,20 @@ plt.text(1.5,1,r'$v = 5.3\times 10^{-5}$',fontsize=18)     # use this label of c
 ax2 = ax1.twinx()
 ax2.yaxis.set_ticks(np.arange(0+0.5/(len(my_Ulabel)),1+0.5/(len(my_Ulabel)),1.0/(len(my_Ulabel))))
 ax2.set_yticklabels(my_slabel[::-1])
-ax2.tick_params(labelsize=12)
-ax2.set_ylabel('Selection coefficient trait 2',fontsize=18,labelpad=20,rotation=270)
+ax2.tick_params(labelsize=18)
+ax2.set_ylabel('Selection coefficient trait 2',fontsize=18,labelpad=25,rotation=270)
 
 ax3 = ax1.twiny()
 ax3.xaxis.set_ticks(np.arange(0+0.5/(len(my_Ulabel)),1+0.5/(len(my_Ulabel)),1.0/(len(my_Ulabel))))
 ax3.set_xticklabels(my_Ulabel)
-ax3.tick_params(labelsize=12)
+ax3.tick_params(labelsize=18)
 ax3.set_xlabel('Mutation rate trait 1',fontsize=18,labelpad=20)
 #plt.tight_layout()
 
 fig1.subplots_adjust(bottom=0.2,left=0.2)
 
 plt.text(.2,-2.1,'Trait 1 favored by selection',fontsize=22)
-plt.text(-0.181,11.5,'Trait 2 favored by mutation',rotation=90,fontsize=22)
+plt.text(-0.213,11.5,'Trait 2 favored by mutation',rotation=90,fontsize=22)
         
 # color x axis
 ax1.annotate("",
@@ -149,20 +149,20 @@ ax1.annotate("",
             
 # color y axis
 ax1.annotate("",
-            xy=(-1.4,0), xycoords='data',
-            xytext=(-1.4,5), textcoords='data',
+            xy=(-1.8,0), xycoords='data',
+            xytext=(-1.8,5), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='cyan',lw=5),
             annotation_clip=False)
 
 ax1.annotate("",
-            xy=(-1.4,5), xycoords='data',
-            xytext=(-1.4,10), textcoords='data',
+            xy=(-1.8,5), xycoords='data',
+            xytext=(-1.8,10), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='yellow',lw=5),
             annotation_clip=False)
 
 ax1.annotate("",
-            xy=(-1.4,10), xycoords='data',
-            xytext=(-1.4,15), textcoords='data',
+            xy=(-1.8,10), xycoords='data',
+            xytext=(-1.8,15), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='lime',lw=5),
             annotation_clip=False)
             

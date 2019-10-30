@@ -198,6 +198,9 @@ ax1.plot(sU_curve2h_vh[:,0],sU_curve2h_vh[:,1],color="red",linewidth=2,linestyle
 
 # plot simulated data points of sU tradeoff concurrent/successional curves
 # -----------------------------------------------------------------------------
+#sU_data[0][10,1]
+#sU_data[0][11,1]
+#sU_data[0][12,1] = sU_data[0][11,1]+(sU_data[0][11,1]-sU_data[0][10,1])
 ax1.scatter(sU_data[0][:,0],sU_data[0][:,1],color="blue",linewidth=2)
 ax1.scatter(sU_data[1][:,0],sU_data[1][:,1],color="purple",linewidth=2)
 ax1.scatter(sU_data[2][:,0],sU_data[2][:,1],color="red",linewidth=2)
@@ -216,9 +219,10 @@ ax1.legend(loc=3)
 xh_loc = (log10_s_max-1.2*log10_sc_max)
 yh_loc = (log10_U_max-log10_U_min)
 plt.text(1.1*log10_sc_max+0.00*xh_loc,log10_U_min+0.19*yh_loc,r'$N = 10^9$',fontsize=16)
-plt.text(1.0*log10_sc_max,0.55*log10_U_min,"Multiple Mutations\n Regime (U << s)",fontsize=16)
+plt.text(1.15*log10_sc_max,0.55*log10_U_min,"Multiple Mutations\n Regime (U << s)",fontsize=16)
 plt.text(0.75*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fontsize=16)
-plt.text(0.75*log10_sc_max,0.16*log10_U_min,"Multiple Mutations\n  Regime (U > s)",color="black",fontsize=16)
+plt.text(0.67*log10_sc_max,0.13*log10_U_min,"Multiple Mutations\n  Regime (U > s)",color="black",fontsize=16)
+plt.text(1.2*log10_sc_max-.12*xh_loc,log10_U_min+.96*yh_loc,'(a)',fontsize=20)
 
 #plt.close()
 
@@ -288,11 +292,12 @@ ax2.legend(loc=3)
 # -----------------------------------------------------------------------------
 xh_loc = (log10_s_max-1.2*log10_sc_max)
 yh_loc = (log10_U_max-log10_U_min)
-plt.text(1.2*log10_sc_max+0.70*xh_loc,log10_U_min+0.60*yh_loc,r'$v = 5.3\times 10^{-5}$',fontsize=16)
+plt.text(1.2*log10_sc_max+0.06*xh_loc,log10_U_min+0.18*yh_loc,r'$v = 5.3\times 10^{-5}$',fontsize=16)
+plt.text(1.2*log10_sc_max-.12*xh_loc,log10_U_min+.96*yh_loc,'(b)',fontsize=20)
 
 plt.close()
 
-#fig2.savefig('figures/fig_v_isoquants_vary_N.pdf')
+fig2.savefig('figures/fig_v_isoquants_vary_N.pdf')
 
 # -----------------------------------------------------------------------------
 #                           OLD CODE
