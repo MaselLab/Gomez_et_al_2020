@@ -102,10 +102,10 @@ ax1.tick_params(axis='both',labelsize=18)
 cbar.ax.text(2.8,0.6,'Ratio of $v_1/v_2$',rotation=270,fontsize=22)    # use this label of comparing v
 # *****************************************************************************
 
-plt.text(1.5,2,r'$N = 10^9$',fontsize=18)
+plt.text(1,2,r'$N = 10^9$',fontsize=18)
 # *****************************************************************************
 #plt.text(1,m-1.7,r'$R = 5.3\times 10^{-3}$',fontsize=18)     # use this label of comparing R
-plt.text(1.5,1,r'$v = 5.3\times 10^{-5}$',fontsize=18)     # use this label of comparing v
+plt.text(1,1,r'$v = 5.3\times 10^{-5}$',fontsize=18)     # use this label of comparing v
 # *****************************************************************************
 
 #ax1.add_patch(Rectangle((someX - 0.1, someY - 0.1), 0.2, 0.2, alpha=1, facecolor='none'))
