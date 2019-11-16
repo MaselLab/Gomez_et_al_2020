@@ -165,5 +165,30 @@ ax1.annotate("",
             xytext=(-1.8,15), textcoords='data',
             arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='lime',lw=5),
             annotation_clip=False)
+
+# add lines to separate regimes
+ax1.annotate("",
+            xy=(5,0), xycoords='data',
+            xytext=(5,15), textcoords='data',
+            arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='black',lw=1.5),
+            annotation_clip=False)
+
+ax1.annotate("",
+            xy=(10,0), xycoords='data',
+            xytext=(10,15), textcoords='data',
+            arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='black',lw=1.5),
+            annotation_clip=False)
+
+ax1.annotate("",
+            xy=(0,5), xycoords='data',
+            xytext=(15,5), textcoords='data',
+            arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='black',lw=1.5),
+            annotation_clip=False)
+
+ax1.annotate("",
+            xy=(0,10), xycoords='data',
+            xytext=(15,10), textcoords='data',
+            arrowprops=dict(arrowstyle="-",connectionstyle="arc3",color='black',lw=1.5),
+            annotation_clip=False)
             
 fig1.savefig('figures/fig_two_trait_compare_v.pdf',bbox_inches='tight')
