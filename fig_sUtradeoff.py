@@ -203,7 +203,7 @@ ax1.plot(sU_curve2h_vh[:,0],sU_curve2h_vh[:,1],color="red",linewidth=2,linestyle
 #sU_data[0][12,1] = sU_data[0][11,1]+(sU_data[0][11,1]-sU_data[0][10,1])
 ax1.scatter(sU_data[0][:,0],sU_data[0][:,1],color="blue",linewidth=2)
 ax1.scatter(sU_data[1][:,0],sU_data[1][:,1],color="purple",linewidth=2)
-ax1.scatter(sU_data[2][:,0],sU_data[2][:,1],color="red",linewidth=2)
+ax1.scatter(sU_data[2][3:,0],sU_data[2][3:,1],color="red",linewidth=2)
 
 # set figure dimensions and labels
 # -----------------------------------------------------------------------------
