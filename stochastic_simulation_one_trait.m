@@ -90,9 +90,10 @@ for timestep=1:steps
 
     newpop=round(newpop);    
     Na = sum(sum(newpop));
+    Nas = sum(sum(newpop(stoch)));
 
     meanfitness = sum(sum(times(newpop,fit)))/Na;
-    pop = newpop*(N/Na);
+    pop = newpop(~stoch)*((N-Nas)*(Na-Nas)/Na)+newpop(stoch);
 
     % recompute time-average of variances and covariances
 

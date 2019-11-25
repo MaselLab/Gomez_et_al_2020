@@ -137,13 +137,14 @@ for timestep=1:steps
     
     newpop=round(newpop);    
     Na = sum(sum(newpop));
+    Nas = sum(sum(newpop(stoch)));
     
     meanfitness = sum(sum(times(newpop,fit)))/Na;
     meanfitx = sum(sum(times(newpop,fitx_arry)))/Na;
     meanfity = sum(sum(times(newpop,fity_arry)))/Na;
     
     nosefitness = max(max(times(fit,sign(newpop))));    % calculate most fitness of most fit class
-    pop = newpop*(N/Na);
+    pop = newpop(~stoch)*((N-Nas)*(Na-Nas)/Na)+newpop(stoch);
     
     % recompute time-average of variances and covariances
     if timestep > 3000
