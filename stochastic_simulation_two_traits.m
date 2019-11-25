@@ -59,31 +59,31 @@ end
 
 % Main loop for simulation of each generation
 for timestep=1:steps   
-    
+
     %%%%%%%%%%%%%%%%%%%
     % Remove columns of zeros of decreasing fitness classes
-    while any(pop(:,1))==0
+    while any(pop(:,1))==0  % remove y-fitness classes
         pop(:,1)=[];
         fit(:,1)=[];
         fity(1)=[];
     end
     
-    while any(pop(1,:))==0 
+    while any(pop(1,:))==0  % remove x-fitness classes
         pop(1,:)=[];
         fit(1,:)=[];
         fitx(1)=[];
     end
     
     % Add columns for padding, i.e. for new class produced by mutations
-    dim=size(pop); 
-    if any(pop(:,dim(2)))==1    % check for expansion of front in direction of trait 1
+    dim=size(pop);
+    if any(pop(:,dim(2)))==1    % check for expansion of front in direction of trait two (y)
         pop(:,dim(2)+1)=zeros(dim(1),1);
         fit(:,dim(2)+1)=fit(:,dim(2))+ones(dim(1),1);
         fity(dim(2)+1)=fity(dim(2))+1;
     end
     
-    dim=size(pop); 
-    if any(pop(dim(1),:))==1    % check for expansion of front in direction of trait 2
+    dim=size(pop);
+    if any(pop(dim(1),:))==1    % check for expansion of front in direction of trait one (x)
         pop(dim(1)+1,:)=zeros(1,dim(2));
         fit(dim(1)+1,:)=fit(dim(1),:)+ones(1,dim(2));
         fitx(dim(1)+1)=fitx(dim(1))+1;
@@ -144,7 +144,8 @@ for timestep=1:steps
     meanfity = sum(sum(times(newpop,fity_arry)))/Na;
     
     nosefitness = max(max(times(fit,sign(newpop))));    % calculate most fitness of most fit class
-    pop = newpop(~stoch)*((N-Nas)*(Na-Nas)/Na)+newpop(stoch);
+    newpop(~stoch)=newpop(~stoch)*((N-Nas)*(Na-Nas)/Na);    %rescale deterministic classes only to get total popsize = N
+    pop = newpop;
     
     % recompute time-average of variances and covariances
     if timestep > 3000
