@@ -12,7 +12,8 @@ digits(16)
 % simulations with two traits either run for a fixed R or a fixed v, which
 % is determined by the combinations of s and U being fed in. 
 
-sU = dlmread('data/SAapprox/mutBiasCI_estimate_U_ml-22-1-1.dat',',');
+sU = dlmread('data/SAapprox/mutBiasCI_estimate_U_ml-6-2-1.dat',','); % this is the original data set for figure 3
+% sU = dlmread('data/SAapprox/mutBiasCI_estimate_U_ml-22-1-1.dat',','); % this is the new data for getting figure 3 along the bottom contour
 
 % the selected s and U pairs below give either v=5.308e-5 or R=5.308e-3 with N=1e9
 % depending on the flag used (fixed R for rate_flag==0, and fixed v for R==1)
