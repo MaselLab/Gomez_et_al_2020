@@ -23,7 +23,7 @@ Uarry = sU(1:13,2);
 steps = 5.0e5;
 start_time = 5e3;                     % collect data on distribution at start time
 end_time = 5e3;                       % collect data on distribution at end time
-outputfile = '~/Documents/mutBiasCI/data/mutBiasCI_data_for_2d_distribution_ml-22'; 
+outputfile = '~/Documents/mutBiasCI/data/mutBiasCI_data_for_2d_distribution_ml-23'; 
 
 data_pts_s = length(sarry);
 number_of_sims = floor(0.5*data_pts_s*(data_pts_s+1));
@@ -48,6 +48,6 @@ for i=1:data_pts_s
 end
 toc
 
-dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_parameters_ml-22-0.dat',NsU,'delimiter',',','precision',16);
-dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_grand_means_ml-22-1.dat',sim_data,'delimiter',',','precision',16);
-dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_indx_of_collected_data_ml-22-2.dat',indx_of_collected_data,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_parameters_ml-23-0.dat',NsU,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_grand_means_ml-23-1.dat',sim_data,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/mutBiasCI_data_all_simulation_indx_of_collected_data_ml-23-2.dat',indx_of_collected_data,'delimiter',',','precision',16);
