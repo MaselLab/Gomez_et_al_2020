@@ -180,11 +180,11 @@ ax1.fill_between(disc_sh_vm[:,0],disc_sh_vm[:,1],disc_sh_vm[:,2],facecolor="lime
 
 # plot three isoquants calculated from theory
 # -----------------------------------------------------------------------------
-ax1.plot(sU_curve1_vl[:,0],sU_curve1_vl[:,1],color="blue",linewidth=2,linestyle="-",label='v='+'%.2e' % vl)
+ax1.plot(sU_curve1_vl[:,0],sU_curve1_vl[:,1],color="blue",linewidth=2,linestyle="-",label=r'$v=5.31\times 10^{-6}$')
 ax1.plot(sU_curve2_vl[:,0],sU_curve2_vl[:,1],color="blue",linewidth=2,linestyle=":")
-ax1.plot(sU_curve1_vm[:,0],sU_curve1_vm[:,1],color="purple",linewidth=2,linestyle="-",label='v='+'%.2e' % vm)
+ax1.plot(sU_curve1_vm[:,0],sU_curve1_vm[:,1],color="purple",linewidth=2,linestyle="-",label=r'$v=5.31\times 10^{-5}$')
 ax1.plot(sU_curve2_vm[:,0],sU_curve2_vm[:,1],color="purple",linewidth=2,linestyle=":")
-ax1.plot(sU_curve1_vh[:,0],sU_curve1_vh[:,1],color="red",linewidth=2,linestyle="-",label='v='+'%.2e' % vh)
+ax1.plot(sU_curve1_vh[:,0],sU_curve1_vh[:,1],color="red",linewidth=2,linestyle="-",label=r'$v=5.31\times 10^{-4}$')
 ax1.plot(sU_curve2_vh[:,0],sU_curve2_vh[:,1],color="red",linewidth=2,linestyle=":")
 
 # plot three isoquants calculated from theory with Hallatschek
@@ -207,18 +207,28 @@ ax1.scatter(sU_data[2][3:,0],sU_data[2][3:,1],color="red",linewidth=2)
 
 # set figure dimensions and labels
 # -----------------------------------------------------------------------------
+new_xtick_labels=['',r'$10^{-3.5}$',r'$10^{-3.0}$',r'$10^{-2.5}$',r'$10^{-2.0}$',r'$10^{-1.5}$',r'$10^{-1.0}$']
+new_ytick_labels=['',r'$10^{-12}$',r'$10^{-10}$',r'$10^{-8}$',r'$10^{-6}$',r'$10^{-4}$',r'$10^{-2}$']
+
 ax1.set_xlim([1.2*log10_sc_max,log10_s_max])
 ax1.set_ylim([log10_U_min,log10_U_max])
-ax1.set_xlabel(r'Selection coefficient ($\log_{10}s$)',fontsize=18,labelpad=20)
-ax1.set_ylabel(r'Mutation rate ($\log_{10}U$)',fontsize=18,labelpad=10)
-ax1.tick_params(labelsize=16)
-ax1.legend(loc=3)
+ax1.set_xticklabels(new_xtick_labels)
+ax1.set_yticklabels(new_ytick_labels)
+
+ax1.set_xlabel(r'Selection coefficient',fontsize=18,labelpad=20)
+ax1.set_ylabel(r'Mutation rate',fontsize=18,labelpad=8)
+
+#locs, labels = xticks()            # Get locations and labels
+#xticks(ticks, [labels], **kwargs)  # Set locations and labels
+
+ax1.tick_params(labelsize=18)
+ax1.legend(loc=3,fontsize=16)
 
 # annotations to graphs
 # -----------------------------------------------------------------------------
 xh_loc = (log10_s_max-1.2*log10_sc_max)
 yh_loc = (log10_U_max-log10_U_min)
-plt.text(1.1*log10_sc_max+0.00*xh_loc,log10_U_min+0.19*yh_loc,r'$N = 10^9$',fontsize=16)
+plt.text(1.1*log10_sc_max-0.082*xh_loc,log10_U_min+0.22*yh_loc,r'$N = 10^9$',fontsize=22)
 plt.text(1.15*log10_sc_max,0.55*log10_U_min,"Multiple Mutations\n Regime (U << s)",fontsize=16)
 plt.text(0.75*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fontsize=16)
 plt.text(0.67*log10_sc_max,0.13*log10_U_min,"Multiple Mutations\n  Regime (U > s)",color="black",fontsize=16)
@@ -257,11 +267,11 @@ fig2, ax2 = plt.subplots(1,1,figsize=[8,8])
 
 # plot three isoquants calculated from theory
 # -----------------------------------------------------------------------------
-ax2.plot(sU_curve1_Nl[:,0],sU_curve1_Nl[:,1],color="mediumblue",linewidth=2,linestyle="-",label='N='+'%.1e' % Nl)
+ax2.plot(sU_curve1_Nl[:,0],sU_curve1_Nl[:,1],color="mediumblue",linewidth=2,linestyle="-",label=r'$N=10^7$')
 ax2.plot(sU_curve2_Nl[:,0],sU_curve2_Nl[:,1],color="mediumblue",linewidth=2,linestyle=":")
-ax2.plot(sU_curve1_Nm[:,0],sU_curve1_Nm[:,1],color="purple",linewidth=2,linestyle="-",label='N='+'%.1e' % Nm)
+ax2.plot(sU_curve1_Nm[:,0],sU_curve1_Nm[:,1],color="purple",linewidth=2,linestyle="-",label=r'$N=10^9$')
 ax2.plot(sU_curve2_Nm[:,0],sU_curve2_Nm[:,1],color="purple",linewidth=2,linestyle=":")
-ax2.plot(sU_curve1_Nh[:,0],sU_curve1_Nh[:,1],color="red",linewidth=2,linestyle="-",label='N='+'%.1e' % Nh)
+ax2.plot(sU_curve1_Nh[:,0],sU_curve1_Nh[:,1],color="red",linewidth=2,linestyle="-",label=r'$N=10^{11}$')
 ax2.plot(sU_curve2_Nh[:,0],sU_curve2_Nh[:,1],color="red",linewidth=2,linestyle=":")
 
 ## plot three isoquants calculated from theory with Hallatschek
@@ -281,21 +291,28 @@ ax2.scatter(sU_data[5][:,0],sU_data[5][:,1],color="red",linewidth=2)
 
 # set figure dimensions and add labels
 # -----------------------------------------------------------------------------
+
+new_xtick_labels=['',r'$10^{-3.5}$',r'$10^{-3.0}$',r'$10^{-2.5}$',r'$10^{-2.0}$',r'$10^{-1.5}$',r'$10^{-1.0}$']
+new_ytick_labels=['',r'$10^{-12}$',r'$10^{-10}$',r'$10^{-8}$',r'$10^{-6}$',r'$10^{-4}$',r'$10^{-2}$']
+
 ax2.set_xlim([1.2*log10_sc_max,log10_s_max])
 ax2.set_ylim([log10_U_min,log10_U_max])
-ax2.set_xlabel(r'Selection coefficient ($\log_{10}s$)',fontsize=18,labelpad=20)
-ax2.set_ylabel(r'Mutation rate ($\log_{10}U$)',fontsize=18,labelpad=10)
-ax2.tick_params(labelsize=16)
-ax2.legend(loc=3)
+ax2.set_xlabel(r'Selection coefficient',fontsize=18,labelpad=20)
+ax2.set_ylabel(r'Mutation rate',fontsize=18,labelpad=8)
+ax2.set_xticklabels(new_xtick_labels)
+ax2.set_yticklabels(new_ytick_labels)
+
+ax2.tick_params(labelsize=18)
+ax2.legend(loc=3,fontsize=16)
 
 # add annotations
 # -----------------------------------------------------------------------------
 xh_loc = (log10_s_max-1.2*log10_sc_max)
 yh_loc = (log10_U_max-log10_U_min)
-plt.text(1.2*log10_sc_max+0.06*xh_loc,log10_U_min+0.18*yh_loc,r'$v = 5.3\times 10^{-5}$',fontsize=16)
+plt.text(1.2*log10_sc_max+0.025*xh_loc,log10_U_min+0.22*yh_loc,r'$v = 5.3\times 10^{-5}$',fontsize=22)
 plt.text(1.2*log10_sc_max-.12*xh_loc,log10_U_min+.96*yh_loc,'(b)',fontsize=20)
 
-plt.close()
+#plt.close()
 
 fig2.savefig('figures/fig_v_isoquants_vary_N.pdf')
 
