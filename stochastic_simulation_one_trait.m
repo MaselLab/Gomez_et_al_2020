@@ -1,4 +1,4 @@
-function v = stochastic_simulation_one_trait(N,s1,u1,ud1,steps)
+function [v,pop,fitx] = stochastic_simulation_one_trait(N,s1,u1,ud1,steps,init_flag,init_pop,init_fitx)
 % The code below has been modified from the source code made
 % availabe by Pearce MT and Fisher DS, obtained from:
 % 
@@ -18,6 +18,9 @@ function v = stochastic_simulation_one_trait(N,s1,u1,ud1,steps)
 % input :u1: mutation rate per locus of trait 1.
 % input :ud1: deleterious mutation rate per locus of trait 1.
 % input :steps: number of steps for simulation.
+% input :init_flag: set initial population to inputed values
+% input :init_pop: initial popluation abundances
+% input :init_fitx: initial popluation classes
 
 % fitness distribution stored as a column vector in pop
 
@@ -25,9 +28,14 @@ digits(16);
 
 % initialize variables
 pop=N;                      % abundances of a classes
-Na = 0;                     % actual population size
+Na=0;                       % actual population size
 fit=0;                      % total fitness of a class
 fitx=0;                     % fitness in trait 1 of a class
+
+if (init_flag)
+    pop = init_pop;
+    fitx = init_fitx;
+end
 
 meanfitness = 0;            % mean fitness of the population
 meanfit_s = 0;              % mean fitness of the population
@@ -37,18 +45,16 @@ cutoff=10/s1;       % population cutoff for stochasticity
 for timestep=1:steps   
 
     %%%%%%%%%%%%%%%%%%%
-    % Remove columns of zeros of decreasing fitness classes
+    % Remove rows of zeros of decreasing fitness classes
     while any(pop(1,:))==0 
         pop(1,:)=[];
-        fit(1,:)=[];
         fitx(1)=[];
     end
 
-    % Add columns for padding, i.e. for new class produced by mutations
-    dim=size(pop); 
-    if any(pop(dim(1),:))==1    % check for expansion of front in direction of trait 2
+    % Add rows for padding, i.e. for new class produced by mutations
+    dim=size(pop);
+    if any(pop(dim(1),:))==1    % check for expansion of front 
         pop(dim(1)+1,:)=0;
-        fit(dim(1)+1,:)=fit(dim(1),:)+1;
         fitx(dim(1)+1)=fitx(dim(1))+1;
     end
 
@@ -77,8 +83,7 @@ for timestep=1:steps
     mutatexdel(1,:)=[];                     % newfreq already has padding, get rid of extra padding from shift
 
     nomutate=(1-u1-ud1)*newfreq;
-    postmutate=nomutate+u1*mutatex+ud1*mutatexdel;    
-    newfreq=nomutate+postmutate;
+    newfreq = nomutate+u1*mutatex+ud1*mutatexdel;
 
     % For subpopulations with size less than the stoch_cutoff, draw size
     % from poisson distribution. Otherwise, size = N*(expected frequency).
@@ -93,8 +98,9 @@ for timestep=1:steps
     Nas = sum(sum(newpop(stoch)));
 
     meanfitness = sum(sum(times(newpop,fit)))/Na;
-    newpop(~stoch) = newpop(~stoch)*((N-Nas)*(Na-Nas)/Na);
+    newpop(~stoch) = newpop(~stoch)*((N-Nas)/(Na-Nas));
     pop = newpop;
+    
 
     % recompute time-average of variances and covariances
 

@@ -1,5 +1,5 @@
 function [v,v1,v2,varx,vary,cov] = stochastic_simulation_two_traits(N,s1,u1,s2,u2,ud1,ud2,steps,...
-                                    collect_data,start_time,end_time,outputfile)
+                                    collect_data,start_time,end_time,outputfile,init_flag,init_time,init_pop,init_fit,init_fitx,init_fity)
 % The code below has been modified from the source code made
 % availabe by Pearce MT and Fisher DS, obtained from:
 % 
@@ -26,6 +26,12 @@ function [v,v1,v2,varx,vary,cov] = stochastic_simulation_two_traits(N,s1,u1,s2,u
 % input :collect_data: true/false - collect detailed data on 2d distr. per generation
 % input :start_time: start time for collecting detailed data on 2d distribution
 % input :end_time: end time for collecting detailed data on 2d distribution
+% input :init_flag: inicates if simulations should be initialized prior one
+% input :init_time: end time from prior simulation
+% input :init_pop: abundances from prior simulation
+% input :init_fit: total fitness from prior simulation
+% input :init_fitx: trait one fitness from prior simulation
+% input :init_fity: trait two fitness from prior simulation
 % input :outputfile: string with filename where detailed data will be stored
 
 digits(16);
@@ -46,7 +52,21 @@ meanfity_s = 0;             % mean fitness in y
 varx = 0;                   % variance in trait 1
 vary = 0;                   % variance in trait 2
 cov = 0;                    % covariance between trait 1 and 2
-cutoff=10/min(s1,s2);       % population cutoff for stochasticity
+adj_time = 0;               % adjustment to timestamp (cont. simulations)
+
+if (s2 == 0)    % simulation with one trait should be done with setting s2 = 0, U2=0, U2d=0
+    cutoff = 10/s1;     % cutoff for stochastic dynamics should be set by first s
+else
+    cutoff = max([10/s1 10/s2]);       % cutoff for stochastic dynamics will use highest of the two cuttoffs
+end
+
+if (init_flag)  % initialize population details to those from a prior simulation
+    pop = init_pop;
+    adj_time = init_time;
+    fit = init_fit;
+    fitx = init_fitx;
+    fity = init_fity;
+end
 
 if (collect_data)           % store parameters used in simulation
     fileID = fopen([outputfile '-0.txt'],'w');
@@ -124,8 +144,7 @@ for timestep=1:steps
     mutateydel(:,1)=[];                     % newfreq already has padding, get rid of extra padding from shift
     
     nomutate=(1-u1-u2-ud1-ud2)*newfreq;
-    postmutate=nomutate+u1*mutatex+u2*mutatey+ud1*mutatexdel+ud2*mutateydel;    
-    newfreq=nomutate+postmutate;
+    newfreq=nomutate+u1*mutatex+u2*mutatey+ud1*mutatexdel+ud2*mutateydel;    
     
     % For subpopulations with size less than the stoch_cutoff, draw size
     % from poisson distribution. Otherwise, size = N*(expected frequency).
@@ -143,7 +162,6 @@ for timestep=1:steps
     meanfitx = sum(sum(times(newpop,fitx_arry)))/Na;
     meanfity = sum(sum(times(newpop,fity_arry)))/Na;
     
-    nosefitness = max(max(times(fit,sign(newpop))));    % calculate most fitness of most fit class
     newpop(~stoch)=newpop(~stoch)*((N-Nas)*(Na-Nas)/Na);    %rescale deterministic classes only to get total popsize = N
     pop = newpop;
     
@@ -164,26 +182,13 @@ for timestep=1:steps
     end
     
     if( collect_data && (timestep >= start_time) && (timestep <= end_time) )
-        
-        % compute the covariance using only classes at the front
-        indx_front = (fit==nosefitness);
-        meanfitx_front = sum(pop(indx_front).*fitx_arry(indx_front))/sum(pop(indx_front));
-        meanfity_front = sum(pop(indx_front).*fity_arry(indx_front))/sum(pop(indx_front));
-        front_cov = sum(pop(indx_front).*(fitx_arry(indx_front)-meanfitx_front).*(fity_arry(indx_front)-meanfity_front))/sum(pop(indx_front));
-        
         % compute variances, covarainces and population load
         sigmax2 = sum(sum(times(newpop,(fitx_arry-meanfitx).^2)))/Na;
         sigmay2 = sum(sum(times(newpop,(fity_arry-meanfity).^2)))/Na;
         sigmaxy = sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity))))/Na;
-        pop_load = nosefitness - meanfitness;
-        
-        % compute v1, v2, sigma12, G eigenvalues and orientation 
-        [D,L] = eig([sigmax2 sigmaxy; sigmaxy sigmay2]);
-        evec1 = [cosd(45) sind(45); -sind(45) cosd(45)]*(sign(D(1,1))*D(:,1)); 
-        Gang = atan2d(evec1(2),evec1(1)); 
-        
-        % print data to output files, need: times,mean_fit,fit_var,fit_cov,pop_load,dcov_dt,vU_thry,v2U_thry
-        fprintf(fileID1,'%i,%.16f,%.16f,%.16f,%.16f,%.16f,%.16f,%.16f,%.16f,%.16f,%.16f,%.16f\n',timestep,sigmax2,sigmay2,sigmaxy,front_cov,pop_load,L(2,2),L(1,1),Gang,meanfitness,meanfitx,meanfity);
+
+        % print data to output files, need: times,mean_fit,fit_var,fit cov
+        fprintf(fileID1,'%i,%.16f,%.16f,%.16f,%.16f,%.16f,%.16f\n',timestep+adj_time,sigmax2,sigmay2,sigmaxy,meanfitness,meanfitx,meanfity);
         
         for i=1:size(pop,1)
             for j=1:size(pop,2)
