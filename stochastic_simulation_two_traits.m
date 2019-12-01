@@ -112,44 +112,48 @@ for timestep=1:steps
     %%%%%%%%%%%% 
     % Find expected frequencies after selection and mutation
     dim=size(pop);  
-    freq=pop/sum(sum(pop));                                 % array with frequencies of the each class
+    freq=pop/N;                                 % array with approximate frequencies of each class
     
     % calculate growth due to selection
     fitx_arry = s1*fitx'*ones(1,dim(2));           % array with # of mutations in trait 1
     fity_arry = s2*ones(dim(1),1)*fity;            % array with # of mutations in trait 2
     fit = fitx_arry + fity_arry;                   % total fitness
-    meanfitness = sum(sum(times(freq,fit)));
+
+    % not actual mean fitness since freq are divided by N. When actual
+    % population size exceeds N, then value results in decrese of popsize.
+    % This allows selection to control population size.
+    meanfitness = sum(sum(times(freq,fit)));        
     
-    newfreq=times(exp(fit-meanfitness),freq);  % after selection
-    newfreq=newfreq/sum(sum(newfreq));          % make sure frequencies still add to one.
+    newpop=times(exp(fit-meanfitness),pop);  % after selection
+    newpop=N*newpop/sum(sum(newpop));        
     
     % calculate changes in abundances due to mutations
     
     % beneficial mutations
     z1=zeros(1,dim(2));
-    mutatex=[z1; newfreq];
+    mutatex=[z1; newpop];
     mutatex(dim(1)+1,:)=[];                     % newfreq already has padding, get rid of extra padding from shift
     
     z2=zeros(dim(1),1);
-    mutatey=[z2 newfreq];
+    mutatey=[z2 newpop];
     mutatey(:,dim(2)+1)=[];                     % newfreq already has padding, get rid of extra padding from shift
     
     % deletirious mutations (note: del mutations in lowest classes ignored)
     z1=zeros(1,dim(2));
-    mutatexdel=[newfreq; z1];
+    mutatexdel=[newpop; z1];
     mutatexdel(1,:)=[];                     % newfreq already has padding, get rid of extra padding from shift
     
     z2=zeros(dim(1),1);
-    mutateydel=[newfreq z2];
+    mutateydel=[newpop z2];
     mutateydel(:,1)=[];                     % newfreq already has padding, get rid of extra padding from shift
     
-    nomutate=(1-u1-u2-ud1-ud2)*newfreq;
-    newfreq=nomutate+u1*mutatex+u2*mutatey+ud1*mutatexdel+ud2*mutateydel;    
+    % Sum of the mutation rates cannot exceed 
+    nomutate=(1-u1-u2-ud1-ud2)*newpop;
+    newpop=nomutate+u1*mutatex+u2*mutatey+ud1*mutatexdel+ud2*mutateydel;    
     
     % For subpopulations with size less than the stoch_cutoff, draw size
     % from poisson distribution. Otherwise, size = N*(expected frequency).
     
-    newpop=N*newfreq;
     stoch=newpop<cutoff;
     stochpop=poissrnd(newpop(stoch));           % sample poisson for abundances below stochasticity cutoff
     newpop(stoch)=stochpop;
@@ -162,7 +166,7 @@ for timestep=1:steps
     meanfitx = sum(sum(times(newpop,fitx_arry)))/Na;
     meanfity = sum(sum(times(newpop,fity_arry)))/Na;
     
-    newpop(~stoch)=newpop(~stoch)*((N-Nas)*(Na-Nas)/Na);    %rescale deterministic classes only to get total popsize = N
+%     newpop(~stoch)=newpop(~stoch)*((N-Nas)/(Na-Nas));    %rescale deterministic classes only to get total popsize = N
     pop = newpop;
     
     % recompute time-average of variances and covariances

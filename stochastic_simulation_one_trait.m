@@ -61,34 +61,37 @@ for timestep=1:steps
     %%%%%%%%%%%% 
     % Find expected frequencies after selection and mutation
     dim=size(pop);  
-    freq=pop/sum(sum(pop));                                 % array with frequencies of the each class
+    freq=pop/N;                                 % array with approximate frequencies of each class
 
     % calculate growth due to selection
     fit = s1*fitx';                                % total fitness
+    
+    % not actual mean fitness since freq are divided by N. When actual
+    % population size exceeds N, then value results in decrese of popsize.
+    % This allows selection to control population size.
     meanfitness = sum(sum(times(freq,fit)));
 
-    newfreq=times(exp(fit-meanfitness),freq);  % after selection
-    newfreq=newfreq/sum(sum(newfreq));          % make sure frequencies still add to one.
+    newpop=times(exp(fit-meanfitness),pop);  % after selection
+    newpop=N*newpop/sum(sum(newpop));          % make sure frequencies still add to one.
 
     % calculate changes in abundances due to mutations
 
     % beneficial mutations
     z1=zeros(1,dim(2));
-    mutatex=[z1; newfreq];
+    mutatex=[z1; newpop];
     mutatex(dim(1)+1,:)=[];                     % newfreq already has padding, get rid of extra padding from shift
 
     % deletirious mutations (note: del mutations in lowest classes ignored)
     z1=zeros(1,dim(2));
-    mutatexdel=[newfreq; z1];
+    mutatexdel=[newpop; z1];
     mutatexdel(1,:)=[];                     % newfreq already has padding, get rid of extra padding from shift
 
-    nomutate=(1-u1-ud1)*newfreq;
-    newfreq = nomutate+u1*mutatex+ud1*mutatexdel;
+    nomutate=(1-u1-ud1)*newpop;
+    newpop = nomutate+u1*mutatex+ud1*mutatexdel;
 
     % For subpopulations with size less than the stoch_cutoff, draw size
     % from poisson distribution. Otherwise, size = N*(expected frequency).
 
-    newpop=N*newfreq;
     stoch=newpop<cutoff;
     stochpop=poissrnd(newpop(stoch));           % sample poisson for abundances below stochasticity cutoff
     newpop(stoch)=stochpop;
@@ -97,13 +100,11 @@ for timestep=1:steps
     Na = sum(sum(newpop));
     Nas = sum(sum(newpop(stoch)));
 
-    meanfitness = sum(sum(times(newpop,fit)))/Na;
-    newpop(~stoch) = newpop(~stoch)*((N-Nas)/(Na-Nas));
+    meanfitness = sum(sum(times(newpop,fit)))/Na;   % this is actual mean fitness
+%     newpop(~stoch) = newpop(~stoch)*((N-Nas)/(Na-Nas));
     pop = newpop;
     
-
     % recompute time-average of variances and covariances
-
     if timestep==3000       % setting burn in period at 3000 generations
         meanfit_s = meanfitness;
     end
