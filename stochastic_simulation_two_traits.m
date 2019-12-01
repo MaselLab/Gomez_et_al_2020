@@ -166,7 +166,6 @@ for timestep=1:steps
     meanfitx = sum(sum(times(newpop,fitx_arry)))/Na;
     meanfity = sum(sum(times(newpop,fity_arry)))/Na;
     
-%     newpop(~stoch)=newpop(~stoch)*((N-Nas)/(Na-Nas));    %rescale deterministic classes only to get total popsize = N
     pop = newpop;
     
     % recompute time-average of variances and covariances

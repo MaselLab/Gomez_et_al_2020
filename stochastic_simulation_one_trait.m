@@ -101,7 +101,6 @@ for timestep=1:steps
     Nas = sum(sum(newpop(stoch)));
 
     meanfitness = sum(sum(times(newpop,fit)))/Na;   % this is actual mean fitness
-%     newpop(~stoch) = newpop(~stoch)*((N-Nas)/(Na-Nas));
     pop = newpop;
     
     % recompute time-average of variances and covariances
