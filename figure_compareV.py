@@ -26,9 +26,10 @@ import matplotlib.mlab as mlab
 # set file name of data
 # -----------------------------------------------------------------------------
 
-pickle_file_name = 'fig_compareVdata-16.pickle'    # data for comparison with fixed v
+#pickle_file_name = 'fig_compareVdata-16.pickle'    # data for comparison with fixed v
 #pickle_file_name = 'fig_compareVdata-19.pickle'    # data for comparison with fixed R
 #pickle_file_name = 'fig_compareVdata-20.pickle'    # data for comparison with fixed R
+pickle_file_name = 'fig_compareVdata-100.pickle'    # data for comparison with fixed v
 
 # load processed matlab data for figure
 # -----------------------------------------------------------------------------
@@ -47,7 +48,7 @@ rate_comp = np.transpose(rate_comp[::-1])[::-1]
 
 for i in range(n-1):                # remove lower portion of grid
     for j in range(m-1-i):
-        rate_comp[i,m-1-j]= 1
+        rate_comp[i,m-1-j]= inf*0
 
 for i in range(n):                  #set R1/R2 or v1/v2 < 1 to 1 for cbar map correction  
     for j in range(m-i):
@@ -55,7 +56,7 @@ for i in range(n):                  #set R1/R2 or v1/v2 < 1 to 1 for cbar map co
 #        rate_comp[i+j,i]=rate_comp[i+j,i]*(sarry[i]/sarry[i+j])
 # *****************************************************************************
         if (rate_comp[i+j,i]< 1):
-            rate_comp[i+j,i]=2-rate_comp[i+j,i]
+            rate_comp[i+j,i]=rate_comp[i+j,i]
 
 # flip the entries to get right matching of values with ordinal axis U vs. s
 for i in range(n):

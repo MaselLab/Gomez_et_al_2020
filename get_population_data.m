@@ -1,4 +1,4 @@
-function [adj_time,param,pop,fit,fitx,fity] = get_population_data(input_file_param,input_file_class,input_file_abund,input_file_summr)
+function [adj_time,param,pop,fit,fitx,fity,means_data,summr_data] = get_population_data(input_file_param,input_file_class,input_file_abund,input_file_summr,input_file_means)
 % get_population_data take ending distribution data from a previous simlation and
 % recreates the arrays to use in a new simulation that will continue the
 % prior one.
@@ -24,32 +24,37 @@ function [adj_time,param,pop,fit,fitx,fity] = get_population_data(input_file_par
     fileID2 = fopen(input_file_class,'r');
     fileID3 = fopen(input_file_abund,'r');
     fileID4 = fopen(input_file_summr,'r');
+    fileID5 = fopen(input_file_means,'r');
     
     % reading data from prior simulation
     param_data = fgetl(fileID1);
     class_data = fgetl(fileID2); 
         class_data = class_data(1:end-1);
-        class_data = replace(class_data,"],[",";")
+        class_data = replace(class_data,"],[",";");
     abund_data = fgetl(fileID3); 
         abund_data = abund_data(1:end-1);
-    summr_data = fgetl(fileID4); 
+    summr_data = fgetl(fileID4);
+    means_data = fgetl(fileID5);
         
     fclose(fileID1);
     fclose(fileID2);
     fclose(fileID3);
     fclose(fileID4);
-    
+    fclose(fileID5);
+
     eval(['param = [' param_data '];'])
     eval(['temp_class = ' class_data ';'])
     eval(['temp_abund = [' abund_data '];'])
-    eval(['temp_summr = ' summr_data ';'])
-    
+    eval(['temp_summr = [' summr_data '];'])
+    eval(['means_data = [' means_data '];'])
+
     % set time adjustment
     adj_time = temp_summr(1,1);
+    summr_data = temp_summr(1,2:end);
     
     % build fitness arrays
-    s1 = temp_param(1,2);
-    s2 = temp_param(1,4);
+    s1 = param(1,2);
+    s2 = param(1,4);
     fitx = min(temp_class(:,1)):1:max(temp_class(:,1));
     fity = min(temp_class(:,2)):1:max(temp_class(:,2));
     dim = [length(fitx) length(fity)];
@@ -60,7 +65,9 @@ function [adj_time,param,pop,fit,fitx,fity] = get_population_data(input_file_par
     % build array with abundances
     pop = zeros(dim(1),dim(2));
     
-    for i=1:length(temp_class)
+    dim=size(temp_class);
+    
+    for i=1:dim(1)
         i1 = temp_class(i,1)-min(fitx)+1;
         i2 = temp_class(i,2)-min(fity)+1;
         pop(i1,i2) = temp_abund(i);

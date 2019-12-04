@@ -42,7 +42,7 @@ def sU_bounds(N,v):
     
 def hall_U_approx(s,N,v):
     # hallatschek approximation has to be adjusted by a constant
-    U = (0.38*v**(1.5)/s**2)/np.log(6**(1/6.0)*N*np.sqrt(v))**(1/2.0)  
+    U = (0.1*v**(1.5)/s**2)/np.log(6**(1/6.0)*N*np.sqrt(v))**(1/2.0)  
     return U 
 
 def hall_U_approx_geno(s,N,R):
@@ -126,8 +126,8 @@ def get_graph_data(N,s,v,log_s_lbd1,log_s_lbd2,log_s_lbd3):
 
 #my_saved_data = 'data/fig_sUtradeoff_simdata-01.pickle'
 #my_saved_data = 'data/fig_sUtradeoff_simdata-06.pickle'
-
-my_saved_data = 'data/fig_sUtradeoff_simdata-22.pickle'
+#my_saved_data = 'data/fig_sUtradeoff_simdata-22.pickle'
+my_saved_data = 'data/fig_sUtradeoff_simdata-100.pickle'
 
 # load estimates for v isoquants from simulations
 # -----------------------------------------------------------------------------
@@ -154,11 +154,11 @@ vh = vm*10**(1)
 
 [succ_sh_vl,conc_sh_vl,disc_sh_vl,c_curve1_vl,c_curve2_vl,s_curve1_vl, \
      s_curve2_vl,sU_curve1_vl,sU_curve2_vl,sU_curve1h_vl,sU_curve2h_vl] \
-     = get_graph_data(Nm,s,vl,log_s_lbd1,1.1*log_s_lbd2,log_s_lbd3)
+     = get_graph_data(Nm,s,vl,log_s_lbd1,1.15*log_s_lbd2,log_s_lbd3)
          
 [succ_sh_vm,conc_sh_vm,disc_sh_vm,c_curve1_vm,c_curve2_vm,s_curve1_vm, \
      s_curve2_vm,sU_curve1_vm,sU_curve2_vm,sU_curve1h_vm,sU_curve2h_vm] \
-     = get_graph_data(Nm,s,vm,log_s_lbd1,0.95*log_s_lbd2,log_s_lbd3)
+     = get_graph_data(Nm,s,vm,log_s_lbd1,1.0*log_s_lbd2,log_s_lbd3)
 
 [succ_sh_vh,conc_sh_vh,disc_sh_vh,c_curve1_vh,c_curve2_vh,s_curve1_vh, \
      s_curve2_vh,sU_curve1_vh,sU_curve2_vh,sU_curve1h_vh,sU_curve2h_vh] \
@@ -314,7 +314,7 @@ plt.text(1.2*log10_sc_max-.12*xh_loc,log10_U_min+.96*yh_loc,'(b)',fontsize=20)
 
 #plt.close()
 
-fig2.savefig('figures/fig_v_isoquants_vary_N.pdf')
+#fig2.savefig('figures/fig_v_isoquants_vary_N.pdf')
 
 # -----------------------------------------------------------------------------
 #                           OLD CODE

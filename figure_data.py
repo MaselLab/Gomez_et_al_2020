@@ -43,9 +43,13 @@ import copy as cpy
 #sim_data_parameters = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-19-0.dat'
 #pickle_file_name = 'data/fig_compareVdata-19.pickle'
 
-sim_data_grandmeans = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_grand_means_ml-20-1.dat'
-sim_data_parameters = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-20-0.dat'
-pickle_file_name = 'data/fig_compareVdata-20.pickle'
+#sim_data_grandmeans = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_grand_means_ml-20-1.dat'
+#sim_data_parameters = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-20-0.dat'
+#pickle_file_name = 'data/fig_compareVdata-20.pickle'
+
+sim_data_grandmeans = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_grand_means_ml-100-1.dat'
+sim_data_parameters = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-100-0.dat'
+pickle_file_name = 'data/fig_compareVdata-100.pickle'
 
 # read matlab outputs and create python data for figure using grand means
 # -----------------------------------------------------------------------------
@@ -138,9 +142,13 @@ def read_my_data(mydata):
 #sim_data_sU_pairs = 'data/SAapprox/mutBiasCI_estimate_U_ml-21-'
 #pickle_file_name = 'data/fig_sUtradeoff_simdata-21.pickle'
 
-sim_data_parameters = 'data/SAapprox/mutBiasCI_estimate_U_ml-22-'
-sim_data_sU_pairs = 'data/SAapprox/mutBiasCI_estimate_U_ml-22-'
-pickle_file_name = 'data/fig_sUtradeoff_simdata-22.pickle'
+#sim_data_parameters = 'data/SAapprox/mutBiasCI_estimate_U_ml-22-'
+#sim_data_sU_pairs = 'data/SAapprox/mutBiasCI_estimate_U_ml-22-'
+#pickle_file_name = 'data/fig_sUtradeoff_simdata-22.pickle'
+
+sim_data_parameters = 'data/SAapprox/mutBiasCI_estimate_U_ml-100-'
+sim_data_sU_pairs = 'data/SAapprox/mutBiasCI_estimate_U_ml-100-'
+pickle_file_name = 'data/fig_sUtradeoff_simdata-100.pickle'
 
 # read, process and save data from files
 # -----------------------------------------------------------------------------

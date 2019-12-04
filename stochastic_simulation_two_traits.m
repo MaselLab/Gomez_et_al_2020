@@ -1,5 +1,5 @@
 function [v,v1,v2,varx,vary,cov] = stochastic_simulation_two_traits(N,s1,u1,s2,u2,ud1,ud2,steps,...
-                                    collect_data,start_time,end_time,outputfile,init_flag,init_time,init_pop,init_fit,init_fitx,init_fity)
+                                    collect_data,start_time,end_time,outputfile,init_flag,init_time,init_pop,init_fit,init_fitx,init_fity,init_means,init_summr)
 % The code below has been modified from the source code made
 % availabe by Pearce MT and Fisher DS, obtained from:
 % 
@@ -66,6 +66,12 @@ if (init_flag)  % initialize population details to those from a prior simulation
     fit = init_fit;
     fitx = init_fitx;
     fity = init_fity;
+    varx = init_means(1,4);
+    vary = init_means(1,5);
+    cov = init_means(1,6);
+    meanfit_s = init_summr(1,4) - init_means(1,1)*(adj_time-3000);
+    meanfitx_s = init_summr(1,5) - init_means(1,2)*(adj_time-3000);
+    meanfity_s = init_summr(1,6) - init_means(1,3)*(adj_time-3000);
 end
 
 if (collect_data)           % store parameters used in simulation
@@ -75,6 +81,7 @@ if (collect_data)           % store parameters used in simulation
     fileID1 = fopen([outputfile '-1.txt'],'w'); %file for all other 2d wave data per generation
     fileID2 = fopen([outputfile '-2.txt'],'w'); %file for data on classes per generation
     fileID3 = fopen([outputfile '-3.txt'],'w'); %file for data on abundances per generation
+    fileID4 = fopen([outputfile '-4.txt'],'w'); %file for grand means
 end
 
 % Main loop for simulation of each generation
@@ -169,12 +176,12 @@ for timestep=1:steps
     pop = newpop;
     
     % recompute time-average of variances and covariances
-    if timestep > 3000
-        varx = (1/timestep)*((timestep-1)*varx + sum(sum(times(newpop,(fitx_arry-meanfitx).^2)))/Na);
-        vary = (1/timestep)*((timestep-1)*vary + sum(sum(times(newpop,(fity_arry-meanfity).^2)))/Na);
-        cov = (1/timestep)*((timestep-1)*cov + sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity))))/Na);
+    if (timestep+adj_time > 3000)
+        varx = ( 1/(timestep+adj_time) )*((timestep+adj_time-1)*varx + sum(sum(times(newpop,(fitx_arry-meanfitx).^2)))/Na);
+        vary = ( 1/(timestep+adj_time) )*((timestep+adj_time-1)*vary + sum(sum(times(newpop,(fity_arry-meanfity).^2)))/Na);
+        cov = ( 1/(timestep+adj_time) )*((timestep+adj_time-1)*cov + sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity))))/Na);
     else
-        if timestep==3000
+        if (timestep+adj_time)==3000
             varx = sum(sum(times(newpop,(fitx_arry-meanfitx).^2)))/Na;
             vary = sum(sum(times(newpop,(fity_arry-meanfity).^2)))/Na;
             cov = sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity))))/Na;
@@ -191,7 +198,7 @@ for timestep=1:steps
         sigmaxy = sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity))))/Na;
 
         % print data to output files, need: times,mean_fit,fit_var,fit cov
-        fprintf(fileID1,'%i,%.16f,%.16f,%.16f,%.16f,%.16f,%.16f\n',timestep+adj_time,sigmax2,sigmay2,sigmaxy,meanfitness,meanfitx,meanfity);
+        fprintf(fileID1,'%i,%.16e,%.16e,%.16e,%.16e,%.16e,%.16e\n',timestep+adj_time,sigmax2,sigmay2,sigmaxy,meanfitness,meanfitx,meanfity);
         
         for i=1:size(pop,1)
             for j=1:size(pop,2)
@@ -208,15 +215,18 @@ for timestep=1:steps
     
 end
 
-v = (meanfitness-meanfit_s)/(steps-3000);
-v1 = (meanfitx-meanfitx_s)/(steps-3000);
-v2 = (meanfity-meanfity_s)/(steps-3000);
+v = (meanfitness-meanfit_s)/(steps+adj_time-3000);
+v1 = (meanfitx-meanfitx_s)/(steps+adj_time-3000);
+v2 = (meanfity-meanfity_s)/(steps+adj_time-3000);
+
+fprintf(fileID4,'%.16e,%.16e,%.16e,%.16e,%.16e,%.16e\n',v,v1,v2,varx,vary,cov);
 
 % close output files
 if(collect_data)
     fclose(fileID1);
     fclose(fileID2);
     fclose(fileID3);
+    fclose(fileID4);
 end
 
 end
