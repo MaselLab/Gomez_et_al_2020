@@ -29,7 +29,8 @@ import matplotlib.mlab as mlab
 #pickle_file_name = 'fig_compareVdata-16.pickle'    # data for comparison with fixed v
 #pickle_file_name = 'fig_compareVdata-19.pickle'    # data for comparison with fixed R
 #pickle_file_name = 'fig_compareVdata-20.pickle'    # data for comparison with fixed R
-pickle_file_name = 'fig_compareVdata-100.pickle'    # data for comparison with fixed v
+#pickle_file_name = 'fig_compareVdata-100.pickle'    # data for comparison with fixed v
+pickle_file_name = 'fig_compareVdata-101.pickle'    # data for comparison with fixed v
 
 # load processed matlab data for figure
 # -----------------------------------------------------------------------------
@@ -40,7 +41,7 @@ pickle_file.close()
 
 # comment out lines depending on R or v (these sections indicated by ****)
 
-rate_comp = v1_data/v2_data
+rate_comp = (1/5.31e-5)*(v1_data-v2_data)
 rate_comp = np.transpose(rate_comp[::-1])[::-1]
 
 [m,n] = rate_comp.shape
@@ -55,7 +56,7 @@ for i in range(n):                  #set R1/R2 or v1/v2 < 1 to 1 for cbar map co
 # *****************************************************************************        
 #        rate_comp[i+j,i]=rate_comp[i+j,i]*(sarry[i]/sarry[i+j])
 # *****************************************************************************
-        if (rate_comp[i+j,i]< 1):
+        if (rate_comp[i+j,i]< 0):
             rate_comp[i+j,i]=rate_comp[i+j,i]
 
 # flip the entries to get right matching of values with ordinal axis U vs. s
