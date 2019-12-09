@@ -14,12 +14,12 @@ Uarry = ones(size(sarry));
 steps = 5e4;
 n = 30;
 
-outputfile = 'data/SAapprox/mutBiasCI_estimate_U_ml-100-';     % name of output file
+outputfile = 'data/SAapprox/mutBiasCI_estimate_U_ml-101-';     % name of output file
 
-for i=4:6
+for i=1:6
     tic
     i
-    [Uarry,Uthry,est_rate] = get_U_estimates(Narry(i),trgt_rate_arry(i),sarry,steps,n);
+    [Uarry,Uthry,est_rate] = get_U_estimates(Narry(i),trgt_rate_arry(i),sarry,steps,n,i);
     dlmwrite([outputfile num2str(i) '-0.dat'],[Narry(i) trgt_rate_arry(i)],'delimiter',',','precision',16);
     dlmwrite([outputfile num2str(i) '-1.dat'],[sarry Uarry Uthry est_rate],'delimiter',',','precision',16);
     toc

@@ -16,14 +16,14 @@ U_max = U*1000;
 digits(16)
 % rng(7);    % set seed for random number generator
 
-n = 31 % must be an odd number to ensure that s that U of trait 1 are used with 2nd trait
+n = 31; % must be an odd number to ensure that s that U of trait 1 are used with 2nd trait
 grid = -(n-1)/2:1:(n-1)/2;
 
 sarry = 10.^( ((log10(s_max)-log10(s_min))/(n-1))*grid + log10(s) );
 Uarry = 10.^( ((log10(U_max)-log10(U_min))/(n-1))*grid + log10(U) );
 
 % name the output files and location to store them
-outputfile = '~/Documents/mutBiasCI/data/FixedsU/mutBiasCI_data_fixed_sU_ml-03'; 
+outputfile = '~/Documents/mutBiasCI/data/FixedsU/mutBiasCI_data_fixed_sU_ml-04'; 
 
 data_pts_s = length(sarry);    
 data_pts_U = length(Uarry);     
@@ -59,8 +59,8 @@ sim_data = zeros(number_of_sims,6);     % data collected [v,v1,v2,varx,vary,cov]
 % index j because figure 3 was switched from lower diagonal to upper
 % diagonal.
 
-new_sim_flag = true;  %set to true if new simulations, otherwise set false if continuing simulations
-init_flag = false;  % set to true if some continue simulations, otherwise set to false
+new_sim_flag = false;  %set to true if new simulations, otherwise set false if continuing simulations
+init_flag = true;  % set to true if some continue simulations, otherwise set to false
 init_time = 0;
 init_pop = N;
 init_fit = 0;
@@ -71,7 +71,7 @@ init_summr = 0;
 
 % indicate which simulations should be initialized from prior simulations
 init_filename = '~/Documents/mutBiasCI/data/FixedsU/mutBiasCI_data_fixed_sU_ml-03';
-init_indx = [];      % set indx values here
+init_indx = [1:data_pts_s*data_pts_U];      % set indx values here
 
 indx = 0;
 tic
@@ -125,6 +125,6 @@ for i=1:data_pts_s
 end
 toc
 
-dlmwrite('~/Documents/mutBiasCI/data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_ml-03-0.dat',NsU,'delimiter',',','precision',16);
-dlmwrite('~/Documents/mutBiasCI/data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_ml-03-1.dat',sim_data,'delimiter',',','precision',16);
-dlmwrite('~/Documents/mutBiasCI/data/FixedsU/mutBiasCI_data_all_simulation_indx_of_collected_data_fixed_sU_ml-03-2.dat',indx_of_collected_data,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_ml-04-0.dat',NsU,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_ml-04-1.dat',sim_data,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/FixedsU/mutBiasCI_data_all_simulation_indx_of_collected_data_fixed_sU_ml-04-2.dat',indx_of_collected_data,'delimiter',',','precision',16);

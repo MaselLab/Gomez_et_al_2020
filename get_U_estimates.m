@@ -1,4 +1,4 @@
-function [Uarry,Uthry,rate] = get_U_estimates(N,trgt_rate,sarry,steps,n)
+function [Uarry,Uthry,rate] = get_U_estimates(N,trgt_rate,sarry,steps,n,run_indx)
 % main function for estimating U's to achieve target v
 % inputs:
 % N - pop size
@@ -18,20 +18,23 @@ Uarry = ones(size(sarry));
 Uthry = ones(size(sarry));
 rate = ones(size(sarry));
 data_pts = length(sarry);
+run_data = [sarry zeros(data_pts,n)];
 
 for i=1:data_pts
     Uthry(i) = initial_U(N,trgt_rate,sarry(i));
     
     % need to bound U, otherwise we don't get a probability of mutation
     if (i>=9) % origin-fixation estimates need to run longer to converge
-        [Uarry(i),rate(i)] = approximate_U(N,trgt_rate,sarry(i),Uthry(i),16*steps,n); % more steps
+        [Uarry(i),rate(i),run_data(i,2:end)] = approximate_U(N,trgt_rate,sarry(i),Uthry(i),16*steps,n); % more steps
     else
-        [Uarry(i),rate(i)] = approximate_U(N,trgt_rate,sarry(i),Uthry(i),steps,n);
+        [Uarry(i),rate(i),run_data(i,2:end)] = approximate_U(N,trgt_rate,sarry(i),Uthry(i),steps,n);
     end
 end
 
+dlmwrite(['~/Documents/mutBiasCI/data/SAapprox/mutBiasCI_data_U_est_converge_ml-101-' num2str(run_indx) '.dat'],run_data,'delimiter',',','precision',16);
+
 %%    
-    function [Ut,est_rate] = approximate_U(Ni,trgt_rate,si,U0,steps,n)
+    function [Ut,est_rate,U_est] = approximate_U(Ni,trgt_rate,si,U0,steps,n)
     % Script attempts to find Ut such that trgt_rate = v given using the
     % N, s, and a target rate of evolution (trgt_rate), and starting at U0
     % robbins-monro algorithm.
@@ -47,26 +50,29 @@ end
     % Ut - estimate of U that provides target rate of adaptation vt
     % est_rate - return the last rate v associated with Ut 
 
-        Ut = U0;
-        log10Ut = log10(U0);
-        init_flag = false;
-        
-        pop = Ni;
-        fitx = 0;
+    Ut = U0;
+    log10Ut = log10(U0);
+    init_flag = false;
 
-        for k=1:n
-            %set initial U value and start simulation with no initial pop
-            Ut = 10^log10Ut;
-            [vn,pop,fitx] = stochastic_simulation_one_trait(Ni,si,Ut,Ut,steps,init_flag,pop,fitx);
-            
-            % adjust power of U based on error. Here I don't allow it to
-            % exceed mutation rates to go higher that 10^-3.1 because then
-            % the mutation rate would not be a probability (2*10^-3.1>1).
-            log10Ut = min([log10(0.49) log10Ut+(1/k^0.6)*log10(trgt_rate/vn)]);
-            init_flag = true;
-        end
-        
-        est_rate = vn;
+    pop = Ni;
+    fitx = 0;
+    U_est = zeros(1,n);
+
+    for k=1:n
+        %set initial U value and start simulation with no initial pop
+        Ut = 10^log10Ut;
+        [vn,pop,fitx] = stochastic_simulation_one_trait(Ni,si,Ut,Ut,steps,init_flag,pop,fitx);
+
+        % adjust power of U based on error. Here I don't allow it to
+        % exceed mutation rates to go higher that 10^-3.1 because then
+        % the mutation rate would not be a probability (2*10^-3.1>1).
+        log10Ut = min([log10(0.49) log10Ut+(1/k^0.6)*log10(trgt_rate/vn)]);
+        U_est(1,k) = 10^log10Ut;
+        init_flag = true;
+    end
+    
+    Ut = 10^log10Ut;
+    est_rate = vn;
     end
 %%
     function Ui = initial_U(Ni,trgt_rate_v,si)

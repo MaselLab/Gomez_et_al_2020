@@ -193,9 +193,17 @@ import scipy as sp
 import numpy as np
 import copy as cpy
 
-sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_ml-02-1.dat'
-sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_ml-02-0.dat'
-pickle_file_name = 'data/fig_compare_sU_data-02.pickle'
+#sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_ml-01-1.dat'
+#sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_ml-01-0.dat'
+#pickle_file_name = 'data/fig_compare_sU_data-01.pickle'
+
+#sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_ml-02-1.dat'
+#sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_ml-02-0.dat'
+#pickle_file_name = 'data/fig_compare_sU_data-02.pickle'
+
+sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_ml-03-1.dat'
+sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_ml-03-0.dat'
+pickle_file_name = 'data/fig_compare_sU_data-03.pickle'
 
 # read matlab outputs and create python data for figure using grand means
 # -----------------------------------------------------------------------------

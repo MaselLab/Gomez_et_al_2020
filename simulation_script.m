@@ -23,7 +23,7 @@ sarry = sU(:,1);
 Uarry = sU(:,2);
 
 % name the output files and location to store them
-outputfile = '~/Documents/mutBiasCI/data/TimeSeries/mutBiasCI_data_for_2d_distribution_ml-102'; 
+outputfile = '~/Documents/mutBiasCI/data/TimeSeries/mutBiasCI_data_for_2d_distribution_ml-103'; 
 
 data_pts_s = length(sarry);     % define the grid size, given by number of s values sampled.
 number_of_sims = floor(0.5*data_pts_s*(data_pts_s+1));  % define trait 1 vs trait 2 grid
@@ -34,7 +34,7 @@ indx_of_collected_data = [];
 % the variable start time can be changed to sample a trajectory in detail,
 % but currently it is set ot the last time point to sample the distribution
 % so that the simulations can be continued from that point.
-steps = 2.0e6;
+steps = 1.0e6;
 start_time = steps;                         % collect data on distribution at start time
 end_time = steps*ones(number_of_sims,1);    % collect data on distribution at end time
 
@@ -65,7 +65,7 @@ init_fitx = 0;
 init_fity = 0;
 
 % indicate which simulations should be initialized from prior simulations
-init_filename = '~/Documents/mutBiasCI/data/TimeSeries/mutBiasCI_data_for_2d_distribution_ml-101';
+init_filename = '~/Documents/mutBiasCI/data/TimeSeries/mutBiasCI_data_for_2d_distribution_ml-102';
 init_indx = [10:15 24:29 37:42 49:54 60:65 70:75 79:84 87:92 94:120];      % set indx values here
 
 indx = 0;
@@ -101,11 +101,11 @@ for i=1:data_pts_s
             NsU(indx,:)=[N,sarry(i),Uarry(i),sarry(j),Uarry(j),Uarry(i),Uarry(j)];
             sim_data(indx,:) = init_means;
             
-            copyfile([input_filename '-' num2str(indx) '-0.txt'], [outputfile '-' num2str(indx) '-0.txt']);
-            copyfile([input_filename '-' num2str(indx) '-1.txt'], [outputfile '-' num2str(indx) '-1.txt']);
-            copyfile([input_filename '-' num2str(indx) '-2.txt'], [outputfile '-' num2str(indx) '-2.txt']);
-            copyfile([input_filename '-' num2str(indx) '-3.txt'], [outputfile '-' num2str(indx) '-3.txt']);
-            copyfile([input_filename '-' num2str(indx) '-4.txt'], [outputfile '-' num2str(indx) '-4.txt']);
+            copyfile([init_filename '-' num2str(indx) '-0.txt'], [outputfile '-' num2str(indx) '-0.txt']);
+            copyfile([init_filename '-' num2str(indx) '-1.txt'], [outputfile '-' num2str(indx) '-1.txt']);
+            copyfile([init_filename '-' num2str(indx) '-2.txt'], [outputfile '-' num2str(indx) '-2.txt']);
+            copyfile([init_filename '-' num2str(indx) '-3.txt'], [outputfile '-' num2str(indx) '-3.txt']);
+            copyfile([init_filename '-' num2str(indx) '-4.txt'], [outputfile '-' num2str(indx) '-4.txt']);
                 
         end
         
@@ -114,9 +114,9 @@ for i=1:data_pts_s
 end
 toc
 
-dlmwrite('~/Documents/mutBiasCI/data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-102-0.dat',NsU,'delimiter',',','precision',16);
-dlmwrite('~/Documents/mutBiasCI/data/TwoTraitSim/mutBiasCI_data_all_simulation_grand_means_ml-102-1.dat',sim_data,'delimiter',',','precision',16);
-dlmwrite('~/Documents/mutBiasCI/data/TwoTraitSim/mutBiasCI_data_all_simulation_indx_of_collected_data_ml-102-2.dat',indx_of_collected_data,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-103-0.dat',NsU,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/TwoTraitSim/mutBiasCI_data_all_simulation_grand_means_ml-103-1.dat',sim_data,'delimiter',',','precision',16);
+dlmwrite('~/Documents/mutBiasCI/data/TwoTraitSim/mutBiasCI_data_all_simulation_indx_of_collected_data_ml-103-2.dat',indx_of_collected_data,'delimiter',',','precision',16);
 
 %% script to copy old simulations to continue simulations
 
