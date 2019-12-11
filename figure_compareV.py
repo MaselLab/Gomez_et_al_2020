@@ -42,7 +42,7 @@ pickle_file.close()
 
 # comment out lines depending on R or v (these sections indicated by ****)
 
-rate_comp = abs(v1_data-v2_data)/v
+rate_comp = v1_data/v2_data
 rate_comp = np.transpose(rate_comp[::-1])[::-1]
 
 [m,n] = rate_comp.shape
@@ -50,14 +50,14 @@ rate_comp = np.transpose(rate_comp[::-1])[::-1]
 
 for i in range(n-1):                # remove lower portion of grid
     for j in range(m-1-i):
-        rate_comp[i,m-1-j]= inf*0
+        rate_comp[i,m-1-j]= 1
 
 for i in range(n):                  #set R1/R2 or v1/v2 < 1 to 1 for cbar map correction  
     for j in range(m-i):
 # *****************************************************************************        
 #        rate_comp[i+j,i]=rate_comp[i+j,i]*(sarry[i]/sarry[i+j])
 # *****************************************************************************
-        if (rate_comp[i+j,i]< 0):
+        if (rate_comp[i+j,i]< 1):
             rate_comp[i+j,i]=2-rate_comp[i+j,i]
 
 # flip the entries to get right matching of values with ordinal axis U vs. s

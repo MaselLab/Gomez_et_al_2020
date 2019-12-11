@@ -42,7 +42,7 @@ def sU_bounds(N,v):
     
 def hall_U_approx(s,N,v):
     # hallatschek approximation has to be adjusted by a constant
-    U = (0.1*v**(1.5)/s**2)/np.log(6**(1/6.0)*N*np.sqrt(v))**(1/2.0)  
+    U = (0.3*v**(1.5)/s**2)/np.log(6**(1/6.0)*N*np.sqrt(v))**(1/2.0)  
     return U 
 
 def hall_U_approx_geno(s,N,R):
@@ -127,7 +127,8 @@ def get_graph_data(N,s,v,log_s_lbd1,log_s_lbd2,log_s_lbd3):
 #my_saved_data = 'data/fig_sUtradeoff_simdata-01.pickle'
 #my_saved_data = 'data/fig_sUtradeoff_simdata-06.pickle'
 #my_saved_data = 'data/fig_sUtradeoff_simdata-22.pickle'
-my_saved_data = 'data/fig_sUtradeoff_simdata-100.pickle'
+#my_saved_data = 'data/fig_sUtradeoff_simdata-100.pickle'
+my_saved_data = 'data/fig_sUtradeoff_simdata-101.pickle'
 
 # load estimates for v isoquants from simulations
 # -----------------------------------------------------------------------------
@@ -170,7 +171,11 @@ vh = vm*10**(1)
 
 # create figure 1    
 # -----------------------------------------------------------------------------
-fig1, ax1 = plt.subplots(1,1,figsize=[8,8])
+fig = plt.figure(figsize=[7,11])
+
+#fig1, ax1 = plt.subplots(2,1,figsize=[16,8])
+
+ax1=plt.subplot(211)
 
 # set colors identifying regions
 # -----------------------------------------------------------------------------
@@ -198,9 +203,6 @@ ax1.plot(sU_curve2h_vh[:,0],sU_curve2h_vh[:,1],color="red",linewidth=2,linestyle
 
 # plot simulated data points of sU tradeoff concurrent/successional curves
 # -----------------------------------------------------------------------------
-#sU_data[0][10,1]
-#sU_data[0][11,1]
-#sU_data[0][12,1] = sU_data[0][11,1]+(sU_data[0][11,1]-sU_data[0][10,1])
 ax1.scatter(sU_data[0][:,0],sU_data[0][:,1],color="blue",linewidth=2)
 ax1.scatter(sU_data[1][:,0],sU_data[1][:,1],color="purple",linewidth=2)
 ax1.scatter(sU_data[2][3:,0],sU_data[2][3:,1],color="red",linewidth=2)
@@ -212,32 +214,32 @@ new_ytick_labels=['',r'$10^{-12}$',r'$10^{-10}$',r'$10^{-8}$',r'$10^{-6}$',r'$10
 
 ax1.set_xlim([1.2*log10_sc_max,log10_s_max])
 ax1.set_ylim([log10_U_min,log10_U_max])
-ax1.set_xticklabels(new_xtick_labels)
+ax1.set_xticklabels([])
 ax1.set_yticklabels(new_ytick_labels)
 
-ax1.set_xlabel(r'Selection coefficient',fontsize=18,labelpad=20)
+#ax1.set_xlabel(r'Selection coefficient',fontsize=18,labelpad=20)
 ax1.set_ylabel(r'Mutation rate',fontsize=18,labelpad=8)
 
 #locs, labels = xticks()            # Get locations and labels
 #xticks(ticks, [labels], **kwargs)  # Set locations and labels
 
 ax1.tick_params(labelsize=18)
-ax1.legend(loc=3,fontsize=16)
+ax1.legend(loc=3,fontsize=18)
 
 # annotations to graphs
 # -----------------------------------------------------------------------------
 xh_loc = (log10_s_max-1.2*log10_sc_max)
 yh_loc = (log10_U_max-log10_U_min)
-plt.text(1.1*log10_sc_max-0.082*xh_loc,log10_U_min+0.22*yh_loc,r'$N = 10^9$',fontsize=22)
+plt.text(1.1*log10_sc_max-0.082*xh_loc,log10_U_min+0.30*yh_loc,r'$N = 10^9$',fontsize=22)
 plt.text(1.15*log10_sc_max,0.55*log10_U_min,"Multiple Mutations\n Regime (U << s)",fontsize=16)
-plt.text(0.75*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fontsize=16)
-plt.text(0.67*log10_sc_max,0.13*log10_U_min,"Multiple Mutations\n  Regime (U > s)",color="black",fontsize=16)
-plt.text(1.2*log10_sc_max-.12*xh_loc,log10_U_min+.96*yh_loc,'(a)',fontsize=20)
+plt.text(0.72*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fontsize=16)
+plt.text(0.67*log10_sc_max,0.13*log10_U_min,"Diffusive Mutations\n        Regime",color="black",fontsize=16)
+plt.text(1.2*log10_sc_max-.16*xh_loc,log10_U_min+.96*yh_loc,'(a)',fontsize=20)
 
 #plt.close()
 
 # save figure
-fig1.savefig('figures/fig_v_isoquants_vary_v.pdf')
+#fig1.savefig('figures/fig_v_isoquants_vary_v.pdf')
 
 #--------------------------------------------------------------------------------
 #           Figure 2 - v-isoquants with varying N 
@@ -263,7 +265,8 @@ fig1.savefig('figures/fig_v_isoquants_vary_v.pdf')
     
 # create figure 2    
 # -----------------------------------------------------------------------------
-fig2, ax2 = plt.subplots(1,1,figsize=[8,8])
+#fig2, ax2 = plt.subplots(1,1,figsize=[8,8])
+ax2=plt.subplot(212)
 
 # plot three isoquants calculated from theory
 # -----------------------------------------------------------------------------
@@ -303,18 +306,18 @@ ax2.set_xticklabels(new_xtick_labels)
 ax2.set_yticklabels(new_ytick_labels)
 
 ax2.tick_params(labelsize=18)
-ax2.legend(loc=3,fontsize=16)
+ax2.legend(loc=3,fontsize=18)
 
 # add annotations
 # -----------------------------------------------------------------------------
 xh_loc = (log10_s_max-1.2*log10_sc_max)
 yh_loc = (log10_U_max-log10_U_min)
-plt.text(1.2*log10_sc_max+0.025*xh_loc,log10_U_min+0.22*yh_loc,r'$v = 5.3\times 10^{-5}$',fontsize=22)
-plt.text(1.2*log10_sc_max-.12*xh_loc,log10_U_min+.96*yh_loc,'(b)',fontsize=20)
-
+plt.text(1.2*log10_sc_max+0.025*xh_loc,log10_U_min+0.30*yh_loc,r'$v = 5.3\times 10^{-5}$',fontsize=22)
+plt.text(1.2*log10_sc_max-.16*xh_loc,log10_U_min+.96*yh_loc,'(b)',fontsize=20)
+plt.tight_layout()
 #plt.close()
 
-#fig2.savefig('figures/fig_v_isoquants_vary_N.pdf')
+fig.savefig('figures/fig_v_isoquants.pdf')
 
 # -----------------------------------------------------------------------------
 #                           OLD CODE
