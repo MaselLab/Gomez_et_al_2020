@@ -42,7 +42,7 @@ rate_comp = v1_data/v
 arry_dim = len(sarry)
 
 # set labels for axes
-my_slabel = ['$10^{'+str(np.round(np.log10(sarry[i,0]),1))+'}$' for i in range(len(sarry))]
+my_slabel = ['$10^{'+str(np.round(np.log10(sarry[i,0]),2))+'}$' for i in range(len(sarry))]
 my_Ulabel = ['$10^{'+str(np.round(np.log10(Uarry[i,0]),1))+'}$' for i in range(len(Uarry))]
 
 # set some labels blank to have them fit on graph
@@ -51,7 +51,7 @@ for i in range(len(my_slabel)):
         my_Ulabel[i]=''
 
 for i in range(len(my_slabel)):
-    if ((i%4==1) | (i%4==2) | (i%4==3)):
+    if ((i%6!=3)):
         my_slabel[i]=''
         
 x_border = [0.0+m*i/1000.0 for i in range(1001)]
@@ -63,8 +63,12 @@ y_border = [min(np.floor(1.0+m*i/1000.0),m) for i in range(1001)]
 fig = plt.figure(figsize=[7,11])
 
 ax1=plt.subplot(211)
-fit_distr_2d = ax1.pcolormesh(rate_comp,cmap=plt.cm.gray_r)
-cbar = plt.colorbar(fit_distr_2d,pad = 0.03,ticks=[0+i/10.0 for i in range(12)])
+fit_distr_2d = ax1.pcolormesh(rate_comp,cmap=plt.cm.bwr)
+cbar = plt.colorbar(fit_distr_2d,pad = 0.03,
+                    ticks=[0+i/10.0 for i in range(12)],
+                           norm=mpl.colors.Normalize(vmin=0.0, vmax=1.1))
+
+cbar.set_clim(-0.1, 1.1)
 cbar.ax.set_yticklabels([str(0+i/10.0) for i in range(12)])
 cbar.ax.tick_params(labelsize=16)
 # *****************************************************************************
@@ -80,8 +84,8 @@ ax1.tick_params(axis='both',labelsize=16)
 # *****************************************************************************
 cbar.ax.text(3,0.55,'Ratio $v_1/v$',rotation=270,fontsize=22)    # use this label of comparing v
 # *****************************************************************************
-plt.text(17.5,28.5,r'$N = 10^9$',fontsize=20)
-plt.text(17.5,26.5,r'$v = 5.3\times 10^{-5}$',fontsize=20)     # use this label of comparing v
+#plt.text(17.5,28.5,r'$N = 10^9$',fontsize=20)
+#plt.text(17.5,26.5,r'$v = 5.3\times 10^{-5}$',fontsize=20)     # use this label of comparing v
 #plt.text(23,28.5,r'$s_1 = 10^{-2}$',fontsize=18)
 #plt.text(22.7,26.5,r'$U_1 = 10^{-5}$',fontsize=18)     # use this label of comparing v
 plt.text(-8.0,30,'(a)',fontsize=20)
