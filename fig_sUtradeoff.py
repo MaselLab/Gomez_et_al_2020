@@ -18,40 +18,17 @@ import numpy as np
 import fig_functions as myfun
 import pickle
 
+import fig_functions as myfun            # my functions in a seperate file
+
+## uncomment if you make changes to fig_functions and run these lines to reload
+#import fig_functions
+#reload(fig_functions)
+
 # functions
 # -----------------------------------------------------------------------------
 
-def sU_bounds(N,v):
-    # computes appropriate bounds of sU space for looking at tradeoff with 
-    # phenotype adaptation
-    # inputs:
-    # s = selection coefficient
-    # N = Population size
-    # v = rate of adaptation
-    # outputs:
-    # list of bounds for s and U
-
-    sm = 1.1*myfun.s_max_Uc(N,v)                      # approx s for max Uc
-    st = 1.2*myfun.s_transition2succ(N,v)             # approx s for transition conc to succ
-    s_min = 1/N
-    s_max = 5*st     
-    U_min = 0.01*myfun.sU_tradeoff_succ(s_max,N,v)
-    U_max = 100*myfun.sU_tradeoff_conc(sm,N,v)
-    
-    return [s_min,s_max,U_min,U_max,sm,st]
-    
-def hall_U_approx(s,N,v):
-    # hallatschek approximation has to be adjusted by a constant
-    U = (0.3*v**(1.5)/s**2)/np.log(6**(1/6.0)*N*np.sqrt(v))**(1/2.0)  
-    return U 
-
-def hall_U_approx_geno(s,N,R):
-    # hallatschek approximation has to be adjusted by a constant
-    U = (0.38*(R*s)**(1.5)/s**2)/np.log(6**(1/6.0)*N*np.sqrt(R*s))**(1/2.0)  
-    return U 
-
 def get_graph_data(N,s,v,log_s_lbd1,log_s_lbd2,log_s_lbd3):
-    # computes tradeoff curves given parameters
+    # computes tradeoff curves given parameters, function is only used here.
     #
     # inputs:
     # s = selection coefficient
@@ -67,7 +44,7 @@ def get_graph_data(N,s,v,log_s_lbd1,log_s_lbd2,log_s_lbd3):
     no_div,no_div1,no_div2 = [100,50,75]        # spacing between s points
     
     # setting bounds for the window and computing their log10 values for the log-plot
-    [s_min,s_max,U_min,U_max,sc_max,sc_trans] = sU_bounds(N,v)          
+    [s_min,s_max,U_min,U_max,sc_max,sc_trans] = myfun.sU_bounds(N,v)          
     log10_s_min = np.log10(s_min)
     log10_s_max = np.log10(s_max)
     log10_U_min = np.log10(U_min)
@@ -102,24 +79,23 @@ def get_graph_data(N,s,v,log_s_lbd1,log_s_lbd2,log_s_lbd3):
     disc_shade = np.log10(np.asarray([[s1[i],min(0.1*s1[i],10*U_max),10*U_max] for i in range(no_div)]))
     
     # caluculate v-isoquant for concurrent regime
-    sU_tradeoff_conc_curve1 = np.log10(np.asarray([[s_reg3[i],myfun.sU_tradeoff_conc(s_reg3[i],N,v)] for i in range(no_div1)]))    
-    sU_tradeoff_conc_curve2 = np.log10(np.asarray([[s_reg4[i],myfun.sU_tradeoff_conc(s_reg4[i],N,v)] for i in range(no_div1)]))    
+    vCont_MM1 = np.log10(np.asarray([[s_reg3[i],myfun.vContour_MM(s_reg3[i],N,v)] for i in range(no_div1)]))    
+    vCont_MM2 = np.log10(np.asarray([[s_reg4[i],myfun.vContour_MM(s_reg4[i],N,v)] for i in range(no_div1)]))    
     
     # caluculate v-isoquant for successional regime
-    sU_tradeoff_succ_curve1 = np.log10(np.asarray([[s_reg1[i],myfun.sU_tradeoff_succ(s_reg1[i],N,v)] for i in range(no_div1)]))    
-    sU_tradeoff_succ_curve2 = np.log10(np.asarray([[s_reg2[i],myfun.sU_tradeoff_succ(s_reg2[i],N,v)] for i in range(no_div1)]))    
+    vCont_OF1 = np.log10(np.asarray([[s_reg1[i],myfun.vContour_OF(s_reg1[i],N,v)] for i in range(no_div1)]))    
+    vCont_OF2 = np.log10(np.asarray([[s_reg2[i],myfun.vContour_OF(s_reg2[i],N,v)] for i in range(no_div1)]))    
 
     # caluculate piecewise v-isoquant for combined regimes
-    sU_curve1 = np.log10(np.asarray([[s_reg5[i],myfun.sU_tradeoff(s_reg5[i],N,v)] for i in range(no_div1)]))    
-    sU_curve2 = np.log10(np.asarray([[s_reg6[i],myfun.sU_tradeoff(s_reg6[i],N,v)] for i in range(no_div1)]))    
+    vCont_OFMM1 = np.log10(np.asarray([[s_reg5[i],myfun.vContour_OFMM(s_reg5[i],N,v)] for i in range(no_div1)]))    
+    vCont_OFMM2 = np.log10(np.asarray([[s_reg6[i],myfun.vContour_OFMM(s_reg6[i],N,v)] for i in range(no_div1)]))    
 
     # caluculate v-isoquant for using halletschek approximations (Hallatschek 20011) 
-    sU_curve1h = np.log10(np.asarray([[s_reg7[i],hall_U_approx(s_reg7[i],N,v)] for i in range(no_div1)]))    
-    sU_curve2h = np.log10(np.asarray([[s_reg8[i],hall_U_approx(s_reg8[i],N,v)] for i in range(no_div1)]))    
+    vCont_DM1 = np.log10(np.asarray([[s_reg7[i],myfun.vContour_DM(s_reg7[i],N,v)] for i in range(no_div1)]))    
+    vCont_DM2 = np.log10(np.asarray([[s_reg8[i],myfun.vContour_DM(s_reg8[i],N,v)] for i in range(no_div1)]))    
     
-    return [succ_shade,conc_shade,disc_shade,sU_tradeoff_conc_curve1, \
-            sU_tradeoff_conc_curve2,sU_tradeoff_succ_curve1, \
-            sU_tradeoff_succ_curve2,sU_curve1,sU_curve2,sU_curve1h,sU_curve2h]
+    return [succ_shade,conc_shade,disc_shade,vCont_MM1, vCont_MM2,vCont_OF1, \
+            vCont_OF2,vCont_OFMM1,vCont_OFMM2,vCont_DM1,vCont_DM2]
 
 # set file names with saved data
 # -----------------------------------------------------------------------------
@@ -165,7 +141,7 @@ vh = vm*10**(1)
      s_curve2_vh,sU_curve1_vh,sU_curve2_vh,sU_curve1h_vh,sU_curve2h_vh] \
      = get_graph_data(Nm,s,vh,log_s_lbd1,0.85*log_s_lbd2,log_s_lbd3)
 
-[s_min,s_max,U_min,U_max,sc_max,sc_trans] = sU_bounds(Nm,vm)
+[s_min,s_max,U_min,U_max,sc_max,sc_trans] = myfun.sU_bounds(Nm,vm)
 [log10_s_min,log10_s_max,log10_U_min,log10_U_max,log10_sc_max,log10_sc_trans] = \
     [np.log10(s_min),np.log10(s_max),np.log10(U_min),np.log10(10*U_max),np.log10(sc_max),np.log10(sc_trans)]
 
@@ -259,7 +235,7 @@ plt.text(1.2*log10_sc_max-.16*xh_loc,log10_U_min+.96*yh_loc,'(a)',fontsize=20)
                              sU_curve1_Nh,sU_curve2_Nh,sU_curve1h_Nh,sU_curve2h_Nh] \
                              = get_graph_data(Nh,s,vm,log_s_lbd1,0.9*log_s_lbd2,log_s_lbd3)
 
-[s_min,s_max,U_min,U_max,sc_max,sc_trans] = sU_bounds(Nm,vm)
+[s_min,s_max,U_min,U_max,sc_max,sc_trans] = myfun.sU_bounds(Nm,vm)
 [log10_s_min,log10_s_max,log10_U_min,log10_U_max,log10_sc_max,log10_sc_trans] = \
     [np.log10(s_min),np.log10(s_max),np.log10(U_min),np.log10(10*U_max),np.log10(sc_max),np.log10(sc_trans)]
     
