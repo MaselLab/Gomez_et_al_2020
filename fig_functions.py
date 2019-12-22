@@ -17,7 +17,12 @@ import scipy.optimize as op
 import numpy as np
 from numpy import inf
 
-# functions
+
+# *****************************************************************************
+# FUNCTIONS TO GET QUANTITIES FROM DESAI AND FISHER 2007
+# *****************************************************************************
+
+
 def get_vDF(N,s,U):
     # Calculates the rate of adaptation v, derived in Desai and Fisher 2007
     # for a given population size (N), selection coefficient (s) and beneficial
@@ -32,24 +37,6 @@ def get_vDF(N,s,U):
     # v - rate of adaptation
         
     v = s**2*(2*np.log(N*s)-np.log(s/U))/(np.log(s/U)**2)
-    
-    return v
-
-def get_vDF_genotype(N,s,U):
-    # Calculates the rate of adaptation v, derived in Desai and Fisher 2007
-    # for a given population size (N), selection coefficient (s) and beneficial
-    # mutation rate (U), and scales v by the selection coefficient to obtain
-    # the genotype adaptation rate.
-    #
-    # Inputs:
-    # N - population size
-    # s - selection coefficient
-    # U - beneficial mutation rate
-    #
-    # Output: 
-    # v - rate of adaptation
-        
-    v = s*(2*np.log(N*s)-np.log(s/U))/(np.log(s/U)**2)
     
     return v
 
@@ -69,37 +56,10 @@ def get_qDF(N,s,U):
     q = 2*np.log(N*s)/np.log(s/U)
     
     return q
-    
-def theta(s,N,v):
-    # computes the characteristic width of the fitness distribution
-    #
-    # inputs:
-    # s = selection coefficient
-    # N = Population size
-    # v = rate of adaptation
-    #
-    # outputs:
-    # theta = characteristic width of the fitness distribution
-    
-    theta = v*np.log(N*s)/s**2
-    
-    return theta
 
-def theta_genotype(s,N,v):
-    # computes the characteristic width of the fitness distribution scaled
-    # by the selection coefficient.
-    #
-    # inputs:
-    # s = selection coefficient
-    # N = Population size
-    # v = rate of adaptation
-    #
-    # outputs:
-    # theta = characteristic width of the fitness distribution
-    
-    theta_g = v*np.log(N*s)/s
-    
-    return theta_g
+# *****************************************************************************
+# FUNCTIONS TO APPROXIMATE TRANSITIONS BETWEEN REGIMES IN s,U SPACE
+# *****************************************************************************
 
 def s_transition2succ(N,v):
     # approximates the transition point from concurrent to successional 
@@ -113,22 +73,6 @@ def s_transition2succ(N,v):
     # s_t = estimated s marking transition to successional from concurrent
     
     s_t = np.sqrt(v*np.log(N*np.sqrt(v)))
-    
-    return s_t
-
-def s_transition2succ_genotype(N,v):
-    # approximates the transition point from concurrent to successional when
-    # v is the genotype adaptation rate.
-    #
-    # inputs:
-    # s = selection coefficient
-    # N = Population size
-    # v = rate of adaptation
-    #
-    # outputs:
-    # s_t = estimated s marking transition to successional from concurrent
-    
-    s_t = v*np.log(N*v)
     
     return s_t
 
@@ -147,21 +91,6 @@ def s_max_Uc(N,v):
     
     return s_m
 
-def s_max_Uc_genotype(N,v):
-    # approximates the s value that maximizes U in concurrent regime
-    #
-    # inputs:
-    # s = selection coefficient
-    # N = Population size
-    # v = rate of adaptation
-    #
-    # outputs:
-    # s_m = estimated s marking transition to successional from concurrent
-    
-    s_m = v/np.log(N*v)
-    
-    return s_m
-
 def succ_conc_barrier(s,N,v):
     # computes mutation rate cutoff between succ and conc regime, given a 
     # selection coefficient s.
@@ -177,10 +106,64 @@ def succ_conc_barrier(s,N,v):
     U = 1/(N*np.log(N*s))
     
     return U
+    
+def sU_bounds(N,v):
+    # computes appropriate bounds of sU space for looking at tradeoff with 
+    # phenotype adaptation
+    # inputs:
+    # s = selection coefficient
+    # N = Population size
+    # v = rate of adaptation
+    # outputs:
+    # list of bounds for s and U
 
-def sU_tradeoff(s,N,v):
+    sm = 1.1*s_max_Uc(N,v)                      # approx s for max Uc
+    st = 1.2*s_transition2succ(N,v)             # approx s for transition conc to succ
+    s_min = 1/N
+    s_max = 5*st     
+    U_min = 0.01*sU_tradeoff_succ(s_max,N,v)
+    U_max = 100*sU_tradeoff_conc(sm,N,v)
+    
+    return [s_min,s_max,U_min,U_max,sm,st]
+
+# *****************************************************************************
+# FUNCTIONS FOR U(s) PARAMETERIZATIONS
+# *****************************************************************************
+
+#def vContour_full(sarry,N,v):
+#    # Computes the U(s) parameteriziation of a v-contour
+#    # for a chosen population size (N). The curve is returns as Uarry in two
+#    # pieces because the theory gives a discontinuous transition between the 
+#    # the diffusive mutations regime (DM) and the multiple mutation regime (MM).
+#    # Origin fixation (OF) and mutltiple mutations intersect so those can be 
+#    # returned as one piece.
+#    #    
+#    # Inputs:
+#    # sarry - array of selection coefficients, should be column
+#    # N - populations size
+#    # v - fixed rate of adaptation
+#    #    
+#    # Outputs:
+#    # Uarry - beneficial mutation rate yielding v, given N and s OF and MM
+#
+#
+#    Uarry1 = np.zeros(sarry.shape)   # stores the calculated
+#     = np.zeros(sarry.shape)   # stores the calculated 
+#    
+#    n = int(sarry.shape[0])     # assuming sarry stored as column
+#
+#    for i in range (n):    
+#        U1 = vContour_OF(s,N,v)
+#        U2 = vContour_OF(s,N,v)
+#        U3 = vContour_OF(s,N,v)
+#    
+#    U = max(U1,U2)
+#    
+#    return U
+
+def vContour_OFMM(s,N,v):
     # Computes the U-s trade-off function that preserves rate of adaptation (v)
-    # for a chosen population size (N)
+    # for a chosen population size (N) for OF and MM as one curve
     #    
     # Inputs:
     # s - selection coefficient
@@ -196,27 +179,8 @@ def sU_tradeoff(s,N,v):
     U = max(U1,U2)
     
     return U
-
-def sU_tradeoff_genotype(s,N,v):
-    # Computes the U-s trade-off function that preserves rate of adaptation (v)
-    # for a chosen population size (N), for genotype evolution.
-    #    
-    # Inputs:
-    # s - selection coefficient
-    # N - populations size
-    # v - fixed rate of adaptation
-    #    
-    # Outputs:
-    # U - beneficial mutation rate yielding v, given N and s
-
-    if (theta_genotype(s,N,v) < 1):              # successional regime 
-        U = v*(1+s)**2/(2*N*s)
-    else:                               # concurrent mutations regime                              
-        U = s*np.exp(-(0.5*s/v)*(np.sqrt(8*theta_genotype(s,N,v)+1)-1))
-        
-    return U
-
-def sU_tradeoff_succ(s,N,v):
+    
+def vContour_OF(s,N,v):
     # Computes the U-s trade-off function that preserves rate of adaptation (v)
     # for a chosen population size (N)
     #    
@@ -231,10 +195,10 @@ def sU_tradeoff_succ(s,N,v):
     U = v*(1+s)**2/(2*N*s**2)
     
     return U
-    
-def sU_tradeoff_genotype_succ(s,N,v):
+
+def vContour_MM(s,N,v):   
     # Computes the U-s trade-off function that preserves rate of adaptation (v)
-    # for a chosen population size (N), for genotype evolution.
+    # for a chosen population size (N) for the multiple mutations regime (U<<s)
     #    
     # Inputs:
     # s - selection coefficient
@@ -242,15 +206,17 @@ def sU_tradeoff_genotype_succ(s,N,v):
     # v - fixed rate of adaptation
     #    
     # Outputs:
-    # U - beneficial mutation rate yielding v, given N and s
+    # U - beneficial mutation rate yielding v, given N and s     
     
-    U = v/(2*N*s)
+    theta = v*np.log(N*s)/s**2    # special ratio marking transition to MM from OF
     
-    return U
+    U = s*np.exp(-(0.5*s**2/v)*(np.sqrt( 8*theta + 1 ) - 1 ))  # concurrent mutations regime      
 
-def sU_tradeoff_conc(s,N,v):
+    return U
+    
+def vContour_DM(s,N,v):
     # Computes the U-s trade-off function that preserves rate of adaptation (v)
-    # for a chosen population size (N)
+    # for a chosen population size (N) for the diffusive mutations regime
     #    
     # Inputs:
     # s - selection coefficient
@@ -258,29 +224,13 @@ def sU_tradeoff_conc(s,N,v):
     # v - fixed rate of adaptation
     #    
     # Outputs:
-    # U - beneficial mutation rate yielding v, given N and s
+    # U - beneficial mutation rate yielding v, given N and s    
+    #
+    # hallatschek approximation has to be adjusted by a constant (~0.3)
 
-    U = s*np.exp(-(0.5*s**2/v)*(np.sqrt(8*theta(s,N,v)+1)-1))
-        
-    return U
+    U = (0.3*v**(1.5)/s**2)/np.log(6**(1/6.0)*N*np.sqrt(v))**(1/2.0)  
 
-def sU_tradeoff_genotype_conc(s,N,v):
-    # Computes the U-s trade-off function that preserves rate of adaptation (v)
-    # for a chosen population size (N), for genotype evolution.
-    #    
-    # Inputs:
-    # s - selection coefficient
-    # N - populations size
-    # v - fixed rate of adaptation
-    #    
-    # Outputs:
-    # U - beneficial mutation rate yielding v, given N and s
-
-    U = s*np.exp(-(0.5*s/v)*(np.sqrt(8*theta_genotype(s,N,v)+1)-1))
-        
-    return U
-
-def hall_U_approx(s,N,v):
-    theta = N*np.sqrt(v)
-    U = 2*(theta**3/np.sqrt(6**(1/6)*theta))/s**2
     return U 
+
+
+
