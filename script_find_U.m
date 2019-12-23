@@ -8,13 +8,13 @@ trgt_rate_arry = [5.3080436677064124e-06,5.3080436677064124e-05,...
         5.3080436677064124e-04,5.3080436677064124e-05,... 
         5.3080436677064124e-05,5.3080436677064124e-05];
 
-sarry = logspace(-3.3,-0.5,15)';
+sarry = logspace(-3.3,-0.5,29)';
 Uarry = ones(size(sarry));
 
 steps = 5e4;
 n = 30;
 
-outputfile = 'data/SAapprox/mutBiasCI_estimate_U_ml-101-';     % name of output file
+outputfile = 'data/SAapprox/mutBiasCI_estimate_U_ml-200-';     % name of output file
 
 for i=1:6
     tic

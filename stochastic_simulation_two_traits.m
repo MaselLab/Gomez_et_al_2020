@@ -53,6 +53,7 @@ varx = 0;                   % variance in trait 1
 vary = 0;                   % variance in trait 2
 cov = 0;                    % covariance between trait 1 and 2
 adj_time = 0;               % adjustment to timestamp (cont. simulations)
+burn_time = 1;
 
 if (s2 == 0)    % simulation with one trait should be done with setting s2 = 0, U2=0, U2d=0
     cutoff = 10/s1;     % cutoff for stochastic dynamics should be set by first s
@@ -69,9 +70,9 @@ if (init_flag)  % initialize population details to those from a prior simulation
     varx = init_means(1,4);
     vary = init_means(1,5);
     cov = init_means(1,6);
-    meanfit_s = init_summr(1,4) - init_means(1,1)*(adj_time-3000);
-    meanfitx_s = init_summr(1,5) - init_means(1,2)*(adj_time-3000);
-    meanfity_s = init_summr(1,6) - init_means(1,3)*(adj_time-3000);
+    meanfit_s = init_summr(1,4) - init_means(1,1)*(adj_time-burn_time);
+    meanfitx_s = init_summr(1,5) - init_means(1,2)*(adj_time-burn_time);
+    meanfity_s = init_summr(1,6) - init_means(1,3)*(adj_time-burn_time);
 end
 
 if (collect_data)           % store parameters used in simulation
@@ -176,12 +177,12 @@ for timestep=1:steps
     pop = newpop;
     
     % recompute time-average of variances and covariances
-    if (timestep+adj_time > 3000)
+    if (timestep+adj_time > burn_time)
         varx = ( 1/(timestep+adj_time) )*((timestep+adj_time-1)*varx + sum(sum(times(newpop,(fitx_arry-meanfitx).^2)))/Na);
         vary = ( 1/(timestep+adj_time) )*((timestep+adj_time-1)*vary + sum(sum(times(newpop,(fity_arry-meanfity).^2)))/Na);
         cov = ( 1/(timestep+adj_time) )*((timestep+adj_time-1)*cov + sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity))))/Na);
     else
-        if (timestep+adj_time)==3000
+        if (timestep+adj_time)==burn_time
             varx = sum(sum(times(newpop,(fitx_arry-meanfitx).^2)))/Na;
             vary = sum(sum(times(newpop,(fity_arry-meanfity).^2)))/Na;
             cov = sum(sum(times(newpop,(fitx_arry-meanfitx).*(fity_arry-meanfity))))/Na;
@@ -215,9 +216,9 @@ for timestep=1:steps
     
 end
 
-v = (meanfitness-meanfit_s)/(steps+adj_time-3000);
-v1 = (meanfitx-meanfitx_s)/(steps+adj_time-3000);
-v2 = (meanfity-meanfity_s)/(steps+adj_time-3000);
+v = (meanfitness-meanfit_s)/(steps+adj_time-burn_time);
+v1 = (meanfitx-meanfitx_s)/(steps+adj_time-burn_time);
+v2 = (meanfity-meanfity_s)/(steps+adj_time-burn_time);
 
 fprintf(fileID4,'%.16e,%.16e,%.16e,%.16e,%.16e,%.16e\n',v,v1,v2,varx,vary,cov);
 
