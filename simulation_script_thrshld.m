@@ -12,7 +12,7 @@ U_min = 1e-2; U_max = 1e-14;
 % the variable start time can be changed to sample a trajectory in detail,
 % but currently it is set ot the last time point to sample the distribution
 % so that the simulations can be continued from that point.
-steps = 1e3;
+steps = 5e5;
 start_time = steps;                         % collect data on distribution at start time
 end_time = steps;    % collect data on distribution at end time
 

@@ -15,6 +15,7 @@ digits(16)
 % Output file holds the s-U pairs of v contour (stoch. Approx).
 % sU = dlmread('data/SAapprox/mutBiasCI_estimate_U_ml-6-2-1.dat',','); % data from figure 3
 % sU = dlmread('data/SAapprox/mutBiasCI_estimate_U_ml-22-1-1.dat',','); % data from figure 3 (bottom contour)
+% sU = dlmread('data/SAapprox/mutBiasCI_estimate_U_ml-101-2-1.dat',','); % data from figure 3
 sU = dlmread('data/SAapprox/mutBiasCI_estimate_U_ml-200-2-1.dat',','); % data from figure 3
 
 % the selected s and U pairs below give either v=5.308e-5 or R=5.308e-3 with N=1e9
@@ -34,9 +35,24 @@ indx_of_collected_data = [];
 % the variable start time can be changed to sample a trajectory in detail,
 % but currently it is set ot the last time point to sample the distribution
 % so that the simulations can be continued from that point.
-steps = 2.0e6;
+steps = 1.5e6*ones(number_of_sims,1);
 start_time = steps;                         % collect data on distribution at start time
-end_time = steps*ones(number_of_sims,1);    % collect data on distribution at end time
+end_time = steps;    % collect data on distribution at end time
+
+indx = 0;
+for i=1:data_pts_s
+    for j=i:data_pts_s
+        indx = indx + 1
+        
+        if ( (sarry(i)>=-1.6) || (sarry(j)>=-1.6) )
+            steps(indx) = steps(indx);
+            start_time(indx) = start_time(indx);                         % collect data on distribution at start time
+            end_time(indx) = end_time(indx);    % collect data on distribution at end time
+        end
+        
+    end
+    
+end
 
 NsU = zeros(number_of_sims,7);          % array that stores the parameters [N,s1,u1,s2,u2]
 sim_data = zeros(number_of_sims,6);     % data collected [v,v1,v2,varx,vary,cov]
@@ -78,8 +94,8 @@ for i=1:data_pts_s
 
         NsU(indx,:)=[N,sarry(i),Uarry(i),sarry(j),Uarry(j),Uarry(i),Uarry(j)];
         [sim_data(indx,1),sim_data(indx,2),sim_data(indx,3),sim_data(indx,4),sim_data(indx,5),sim_data(indx,6)] ...
-            = stochastic_simulation_two_traits(N,sarry(i),Uarry(i),sarry(j),Uarry(j),Uarry(i),Uarry(j),steps, ...
-            collect_distribution_data(indx),start_time,end_time(indx),[outputfile '-' num2str(indx)], ...
+            = stochastic_simulation_two_traits(N,sarry(i),Uarry(i),sarry(j),Uarry(j),Uarry(i),Uarry(j),steps(indx), ...
+            collect_distribution_data(indx),start_time(indx),end_time(indx),[outputfile '-' num2str(indx)], ...
             init_flag,init_time,init_pop,init_fit,init_fitx,init_fity,init_means,init_summr);
         
     end
