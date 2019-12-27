@@ -55,9 +55,13 @@ import copy as cpy
 #sim_data_parameters = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-101-0.dat'
 #pickle_file_name = 'data/fig_compareVdata-101.pickle'
 
-sim_data_grandmeans = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_grand_means_ml-102-1.dat'
-sim_data_parameters = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-102-0.dat'
-pickle_file_name = 'data/fig_compareVdata-102.pickle'
+#sim_data_grandmeans = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_grand_means_ml-102-1.dat'
+#sim_data_parameters = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-102-0.dat'
+#pickle_file_name = 'data/fig_compareVdata-102.pickle'
+
+sim_data_grandmeans = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_grand_means_ml-110-1.dat'
+sim_data_parameters = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-110-0.dat'
+pickle_file_name = 'data/fig_compareVdata-110.pickle'
 
 # read matlab outputs and create python data for figure using grand means
 # -----------------------------------------------------------------------------
@@ -197,6 +201,63 @@ import scipy as sp
 import numpy as np
 import copy as cpy
 
+
+# function for processing matlab data
+def process_matlab_data(sim_data_grandmeans,sim_data_parameters,pickle_file_name):
+    data_file=open(sim_data_grandmeans)
+    grand_means = data_file.read().splitlines()
+    data_file.close()
+    data_file=open(sim_data_parameters)
+    parameters = data_file.read().splitlines()
+    data_file.close()
+    del data_file
+    
+    num_of_sims = len(grand_means)     # number of simulations
+    for i in range(num_of_sims):
+        grand_means[i]='grand_means[i]=np.array(['+grand_means[i].replace('\t',',')+'])'
+        exec(grand_means[i])
+        parameters[i]='parameters[i]=np.array(['+parameters[i].replace('\t',',')+'])'
+        exec(parameters[i])
+        
+    grand_means = np.asarray(grand_means)
+    parameters = np.asarray(parameters)
+    
+    # basic parameters (these should be exported with paremeters)
+    # -----------------------------------------------------------------------------
+    [N,s,U] = [1e9, 1e-2, 1e-5]     # these are set in the simulation
+    v = s**2*(2*np.log(N*s)-np.log(s/U))/(np.log(s/U)**2)
+    
+    # reconstruct array of parameters 
+    # -----------------------------------------------------------------------------
+    arry_dim_s = int(np.unique(parameters[:,3]).shape[0])
+    arry_dim_u = int(np.unique(parameters[:,4]).shape[0]) 
+    
+    sarry = np.zeros([arry_dim_s, 1])
+    Uarry = np.zeros([arry_dim_u, 1])
+    v1_data = np.zeros([arry_dim_s, arry_dim_u])
+    v2_data = np.zeros([arry_dim_s, arry_dim_u])
+    
+    for i in range(arry_dim_s):
+        for j in range(arry_dim_u):
+            indx = int(arry_dim_u*i+j)
+            if (i==0):
+                Uarry[j,0] = parameters[j,4]    
+            
+            sarry[i,0] = parameters[indx,3]
+            
+            v1_data[i,j] = grand_means[indx,1]
+            v2_data[i,j] = grand_means[indx,2]
+                
+    v1_data = np.transpose(v1_data)
+    v2_data = np.transpose(v2_data)
+    
+    pickle_file = open(pickle_file_name,'wb') 
+    pickle.dump([N,s,U,v,parameters,grand_means,sarry,Uarry,v1_data,v2_data],pickle_file,pickle.HIGHEST_PROTOCOL)
+    pickle_file.close()    
+    return
+    
+# set filenames of matlab output files and set filename for processed data
+    
 #sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_ml-01-1.dat'
 #sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_ml-01-0.dat'
 #pickle_file_name = 'data/fig_compare_sU_data-01.pickle'
@@ -205,171 +266,20 @@ import copy as cpy
 #sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_ml-02-0.dat'
 #pickle_file_name = 'data/fig_compare_sU_data-02.pickle'
 
-sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_ml-03-1.dat'
-sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_ml-03-0.dat'
+sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_DF_ml-01-1.dat'
+sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_DF_ml-01-0.dat'
 pickle_file_name = 'data/fig_compare_sU_data-03-DF.pickle'
 
-# read matlab outputs and create python data for figure using grand means
-# -----------------------------------------------------------------------------
-data_file=open(sim_data_grandmeans)
-grand_means = data_file.read().splitlines()
-data_file.close()
-data_file=open(sim_data_parameters)
-parameters = data_file.read().splitlines()
-data_file.close()
-del data_file
-
-num_of_sims = len(grand_means)     # number of simulations
-for i in range(num_of_sims):
-    grand_means[i]='grand_means[i]=np.array(['+grand_means[i].replace('\t',',')+'])'
-    exec(grand_means[i])
-    parameters[i]='parameters[i]=np.array(['+parameters[i].replace('\t',',')+'])'
-    exec(parameters[i])
-    
-grand_means = np.asarray(grand_means)
-parameters = np.asarray(parameters)
-
-# basic parameters (these should be exported with paremeters)
-# -----------------------------------------------------------------------------
-[N,s,U] = [1e9, 1e-2, 1e-5]     # these are set in the simulation
-v = s**2*(2*np.log(N*s)-np.log(s/U))/(np.log(s/U)**2)
-
-# reconstruct array of parameters 
-# -----------------------------------------------------------------------------
-arry_dim = int(np.sqrt(num_of_sims))
-sarry = np.zeros([arry_dim, 1])
-Uarry = np.zeros([arry_dim, 1])
-v1_data = np.zeros([arry_dim, arry_dim])
-v2_data = np.zeros([arry_dim, arry_dim])
-
-for i in range(arry_dim):
-    for j in range(arry_dim):
-        indx = int(arry_dim*i+j)
-        if (i==0):
-            Uarry[j,0] = parameters[j,4]    
-        
-        sarry[i,0] = parameters[indx,3]
-        
-        v1_data[i,j] = grand_means[indx,1]
-        v2_data[i,j] = grand_means[indx,2]
-            
-v1_data = np.transpose(v1_data)
-v2_data = np.transpose(v2_data)
-
-pickle_file = open(pickle_file_name,'wb') 
-pickle.dump([N,s,U,v,parameters,grand_means,sarry,Uarry,v1_data,v2_data],pickle_file,pickle.HIGHEST_PROTOCOL)
-pickle_file.close()
-
-# -----------------------------------------------------------------------------
+process_matlab_data(sim_data_grandmeans,sim_data_parameters,pickle_file_name)
 
 sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_OF_ml-01-1.dat'
 sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_OF_ml-01-0.dat'
 pickle_file_name = 'data/fig_compare_sU_data-01-OF.pickle'
 
-# read matlab outputs and create python data for figure using grand means
-# -----------------------------------------------------------------------------
-data_file=open(sim_data_grandmeans)
-grand_means = data_file.read().splitlines()
-data_file.close()
-data_file=open(sim_data_parameters)
-parameters = data_file.read().splitlines()
-data_file.close()
-del data_file
-
-num_of_sims = len(grand_means)     # number of simulations
-for i in range(num_of_sims):
-    grand_means[i]='grand_means[i]=np.array(['+grand_means[i].replace('\t',',')+'])'
-    exec(grand_means[i])
-    parameters[i]='parameters[i]=np.array(['+parameters[i].replace('\t',',')+'])'
-    exec(parameters[i])
-    
-grand_means = np.asarray(grand_means)
-parameters = np.asarray(parameters)
-
-# basic parameters (these should be exported with paremeters)
-# -----------------------------------------------------------------------------
-[N,s,U] = [1e9, 1e-2, 1e-5]     # these are set in the simulation
-v = s**2*(2*np.log(N*s)-np.log(s/U))/(np.log(s/U)**2)
-
-# reconstruct array of parameters 
-# -----------------------------------------------------------------------------
-arry_dim = int(np.sqrt(num_of_sims))
-sarry = np.zeros([arry_dim, 1])
-Uarry = np.zeros([arry_dim, 1])
-v1_data = np.zeros([arry_dim, arry_dim])
-v2_data = np.zeros([arry_dim, arry_dim])
-
-for i in range(arry_dim):
-    for j in range(arry_dim):
-        indx = int(arry_dim*i+j)
-        if (i==0):
-            Uarry[j,0] = parameters[j,4]    
-        
-        sarry[i,0] = parameters[indx,3]
-        
-        v1_data[i,j] = grand_means[indx,1]
-        v2_data[i,j] = grand_means[indx,2]
-            
-v1_data = np.transpose(v1_data)
-v2_data = np.transpose(v2_data)
-
-pickle_file = open(pickle_file_name,'wb') 
-pickle.dump([N,s,U,v,parameters,grand_means,sarry,Uarry,v1_data,v2_data],pickle_file,pickle.HIGHEST_PROTOCOL)
-pickle_file.close()
-
-# -----------------------------------------------------------------------------
+process_matlab_data(sim_data_grandmeans,sim_data_parameters,pickle_file_name)
 
 sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_HR_ml-01-1.dat'
 sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_HR_ml-01-0.dat'
 pickle_file_name = 'data/fig_compare_sU_data-01-HR.pickle'
 
-# read matlab outputs and create python data for figure using grand means
-# -----------------------------------------------------------------------------
-data_file=open(sim_data_grandmeans)
-grand_means = data_file.read().splitlines()
-data_file.close()
-data_file=open(sim_data_parameters)
-parameters = data_file.read().splitlines()
-data_file.close()
-del data_file
-
-num_of_sims = len(grand_means)     # number of simulations
-for i in range(num_of_sims):
-    grand_means[i]='grand_means[i]=np.array(['+grand_means[i].replace('\t',',')+'])'
-    exec(grand_means[i])
-    parameters[i]='parameters[i]=np.array(['+parameters[i].replace('\t',',')+'])'
-    exec(parameters[i])
-    
-grand_means = np.asarray(grand_means)
-parameters = np.asarray(parameters)
-
-# basic parameters (these should be exported with paremeters)
-# -----------------------------------------------------------------------------
-[N,s,U] = [1e9, 1e-2, 1e-5]     # these are set in the simulation
-v = s**2*(2*np.log(N*s)-np.log(s/U))/(np.log(s/U)**2)
-
-# reconstruct array of parameters 
-# -----------------------------------------------------------------------------
-arry_dim = int(np.sqrt(num_of_sims))
-sarry = np.zeros([arry_dim, 1])
-Uarry = np.zeros([arry_dim, 1])
-v1_data = np.zeros([arry_dim, arry_dim])
-v2_data = np.zeros([arry_dim, arry_dim])
-
-for i in range(arry_dim):
-    for j in range(arry_dim):
-        indx = int(arry_dim*i+j)
-        if (i==0):
-            Uarry[j,0] = parameters[j,4]    
-        
-        sarry[i,0] = parameters[indx,3]
-        
-        v1_data[i,j] = grand_means[indx,1]
-        v2_data[i,j] = grand_means[indx,2]
-            
-v1_data = np.transpose(v1_data)
-v2_data = np.transpose(v2_data)
-
-pickle_file = open(pickle_file_name,'wb') 
-pickle.dump([N,s,U,v,parameters,grand_means,sarry,Uarry,v1_data,v2_data],pickle_file,pickle.HIGHEST_PROTOCOL)
-pickle_file.close()
+process_matlab_data(sim_data_grandmeans,sim_data_parameters,pickle_file_name)

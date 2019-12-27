@@ -121,8 +121,8 @@ def sU_bounds(N,v):
     st = 1.2*s_transition2succ(N,v)             # approx s for transition conc to succ
     s_min = 1/N
     s_max = 5*st     
-    U_min = 0.01*sU_tradeoff_succ(s_max,N,v)
-    U_max = 100*sU_tradeoff_conc(sm,N,v)
+    U_min = 0.01*vContour_OF(s_max,N,v)
+    U_max = 100*vContour_MM(sm,N,v)
     
     return [s_min,s_max,U_min,U_max,sm,st]
 
@@ -172,9 +172,10 @@ def vContour_OFMM(s,N,v):
     #    
     # Outputs:
     # U - beneficial mutation rate yielding v, given N and s
-
+    theta  = v*np.log(N*s)/s**2
+    
     U1 = v*(1+s)**2/(2*N*s**2)                 # successional regime 
-    U2 = s*np.exp(-(0.5*s**2/v)*(np.sqrt(8*theta(s,N,v)+1)-1))  # concurrent mutations regime      
+    U2 = s*np.exp(-(0.5*s**2/v)*(np.sqrt(8*theta+1)-1))  # concurrent mutations regime      
     
     U = max(U1,U2)
     
