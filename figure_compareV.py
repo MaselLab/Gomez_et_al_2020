@@ -98,7 +98,7 @@ ax1.set_yticks(np.arange(arry_dim)+0.5)
 ax1.set_xticklabels(my_slabel)
 ax1.set_yticklabels(my_Ulabel[::-1])        
 ax1.set_xlabel('Selection coefficient trait 1',multialignment='center',fontsize=18,labelpad=10)
-ax1.set_ylabel('Mutation rate trait 2',multialignment='center',fontsize=18,labelpad=10)
+ax1.set_ylabel('Beneficial mutation rate trait 2',multialignment='center',fontsize=18,labelpad=10)
 ax1.tick_params(axis='both',labelsize=18)
 # *****************************************************************************
 #cbar.ax.text(2.8,0.6,'Ratio of $R_1/R_2$',rotation=270,fontsize=22)     # use this label of comparing R
@@ -123,7 +123,7 @@ ax3 = ax1.twiny()
 ax3.xaxis.set_ticks(np.arange(0+0.5/(len(my_Ulabel)),1+0.5/(len(my_Ulabel)),1.0/(len(my_Ulabel))))
 ax3.set_xticklabels(my_Ulabel)
 ax3.tick_params(labelsize=18)
-ax3.set_xlabel('Mutation rate trait 1',fontsize=18,labelpad=20)
+ax3.set_xlabel('Beneficial mutation rate trait 1',fontsize=18,labelpad=20)
 #plt.tight_layout()
 
 fig1.subplots_adjust(bottom=0.2,left=0.2)

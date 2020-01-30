@@ -53,6 +53,7 @@ def get_heatmap_data(pickle_file_name):
                 
     Uarry = np.flipud(Uarry)
     v_max = np.amax(v1_data)
+#    rate_comp = v1_data/v_max    
     rate_comp = np.log10(v1_data/v_max)
 #    v_tot = v1_data+v2_data
 #    rate_comp = v1_data/v_tot
@@ -201,7 +202,7 @@ hlumax = np.log10(np.amax(Uarry))
 
 # set labels for axes
 my_slabel = ['$10^{'+str(np.round(np.log10(sarry[i,0]),2))+'}$' for i in range(len(sarry))]
-my_Ulabel = ['$10^{'+str(np.round(np.log10(Uarry[i,0]),1))+'}$' for i in range(len(Uarry))]
+my_Ulabel = ['$10^{'+str(int(np.round(np.log10(Uarry[i,0]),1)))+'}$' for i in range(len(Uarry))]
 
 # set some labels blank to have them fit on graph
 for i in range(len(my_Ulabel)):
@@ -252,10 +253,10 @@ ax.set_xticks(np.arange(arry_dim_s)+0.5)
 ax.set_yticks(np.arange(arry_dim_u)+0.5)        
 ax.set_xticklabels([])
 ax.set_yticklabels(my_Ulabel[::-1])        
-ax.set_ylabel('Mutation rate trait 2',multialignment='center',fontsize=18,labelpad=10)
-ax.tick_params(axis='both',labelsize=18)
+ax.set_ylabel('Beneficial mutation\nrate trait 2',multialignment='center',fontsize=18,labelpad=10)
+ax.tick_params(axis='both',labelsize=20)
 #cbar.ax.text(3.8,0.80,'Ratio $\log_{10}(v_1/v)$',rotation=270,fontsize=22)    # use this label of comparing v
-cbar.ax.text(4.4,0.65,'Ratio $v_1/v$',rotation=270,fontsize=22)    # use this label of comparing v
+cbar.ax.text(4.5,0.52,'$v_1/v$',rotation=270,fontsize=22)    # use this label of comparing v
 #cbar.ax.text(3.5,0.75,'Ratio $v_1/(v_1+v_2)$',rotation=270,fontsize=22)    # use this label of comparing v
 plt.text(-8.0,60,'(a)',fontsize=20)
 
@@ -264,7 +265,7 @@ ax.plot(vCont_OFMM1[:,0],vCont_OFMM1[:,1],color="black",linewidth=2,linestyle="-
 ax.plot(vCont_OFMM2[:,0],vCont_OFMM2[:,1],color="black",linewidth=2,linestyle=":")
 ax.plot(vCont_DM1[:,0],vCont_DM1[:,1],color="black",linewidth=2,linestyle="-")
 ax.plot(vCont_DM2[:,0],vCont_DM2[:,1],color="black",linewidth=2,linestyle=":")
-ax.scatter(s1_coord_OF,U1_coord_OF, facecolors='none',linewidth=2, edgecolors='k',s=80)
+ax.scatter(s1_coord_OF,U1_coord_OF, facecolors='none',linewidth=2, edgecolors='w',s=80)
 
 
 # *****************************************************************************
@@ -285,10 +286,10 @@ ax.set_xticks(np.arange(arry_dim_s)+0.5)
 ax.set_yticks(np.arange(arry_dim_u)+0.5)        
 ax.set_xticklabels([])
 ax.set_yticklabels(my_Ulabel[::-1])        
-ax.set_ylabel('Mutation rate trait 2',multialignment='center',fontsize=18,labelpad=10)
-ax.tick_params(axis='both',labelsize=18)
+ax.set_ylabel('Beneficial mutation\nrate trait 2',multialignment='center',fontsize=18,labelpad=10)
+ax.tick_params(axis='both',labelsize=20)
 #cbar.ax.text(3.8,0.80,'Ratio $\log_{10}(v_1/v)$',rotation=270,fontsize=22)    # use this label of comparing v
-cbar.ax.text(4.4,0.65,'Ratio $v_1/v$',rotation=270,fontsize=22)    # use this label of comparing v
+cbar.ax.text(4.5,0.52,'$v_1/v$',rotation=270,fontsize=22)    # use this label of comparing v
 #cbar.ax.text(3.5,0.75,'Ratio $v_1/(v_1+v_2)$',rotation=270,fontsize=22)    # use this label of comparing v
 plt.text(-8.0,60,'(b)',fontsize=20)
 
@@ -297,7 +298,7 @@ ax.plot(vCont_OFMM1[:,0],vCont_OFMM1[:,1],color="black",linewidth=2,linestyle="-
 ax.plot(vCont_OFMM2[:,0],vCont_OFMM2[:,1],color="black",linewidth=2,linestyle=":")
 ax.plot(vCont_DM1[:,0],vCont_DM1[:,1],color="black",linewidth=2,linestyle="-")
 ax.plot(vCont_DM2[:,0],vCont_DM2[:,1],color="black",linewidth=2,linestyle=":")
-ax.scatter(s1_coord_MM,U1_coord_MM, facecolors='none',linewidth=2, edgecolors='k',s=80)
+ax.scatter(s1_coord_MM,U1_coord_MM, facecolors='none',linewidth=2, edgecolors='w',s=80)
 
 
 # *****************************************************************************
@@ -319,10 +320,10 @@ ax.set_yticks(np.arange(arry_dim_u)+0.5)
 ax.set_xticklabels(my_slabel)
 ax.set_yticklabels(my_Ulabel[::-1])        
 ax.set_xlabel('Selection coefficient trait 2',multialignment='center',fontsize=18,labelpad=10)
-ax.set_ylabel('Mutation rate trait 2',multialignment='center',fontsize=18,labelpad=10)
-ax.tick_params(axis='both',labelsize=18)
+ax.set_ylabel('Beneficial mutation\nrate trait 2',multialignment='center',fontsize=18,labelpad=10)
+ax.tick_params(axis='both',labelsize=20)
 #cbar.ax.text(3.8,0.80,'Ratio $\log_{10}(v_1/v)$',rotation=270,fontsize=22)    # use this label of comparing v
-cbar.ax.text(4.4,0.65,'Ratio $v_1/v$',rotation=270,fontsize=22)    # use this label of comparing v
+cbar.ax.text(4.5,0.52,'$v_1/v$',rotation=270,fontsize=22)    # use this label of comparing v
 #cbar.ax.text(3.5,0.75,'Ratio $v_1/(v_1+v_2)$',rotation=270,fontsize=22)    # use this label of comparing v
 plt.text(-8.0,60,'(c)',fontsize=20)
 
@@ -331,7 +332,7 @@ ax.plot(vCont_OFMM1[:,0],vCont_OFMM1[:,1],color="black",linewidth=2,linestyle="-
 ax.plot(vCont_OFMM2[:,0],vCont_OFMM2[:,1],color="black",linewidth=2,linestyle=":")
 ax.plot(vCont_DM1[:,0],vCont_DM1[:,1],color="black",linewidth=2,linestyle="-")
 ax.plot(vCont_DM2[:,0],vCont_DM2[:,1],color="black",linewidth=2,linestyle=":")
-ax.scatter(s1_coord_DM,U1_coord_DM, facecolors='none',linewidth=2, edgecolors='k',s=80)
+ax.scatter(s1_coord_DM,U1_coord_DM, facecolors='none',linewidth=2, edgecolors='w',s=80)
 
 plt.tight_layout()
 fig.savefig('figures/fig_two_trait_compare_sU.pdf',bbox_inches='tight')

@@ -194,7 +194,7 @@ ax1.set_xticklabels([])
 ax1.set_yticklabels(new_ytick_labels)
 
 #ax1.set_xlabel(r'Selection coefficient',fontsize=18,labelpad=20)
-ax1.set_ylabel(r'Mutation rate',fontsize=18,labelpad=8)
+ax1.set_ylabel(r'Beneficial mutation rate',fontsize=18,labelpad=8)
 
 #locs, labels = xticks()            # Get locations and labels
 #xticks(ticks, [labels], **kwargs)  # Set locations and labels
@@ -277,7 +277,7 @@ new_ytick_labels=['',r'$10^{-12}$',r'$10^{-10}$',r'$10^{-8}$',r'$10^{-6}$',r'$10
 ax2.set_xlim([1.2*log10_sc_max,log10_s_max])
 ax2.set_ylim([log10_U_min,log10_U_max])
 ax2.set_xlabel(r'Selection coefficient',fontsize=18,labelpad=20)
-ax2.set_ylabel(r'Mutation rate',fontsize=18,labelpad=8)
+ax2.set_ylabel(r'Beneficial mutation rate',fontsize=18,labelpad=8)
 ax2.set_xticklabels(new_xtick_labels)
 ax2.set_yticklabels(new_ytick_labels)
 
