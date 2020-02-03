@@ -199,16 +199,16 @@ ax1.set_ylabel(r'Beneficial mutation rate',fontsize=18,labelpad=8)
 #locs, labels = xticks()            # Get locations and labels
 #xticks(ticks, [labels], **kwargs)  # Set locations and labels
 
-ax1.tick_params(labelsize=18)
-ax1.legend(loc=3,fontsize=18)
+ax1.tick_params(labelsize=20)
+ax1.legend(loc=3,fontsize=20)
 
 # annotations to graphs
 # -----------------------------------------------------------------------------
 xh_loc = (log10_s_max-1.2*log10_sc_max)
 yh_loc = (log10_U_max-log10_U_min)
-plt.text(1.1*log10_sc_max-0.082*xh_loc,log10_U_min+0.30*yh_loc,r'$N = 10^9$',fontsize=22)
-plt.text(1.15*log10_sc_max,0.55*log10_U_min,"Multiple Mutations\n Regime (U << s)",fontsize=16)
-plt.text(0.72*log10_sc_max,0.93*log10_U_min,"Origin-fixation\n     Regime",fontsize=16)
+plt.text(1.1*log10_sc_max-0.082*xh_loc,log10_U_min+0.33*yh_loc,r'$N = 10^9$',fontsize=22)
+plt.text(1.15*log10_sc_max,0.55*log10_U_min,"Multiple Mutations\n       Regime",fontsize=16)
+plt.text(0.68*log10_sc_max,0.96*log10_U_min,"Origin-fixation\n     Regime",fontsize=16)
 plt.text(0.67*log10_sc_max,0.13*log10_U_min,"Diffusive Mutations\n        Regime",color="black",fontsize=16)
 plt.text(1.2*log10_sc_max-.16*xh_loc,log10_U_min+.96*yh_loc,'(a)',fontsize=20)
 
@@ -281,14 +281,14 @@ ax2.set_ylabel(r'Beneficial mutation rate',fontsize=18,labelpad=8)
 ax2.set_xticklabels(new_xtick_labels)
 ax2.set_yticklabels(new_ytick_labels)
 
-ax2.tick_params(labelsize=18)
-ax2.legend(loc=3,fontsize=18)
+ax2.tick_params(labelsize=20)
+ax2.legend(loc=3,fontsize=20)
 
 # add annotations
 # -----------------------------------------------------------------------------
 xh_loc = (log10_s_max-1.2*log10_sc_max)
 yh_loc = (log10_U_max-log10_U_min)
-plt.text(1.2*log10_sc_max+0.025*xh_loc,log10_U_min+0.30*yh_loc,r'$v = 5.3\times 10^{-5}$',fontsize=22)
+plt.text(1.2*log10_sc_max+0.025*xh_loc,log10_U_min+0.33*yh_loc,r'$v = 5.3\times 10^{-5}$',fontsize=22)
 plt.text(1.2*log10_sc_max-.16*xh_loc,log10_U_min+.96*yh_loc,'(b)',fontsize=20)
 plt.tight_layout()
 #plt.close()
