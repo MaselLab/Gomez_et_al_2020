@@ -59,9 +59,13 @@ import copy as cpy
 #sim_data_parameters = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-102-0.dat'
 #pickle_file_name = 'data/fig_compareVdata-102.pickle'
 
-sim_data_grandmeans = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_grand_means_ml-110-1.dat'
-sim_data_parameters = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-110-0.dat'
-pickle_file_name = 'data/fig_compareVdata-110.pickle'
+#sim_data_grandmeans = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_grand_means_ml-110-1.dat'
+#sim_data_parameters = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-110-0.dat'
+#pickle_file_name = 'data/fig_compareVdata-110.pickle'
+
+sim_data_grandmeans = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_grand_means_ml-200-1.dat'
+sim_data_parameters = 'data/TwoTraitSim/mutBiasCI_data_all_simulation_parameters_ml-200-0.dat'
+pickle_file_name = 'data/fig_compareVdata-200.pickle'
 
 # read matlab outputs and create python data for figure using grand means
 # -----------------------------------------------------------------------------
@@ -162,9 +166,13 @@ def read_my_data(mydata):
 #sim_data_sU_pairs = 'data/SAapprox/mutBiasCI_estimate_U_ml-100-'
 #pickle_file_name = 'data/fig_sUtradeoff_simdata-100.pickle'
 
-sim_data_parameters = 'data/SAapprox/mutBiasCI_estimate_U_ml-101-'
-sim_data_sU_pairs = 'data/SAapprox/mutBiasCI_estimate_U_ml-101-'
-pickle_file_name = 'data/fig_sUtradeoff_simdata-101.pickle'
+#sim_data_parameters = 'data/SAapprox/mutBiasCI_estimate_U_ml-101-'
+#sim_data_sU_pairs = 'data/SAapprox/mutBiasCI_estimate_U_ml-101-'
+#pickle_file_name = 'data/fig_sUtradeoff_simdata-101.pickle'
+
+sim_data_parameters = 'data/SAapprox/mutBiasCI_estimate_U_ml-200-'
+sim_data_sU_pairs = 'data/SAapprox/mutBiasCI_estimate_U_ml-200-'
+pickle_file_name = 'data/fig_sUtradeoff_simdata-200.pickle'
 
 # read, process and save data from files
 # -----------------------------------------------------------------------------
@@ -266,20 +274,33 @@ def process_matlab_data(sim_data_grandmeans,sim_data_parameters,pickle_file_name
 #sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_ml-02-0.dat'
 #pickle_file_name = 'data/fig_compare_sU_data-02.pickle'
 
-sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_DF_ml-01-1.dat'
-sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_DF_ml-01-0.dat'
-pickle_file_name = 'data/fig_compare_sU_data-03-DF.pickle'
+# ------------------------------------------------------------------------------
+#sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_DF_ml-01-1.dat'
+#sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_DF_ml-01-0.dat'
+#pickle_file_name = 'data/fig_compare_sU_data-03-DF.pickle'
+
+sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_DF_ml-200-1.dat'
+sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_DF_ml-200-0.dat'
+pickle_file_name = 'data/fig_compare_sU_data-200-DF.pickle'
 
 process_matlab_data(sim_data_grandmeans,sim_data_parameters,pickle_file_name)
 
-sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_OF_ml-01-1.dat'
-sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_OF_ml-01-0.dat'
-pickle_file_name = 'data/fig_compare_sU_data-01-OF.pickle'
+#sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_OF_ml-01-1.dat'
+#sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_OF_ml-01-0.dat'
+#pickle_file_name = 'data/fig_compare_sU_data-01-OF.pickle'
+
+sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_OF_ml-200-1.dat'
+sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_OF_ml-200-0.dat'
+pickle_file_name = 'data/fig_compare_sU_data-200-OF.pickle'
 
 process_matlab_data(sim_data_grandmeans,sim_data_parameters,pickle_file_name)
 
-sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_HR_ml-01-1.dat'
-sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_HR_ml-01-0.dat'
-pickle_file_name = 'data/fig_compare_sU_data-01-HR.pickle'
+#sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_HR_ml-01-1.dat'
+#sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_HR_ml-01-0.dat'
+#pickle_file_name = 'data/fig_compare_sU_data-01-HR.pickle'
+
+sim_data_grandmeans = 'data/FixedsU/mutBiasCI_data_all_simulation_grand_means_fixed_sU_HR_ml-200-1.dat'
+sim_data_parameters = 'data/FixedsU/mutBiasCI_data_all_simulation_parameters_fixed_sU_HR_ml-200-0.dat'
+pickle_file_name = 'data/fig_compare_sU_data-200-HR.pickle'
 
 process_matlab_data(sim_data_grandmeans,sim_data_parameters,pickle_file_name)
